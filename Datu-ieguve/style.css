@@ -1,0 +1,939 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400&display=swap');
+
+
+
+*{
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: content-box;
+    outline: none;
+    border: 0;
+    text-decoration: none;
+    transition: all 0.02s linear;
+    
+}
+body{
+    padding-left: 10rem;
+    overflow: hidden;
+    height:100%;
+}
+:root{
+    --maincolor: #096eccb4;
+    --secondcolor: #333;
+    --accentcolor: #ff0;
+}
+html{
+    scroll-behavior: smooth;
+    height:100%;
+}
+*::selection{
+    background: var(--maincolor);
+    color: white;
+}
+
+.underline{
+    border-bottom: 3px solid grey; 
+    border-radius: 3px; 
+    cursor: pointer;
+}
+.hoverable-pointer{
+    cursor: pointer;
+}
+
+.input_style{
+    display: inline-block; 
+   
+    margin-right: 0.5rem;
+    border: solid 2px grey;
+    font-size: 1rem; 
+    border-radius: 0.4rem;  
+    background: #f0f0f0; 
+    padding: 0.5rem 1rem;
+}
+
+
+.close-button{
+
+    background: var(--secondcolor);
+    color: #fff;
+    font-size: 1rem;
+    position: absolute; 
+    top: 5px; 
+    right: 5px; 
+    padding: 3px 6px; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer;
+}
+
+
+
+.close-button:hover{
+    background: var(--maincolor);
+    
+}
+
+
+section{
+    padding: 2.5rem 3%;
+    padding-left: 7rem; 
+
+}
+section:nth-child(even){
+    background: #f6f6f6;
+}
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background:#d3d3d3;;
+    width: 11rem;
+    height: 100%;
+ 
+}
+
+
+
+header .navbar a{
+    display: block;
+    font-size: 1rem;
+   
+    padding-top: 1.6rem;
+    height: 7rem;
+    color: #494949;
+    transition:  0.25s ease-in-out; 
+}
+
+header .navbar .fa1 i{
+ 
+    transform: translateX(118%) ;
+
+}
+
+header .navbar .fa2 i{
+ 
+    transform: translateX(136%) ;
+
+}
+header .navbar .fa3 i{
+ 
+    transform: translateX(122%) ;
+
+}
+
+
+header .navbar a p {
+    text-align: center;
+    font-size: 1rem;
+    pointer-events: none; 
+  
+}
+
+
+
+header .navbar a i{
+    padding-bottom: 0.8rem;
+
+
+padding-right: 1rem;
+font-size: 2.5rem;
+
+}
+
+
+header .navbar a:hover {
+    transform: scale(1.1); 
+   
+}
+.button-container {
+    margin-top: 1rem; 
+    display: flex;
+ 
+    align-items: center;
+    width: 100%; 
+}
+#export {
+    margin-left: auto; 
+}
+
+
+header .navbar a.current-page {
+    pointer-events: none; 
+    cursor: default; 
+    background-color: #096eccb4;
+    color: white;
+    
+}
+
+
+
+.information{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+}
+.information .image, .information .content{
+    flex: 1 1 30rem;
+
+}
+.information img{
+width: 95%;
+
+}
+
+.information .content span{
+    color: var(--maincolor);
+    font-size: 1.4rem ;
+}
+
+.information .content h3{
+    color: var(--secondcolor);
+    font-size: 2rem ;
+    padding: 1.4rem 0;
+}
+.information .content p{
+   
+    font-size: 1rem ;
+    color: #777;
+    color: #f0f0f0;
+    padding-bottom: .7rem;
+    line-height: 1.8rem;
+}
+
+
+#pazinojums{
+    position: fixed;
+    bottom: 0; right:0;
+    z-index:1;
+    width: 100%;
+    text-align: center;
+    background: var(--secondcolor);
+    color: #fff;
+    padding: 2rem 9%;
+    font-size: 1.4rem;
+    display: block;
+}
+
+#pazinojums p{
+    animation: blinker 2s linear infinite;
+}
+
+#pazinojums a{
+    cursor: pointer;
+}
+
+.btn{
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 1rem 2rem;
+    background: var(--secondcolor);
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+}
+.btn:hover{
+    background: var(--maincolor);
+    
+}
+
+.title .btn2, .container.btn2 {
+   
+   
+    margin: 0;
+    margin-right: 0.5rem;
+}
+.btn2{
+    background:#1D6F42; 
+    color:white;
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    
+}
+.btn2:hover{
+  
+  
+    background:#18a758; 
+    
+}
+
+.info-container{
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(15rem,1fr));
+    grid-gap:1rem; 
+}
+
+.info-container .box{
+background: #fff; 
+padding: 2rem;
+display: flex;
+align-items: center;
+grid-gap:1rem;
+border: .1rem solid #ccc;
+box-shadow: 0 .5rem 1rem #ddd;
+border-radius: .4rem
+}
+
+
+
+.info-container .box i{
+    width: 3rem;
+    height: 3rem;
+    font-size: 1rem;
+    background: var(--maincolor);
+    color: #fff;
+    border-radius: 50%;
+    line-height: 3rem;
+    text-align: center;
+}
+
+
+.info-container_2{
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(15rem,1fr));
+    grid-gap:1rem; 
+}
+
+.info-container_2 .box{
+background: rgb(233, 233, 233); 
+padding: 2rem;
+display: flex;
+align-items: center;
+grid-gap:1rem;
+
+border-radius: .4rem
+}
+
+
+
+.info-container_2 .box i{
+    display:inline;
+    min-width: 4rem;
+    min-height: 4rem;
+    font-size: 1.5rem;
+    background: var(--maincolor);
+    color: #fff;
+    border-radius: 50%;
+    line-height: 4rem;
+    text-align: center;
+   
+}
+
+
+.info-container_2 .box h3 {
+   padding: 0.2rem;
+    text-align: left;
+   
+}
+
+.info-container_2 .box p {
+    padding: 0.2rem;
+     text-align: left;
+    
+ }
+
+
+#category .box-container{
+display: grid;
+grid-template-columns: repeat(auto-fit,minmax(13rem,1fr));
+grid-gap:1rem; 
+}
+
+
+#category .box{
+text-align: center;
+padding: 2rem 1rem;
+border: .1rem solid #999;
+border-radius: .4rem;
+box-shadow: 0 .5rem .6rem #ddd;
+}
+
+
+
+#category .box:hover i{
+transform: translateY(-1rem);
+
+}
+#category .box i{
+   width: 4rem;
+   height: 4rem;
+   line-height: 4rem;
+   font-size:1.4rem;
+   border-radius: .5rem;
+   color: #fff;
+   background: var(--maincolor);
+   margin-bottom: 1.5rem; 
+    
+    }
+
+    #category.box h3{
+
+        font-size: 1.4rem;
+        color: var(--secondcolor);
+    }
+
+    .heading{
+        text-align: center;
+        margin-bottom:2rem;
+    }
+
+    .heading h3{
+        font-size: 2rem;
+        text-transform: uppercase;
+        color: var(--secondcolor);
+    }
+
+
+
+    #menu-btn{
+        position: fixed;
+        top: 1rem;
+        right: 2rem;
+        height: 5rem;
+        width: 5rem;
+        line-height: 5rem;
+        font-size: 2.5rem;
+        background: var(--maincolor);
+        color: #fff;
+        cursor: pointer;
+        text-align: center;
+        z-index: 1;
+        display: none;
+    }
+
+
+    #menu-btn.fa-times{
+        background: #fff;
+        color: var(--maincolor);
+        
+    }
+    .box img{
+        width: 95%;
+    }
+
+    #courses .box{
+        margin: 1rem;
+        text-align: center;
+        padding: 2rem 0.5rem;
+        border: .1rem solid #999;
+        border-radius: .4rem;
+        box-shadow: 0 .5rem .6rem #ddd;
+   
+        flex: 1 1 0px;
+    }
+    #courses .box-container{
+        display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(400px, 1fr));
+         gap: 2rem; 
+    }
+    .courses .box-container{
+        display: grid;
+        grid-template-columns: repeat(auto-fit,minmax(23rem, 1fr));
+        gap: 2rem; 
+    }
+    .courses .box-container .box{
+        position: relative;
+        padding: 1rem solid #999;
+        overflow: hidden;
+        text-align: center;
+        box-shadow: 0 .5rem .7rem #ddd;
+        border-radius:  .4rem;
+
+        
+    }
+    .courses .box-container .box:hover .content{
+        opacity: 1;
+    }
+   
+    .courses .box-container .box .image img{
+        width: 100%;
+    }
+    .courses .box-container .box .image h3{
+        font-size: 1.4rem;
+        color: var(--secondcolor);
+        font-weight: normal;
+        padding-bottom: 1rem;
+    }
+
+    .courses .box-container .box .content{
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-flow: column;
+        background: var(--maincolor);
+    
+     
+        opacity: 0;
+    }
+    .courses .box-container .box .content h3{
+        font-size: 1.4rem;
+    }
+
+
+    .container_2 table{
+      
+        border-collapse: none;
+      
+        border-spacing:0 .5rem;
+        padding-left: 0rem;
+    }
+
+    #courses h3{
+       
+        font-weight: bold;
+      }
+    #courses p,h3{
+      text-align: center;
+        font-size: 1.7rem;
+       
+        padding: 0.5rem;  
+    }
+
+    #courses p{
+    color: var(--maincolor);
+    }
+    #reviews img{
+        width: 30%;
+        padding-bottom: 0.8rem;
+    }
+
+    #reviews .box{
+        margin: 1rem;
+        text-align: center;
+        padding: 2rem 0.5rem;
+        border: .1rem solid #999;
+        border-radius: .4rem;
+        box-shadow: 0 .5rem .6rem #ddd;
+   
+        flex: 1 1 0px;
+    }
+    #reviews .box-container{
+        display: flex;     
+    }
+    #reviews, h3,p{
+      text-align: center;
+        font-size: 16px;
+   
+      
+    }
+    #reviews .stars{
+        color: var(--maincolor);
+        font-size: 16px;
+      margin-top: 1rem;
+      }
+  
+
+      #reviews h3{
+       
+        font-weight: bold;
+      }
+    #reviews h4,h3{
+      text-align: center;
+        font-size: 1.7rem;
+       
+        padding: 0.5rem;  
+    }
+
+    #reviews h4{
+    color: var(--maincolor);
+    }
+    .inputBox input{
+        margin: 0.4rem;
+        padding: 1rem;
+        width: 30rem;
+        border:solid  2px #777 ;
+        border-radius: 0.5rem;
+        
+    }
+
+
+
+    #contact h3{
+       
+        font-weight: bold;
+      }
+    #contact h4,h3{
+      text-align: center;
+        font-size: 1.7rem;
+       
+        padding: 0.5rem;  
+    }
+
+    #contact h4{
+    color: var(--maincolor);
+    }
+    #contact .box-container{
+        display: flex;     
+    
+    }
+    #contact .input{
+        display: flex;     
+        flex-wrap: wrap;
+        justify-content: right
+    }
+    #contact .inf{
+        display: flex;     
+        flex-wrap: wrap;
+  
+      
+    }
+    #contact .inf i{
+        width: 3rem;
+    height: 3rem;
+    font-size: 1rem;
+    background: var(--maincolor);
+    color: #fff;
+    border-radius: 50%;
+    line-height: 3rem;
+    text-align: center;
+    margin-right: 1rem;    
+    }
+    #contact .inf .box{
+        display: flex;  
+        padding: 1rem
+    }
+  
+    #contact .inf h2{       
+        padding: 0.8rem;
+    }
+    #contact p{
+       
+      color: grey;      
+    }
+    #contact .buttons{
+        display: flex;   
+        cursor: pointer;
+     }
+     #contact .inputBox{
+        display: flex;   
+      
+      
+     }
+     #contact textarea{
+        margin: 0.4rem;
+        padding: 1rem;
+        width: 30rem;
+        border:solid  2px #777 ;
+        border-radius: 0.5rem;
+
+     }
+
+
+
+    @keyframes blinker{
+        50% {
+            opacity: .4;
+        }
+    }
+
+
+    .modal  {
+        position: fixed;
+ 
+        background: rgba(0, 0, 0, .5);
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        
+    }
+
+    .modal.modalActive{
+    
+        display: flex;
+       
+
+    }
+    .modal .apply{
+        opacity: 1;
+        background: #eee;
+        width: 50rem;
+        border-radius: .5rem;
+        box-shadow: 0 .5rem 1rem #666;
+        padding: 2rem;
+        position: relative;
+    }
+    .modal .apply_chart{
+        opacity: 1;
+        background: #eee;
+        
+        border-radius: .5rem;
+        box-shadow: 0 .5rem 1rem #666;
+        padding: 2rem;
+        position: relative;
+    }
+
+    .apply .close_modal{
+        position: absolute;
+        right: 2rem;
+        background: var(--maincolor);
+        color: #fff;
+        padding: .5rem;
+        font-size: .7rem;
+        border-radius: .5rem;
+        cursor: pointer;
+    }
+
+    .apply_chart  .close_modal{
+        position: absolute;
+        right: 2rem;
+        background: var(--maincolor);
+        color: #fff;
+        padding: .5rem;
+        font-size: .7rem;
+        border-radius: .5rem;
+        cursor: pointer;
+    }
+
+    .apply .close_modal:hover{
+background: var(--secondcolor);
+
+    }
+
+    .apply_chart .close_modal:hover{
+        background: var(--secondcolor);
+        
+    }
+
+    .apply h2{
+        text-align: center;
+        margin-bottom: 1rem;
+        color: var(--secondcolor);
+
+    }
+    .apply_chart h2{
+        text-align: center;
+        margin-bottom: 1rem;
+        color: var(--secondcolor);
+
+    }
+    .apply input{
+        width: 94%;
+        border-radius: .4rem;
+
+    
+    }
+    .apply_chart  input{
+        width: 94%;
+        border-radius: .4rem;
+
+    
+    }
+
+    .login-kluda{
+        text-align: center;
+        text-align: red;
+        margin: 1rem 0;
+
+    }
+
+    
+    .apply input[type=text], .apply input[type=email], .apply input[type=tel],  .apply input[type=password], select{
+        border-radius: .4rem;
+        padding: 1rem;
+        background: #f6f6f6;
+        color: #777;
+        margin: .4rem 0;
+        font-size: 1rem;
+        border: .1rem solid #999;
+        border-radius: .4rem;
+        margin-bottom: 1rem;
+    }
+    
+    .modal span{
+        color: #cc0000;
+    }
+
+   
+    .container{
+       
+        overflow-y: auto; /* Enable vertical scrollbar if needed */
+        overflow-x: hidden;
+        height: calc(100vh - 11.35rem);
+      
+        /*border: solid 2px #333;*/
+
+    }
+    .title{
+       
+        background:#fafafa;
+        border-bottom: 3px solid #999;
+        padding: 2.5rem 7.5rem;
+        color: #686868;
+        font-size: 1.8rem;
+        justify-content: space-between;
+        z-index: 999;
+      
+    }
+
+    .title .btn{
+      padding: .5rem 1rem;
+    
+    }
+
+
+    .title .btn,.container.btn{
+        background: #eee;
+        color: #494949;
+        margin:0;
+        margin-right: 0.5rem;
+    }
+
+
+
+    .title .btn:hover{
+        background: #096eccb4;
+        color: var(--secondcolor);
+        color: #eee;
+     
+    }
+    table{
+       
+        width: 99% ;
+        border-collapse: none;
+        border-spacing:0;
+        padding-left: 1rem;
+ 
+    }
+
+   
+    th{
+        border-top: solid 2px #d8d8d8;
+        border-bottom: solid 2px #d8d8d8;
+        padding: 1rem;
+        text-align: left;
+    }
+    td{
+        border-bottom: solid 2px #d8d8d8;
+        padding: 1rem;
+    }
+    .first{
+        background: #f5f5f5;
+        position: sticky;
+        top: 0;
+        z-index: 200;
+       
+        
+    }
+    
+
+  
+      
+       .btn-edit{
+        color: #096eccb4;
+       
+       } 
+       
+       .btn-edit i{
+      
+        transition: 0.15s ease-in-out; 
+       } 
+       .btn-edit i:hover{
+        color: #00ccffb4;
+     
+       } 
+
+
+       .fromElements{
+        display: grid;
+        grid-template-columns: 30% 70%;
+        align-items: center;
+       }
+
+
+
+
+    @media (max-width: 1600px){
+        html{
+            font-size:80%;
+        }
+    }
+    
+
+
+    @media (max-width: 3000px){
+        html{
+            font-size: 80%;
+        }
+        #courses .box-container{
+         
+            grid-template-columns: repeat(auto-fill,minmax(700px, 1fr));         
+        }
+    }
+    @media (max-width: 2500px){
+        html{
+            font-size: 80%;
+        }
+        #courses .box-container{      
+            grid-template-columns: repeat(auto-fill,minmax(500px, 1fr));
+      }
+    }
+    @media (max-width: 2300px){
+        html{
+            font-size: 80%;
+        }
+        #courses .box-container{     
+            grid-template-columns: repeat(auto-fill,minmax(440px, 1fr));
+      }
+     
+    }
+    @media (max-width: 1600px){
+        html{
+            font-size: 80%;
+        }
+        #courses .box-container{      
+            grid-template-columns: repeat(auto-fill,minmax(300px, 1fr));          
+        }
+    }
+    @media (max-width: 1400px){
+        html{
+            font-size: 80%;
+        }
+        #courses .box-container{      
+            grid-template-columns: repeat(auto-fill,minmax(250px, 1fr));            
+        }
+    }
+    @media (max-width: 1250px){
+        html{
+            font-size: 60%;
+        }
+        #courses .box-container{
+         
+            grid-template-columns: repeat(auto-fill,minmax(200px, 1fr));              
+        }
+    }
+    @media (max-width: 940px){
+      
+        
+      
+       
+        section{
+         
+            padding-left: 3rem; 
+         
+        }
+        .header.active{
+         left: 0;
+         padding-left: 20rem;
+         
+        }
+    }
