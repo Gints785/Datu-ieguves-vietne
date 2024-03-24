@@ -29,7 +29,7 @@ except Exception as e:
     logger.error("Error while establishing connection to the database: %s", e)
 
 # Read data from the PostgreSQL database
-query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"barbora\" IS NOT NULL AND TRIM(\"barbora\") <> ''"
+query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"citro\" IS NOT NULL AND TRIM(\"citro\") <> ''"
 cursor = conn.cursor()
 cursor.execute(query)
 
@@ -46,14 +46,19 @@ driver = webdriver.Firefox()
 
 # Define the base URLs
 base_urls = [
-    "https://www.barbora.lv/piena-produkti-un-olas",
-    "https://www.barbora.lv/augli-un-darzeni"
+    "https://rezekne.citro.lv/product-category/alkoholiskie-dzerieni/"
     # Add other URLs as needed
 ]
+button_selector = "input.age_input"
+selector1 = 'ins span.woocommerce-Price-amount.amount bdi, span.price > span.woocommerce-Price-amount.amount bdi'
 
-selector1 = '.tw-mr-0\\.5.tw-text-b-price-sm.tw-font-semibold.lg\\:tw-text-b-price-xl'
-cents_selector = 'span.tw-text-b-price-xs.tw-font-semibold.lg\\:tw-text-b-price-lg'
 
+try:
+    button = driver.find_element(By.CSS_SELECTOR, button_selector)
+    button.click()
+    print(f'Clicked the button with selector: {button_selector}')
+except:
+    pass
 
 
 
@@ -65,8 +70,8 @@ found_product_discount = []
 found_product_url = []
 found_product_dates_7 = []
 
-
-
+product_data = []
+product_url = []
 
 total_products_not_found = 0
 max_pages_per_category = float('inf')
@@ -77,7 +82,7 @@ today_date = datetime.now()
 today_date_str = today_date.strftime("%Y-%m-%d %H:%M:%S")
 
 # Extract Artikuls from the Excel file
-product_names_in_db = df['barbora'].tolist()
+product_names_in_db = df['citro'].tolist()
 artikuls_in_db = df['artikuls'].tolist()
 
 def is_nan_or_empty(value):
@@ -87,55 +92,26 @@ def is_nan_or_empty(value):
 
 
 for base_url in base_urls:
-    title_match = re.search(r"https://www.barbora.lv/([^/]+)", base_url)
-    if title_match:
-        title = title_match.group(1)
-    else:
-        title = "Unknown"
+    title_match = re.search(r"https://rezekne.citro.lv/([^/]+)", base_url)
+    title = title_match.group(1) if title_match else "Unknown"
 
     products_not_found = 0
     page_number = 1
     products_found_count = 0
 
     while True:
-        url = f"{base_url}?page={page_number}"
+        url = f"{base_url}page/{page_number}/"
         driver.get(url)
         elements1 = driver.find_elements(By.CSS_SELECTOR, selector1)
-      
-        cents_elements = driver.find_elements(By.CSS_SELECTOR, cents_selector)
-
-     
-       
-        
-        if not elements1 or not cents_elements:
-            break
-
         scraped_product_names = []
         scraped_product_prices = []
         scraped_product_akcijas = []
-    
-    
-        for element1, cents_element in zip(elements1, cents_elements):
-            value1 = element1.text.strip()
-            cents_value = cents_element.text.strip()
-           
+        if not elements1:
+            break
 
-            # Extract whole and decimal parts
-            matches1 = value1.split()
 
-            if len(matches1) >= 1:
-                whole_part = matches1[0]
-
-                # Check if there's at least one element in cents
-                if len(cents_value) >= 1:
-                    decimal_part = cents_value
-
-                    # Combine the values
-                    combined_value = f"{whole_part}.{decimal_part}"
-                    scraped_product_prices.append(combined_value)
-                else:
-                    # If cents are missing, use only the whole part
-                    scraped_product_prices.append(whole_part)
+        scraped_product_prices.append(elements1)
+                
 
         
 
@@ -147,8 +123,8 @@ for base_url in base_urls:
   
         while True:
             product_elements = driver.find_elements(By.CSS_SELECTOR, "[id^='fti-product-card-category-page-']")
-            product_url = []
-            product_data = []
+
+
             for url_element in product_elements:
 
                 href_attribute = url_element.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
@@ -176,7 +152,7 @@ for base_url in base_urls:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             name_elements = driver.find_elements("css selector", "span.tw-block")
             scraped_product_names.extend([name_element.text.strip() for name_element in name_elements])
-            logger.info(product_data)
+        
             
             price_elements = driver.find_elements("css selector", "div.b-product-price-current")
             scraped_product_prices.extend([float(price_element.text.strip().replace('€', '').replace(',', '.')) for price_element in price_elements])
@@ -273,7 +249,18 @@ try:
 
 
             
-            
+            new_discount_str = values[found_products_df.columns.get_loc('barbora_akcija')]
+            if new_discount_str and isinstance(new_discount_str, str):
+                new_discount_str = new_discount_str.replace(',', '.')
+                try:
+                    new_discount = float(new_discount_str)
+                except ValueError:
+                    new_discount = 0.0
+            else:
+                new_discount = 0.0
+
+            logger.info(existing_discount)
+            logger.info(new_discount)
             if existing_price != new_price:
                 # Price has changed, update both price and date
                 update_main_table_query = f"""
@@ -288,7 +275,7 @@ try:
                     INSERT INTO {history_table_name} ("artikuls", "barbora_nosaukums", "barbora_cena", "barbora_datums", "barbora_akcija")
                     VALUES (%s, %s, %s, %s, %s)
                 """
-                cursor.execute(insert_history_query, (values[found_products_df.columns.get_loc('artikuls')], values[found_products_df.columns.get_loc('barbora_nosaukums')], values[found_products_df.columns.get_loc('barbora_cena')], values[found_products_df.columns.get_loc('barbora_datums')], values[found_products_df.columns.get_loc('barbora_akcija')]))
+                cursor.execute(insert_history_query, (existing_data[0], existing_data[1], existing_data[2], existing_data[3],existing_data[4]))
 
                 logger.info("Updated main table with new price and date, and inserted old data into history table.")
             else:
@@ -304,7 +291,12 @@ try:
 
 
                 logger.info("Prices are the same, updated only the date.")
-          
+            if existing_discount != new_discount:
+                insert_history_query = f"""
+                    INSERT INTO {history_table_name} ("artikuls", "barbora_nosaukums", "barbora_cena", "barbora_datums", "barbora_akcija")
+                    VALUES (%s, %s, %s, %s, %s)
+                """
+                cursor.execute(insert_history_query, (existing_data[0], existing_data[1], existing_data[2], existing_data[3],existing_data[4]))        
 
 
 

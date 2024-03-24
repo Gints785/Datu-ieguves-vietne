@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style-reader.css" />
    
     <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"defer> </script>
@@ -25,6 +26,7 @@
     <?php
         require("connectDB.php");
         require("nav.php");
+        require("indicator.php");
     ?>
   <div class="title"  >
         <div class="name">

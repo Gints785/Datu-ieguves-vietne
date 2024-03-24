@@ -7,6 +7,7 @@ $(document).ready(function(){
     $(document).on('click', '#Reset_price_selection', function() {
       
         fetchProducts();
+        $('#dataArtikuls').val('');
     });
     let enteredArtikuls = [];
    
@@ -47,7 +48,7 @@ $(document).ready(function(){
     }
  
     if (postData.action === 'add') {
-        $.post('check.php', postData, (response) => {
+        $.post('data/check.php', postData, (response) => {
             console.log('Response from check.php:', response); 
 
             if (response === 'eksiste') {
@@ -56,7 +57,7 @@ $(document).ready(function(){
                 alert('Šāds artikuls neeksistē!');
             } else if (response === 'success') {
            
-                const url = edit === false ? 'product-add.php' : 'product-edit.php';
+                const url = edit === false ? 'data/product-add.php' : 'data/product-edit.php';
                 $.post(url, postData, (response) => {
                     $("#productForma").trigger('reset');
                     fetchProducts(enteredArtikuls);
@@ -73,7 +74,7 @@ $(document).ready(function(){
      
     
        
-        const url = edit === false ? 'product-add.php' : 'product-edit.php';
+        const url = edit === false ? 'data/product-add.php' : 'data/product-edit.php';
         $.post(url, postData, (response) => {
             $("#productForma").trigger('reset');
            
@@ -124,7 +125,7 @@ $(document).ready(function(){
         console.log(element)
         const id = $(element).attr('productID')
       
-        $.post('product-single.php',{id},(response) => {
+        $.post('data/product-single.php',{id},(response) => {
             const product_info = JSON.parse(response)
             $('#artikuls').val(product_info.artikuls)
             $('#barbora').val(product_info.barbora)
@@ -161,7 +162,7 @@ $(document).ready(function(){
 
     function fetchProducts(enteredArtikuls = []) {
         $.ajax({
-            url: 'product-info.php',
+            url: 'data/product-info.php',
             type: 'GET',
             success: function(response) {
                 const preces_info = JSON.parse(response);

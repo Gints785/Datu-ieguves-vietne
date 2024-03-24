@@ -1,5 +1,5 @@
 <?php
-require("connectDB.php");
+require("../connectDB.php");
 
 // Check if artikuls exists in web_preces_db
 $sql_web_preces_db = "SELECT COUNT(*) FROM web_preces_db WHERE artikuls = $1";

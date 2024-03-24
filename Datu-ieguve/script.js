@@ -14,6 +14,7 @@ $(document).ready(function(){
     $(document).on('click', '#Reset_price_selection', function() {
     
         fetchpreces();
+        $('#artikuls').val('');
     });
     
 
@@ -22,7 +23,7 @@ $(document).ready(function(){
 
     function fetchpreces() {
         $.ajax({
-            url: 'preces-info.php',
+            url: 'data/preces-info.php',
             type: 'GET',
             success: function (response) {
                 const preces_info = JSON.parse(response);
@@ -44,7 +45,7 @@ $(document).ready(function(){
         }
         
         $.ajax({
-            url: 'preces-info.php',
+            url: 'data/preces-info.php',
             type: 'GET',
             success: function (response) {
                 const preces_info = JSON.parse(response);
@@ -68,23 +69,24 @@ $(document).ready(function(){
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
         const sevenDaysAgoString = sevenDaysAgo.toISOString().slice(0, 10);
-        console.log("Today's Date:", today); 
+        //console.log("Today's Date:", today); 
         
         preces_info.forEach(preces_info => {
-            const isPriceStable = preces_info.date_barbora_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_barbora));
-            console.log("Date from Server: barbora_string7", sevenDaysAgoString);
-            console.log("Date from Server: barbora_date7", preces_info.date_barbora_7);
-            console.log("Date from Server: barbora", preces_info.date_barbora);
+            const isPriceStable_barbora = preces_info.date_barbora_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_barbora));
+            const isPriceStable_lats = preces_info.date_lats_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_lats));
+            //console.log("Date from Server: barbora_string7", sevenDaysAgoString);
+            //console.log("Date from Server: barbora_date7", preces_info.date_barbora_7);
+            //console.log("Date from Server: barbora", preces_info.date_barbora);
             template += `
                 <tr>
                     <td>${preces_info.artikuls}</td>
                     <td>${preces_info.nosaukums}</td>
                     <td style="text-align:center;">${preces_info.cena}</td>
-                    <td class="hoverable-number" style="text-align:center; position: relative; ${isPriceStable ? 'background-color: yellow;' : ''}" data_ID="${preces_info.artikuls}" data-type="cena_barbora">
+                    <td class="hoverable-number" style="text-align:center; position: relative; ${isPriceStable_barbora ? 'background-color: yellow;' : ''}" data_ID="${preces_info.artikuls}" data-type="cena_barbora">
                         <a href="#"><span class="product-data hoverable-pointer" >${preces_info.date_barbora === today ? preces_info.cena_barbora : (preces_info.cena_barbora ? `<span class="underline">${preces_info.cena_barbora}</span>` : '')}</span></a>
                     </td>
-                    <td class="hoverable-number" style="text-align:center; position: relative; ${isPriceStable ? 'background-color: yellow;' : ''}" data_ID="${preces_info.artikuls}" data-type="cena_lats">
-                        <span class="hoverable-pointer">${preces_info.date_lats === today ? preces_info.cena_lats : (preces_info.cena_lats ? `<span class="underline">${preces_info.cena_lats}</span>` : '')}</span>
+                    <td class="hoverable-number" style="text-align:center; position: relative; ${isPriceStable_lats ? 'background-color: yellow;' : ''}" data_ID="${preces_info.artikuls}" data-type="cena_lats">
+                        <a href="#"><span class="product-data hoverable-pointer">${preces_info.date_lats === today ? preces_info.cena_lats : (preces_info.cena_lats ? `<span class="underline">${preces_info.cena_lats}</span>` : '')}</span></a>
                     </td>
                     <td class="hoverable-number" style="text-align:center; position: relative;">
                         <span class="hoverable-pointer">${preces_info.date_citro === today ? preces_info.cena_citro : (preces_info.cena_citro ? `<span class="underline">${preces_info.cena_citro}</span>` : '')}</span>
@@ -127,21 +129,23 @@ $(document).ready(function(){
         const artikuls = $(element).attr('data_ID')
         const dataType = $(element).attr('data-type');
       
-        $.post('preces-info.php',{artikuls},(response) => {
+        $.post('data/preces-info.php',{artikuls},(response) => {
             
-            $('#artikuls').val(artikuls)
+           
             $('#data_ID').val(artikuls)
 
 
             switch (dataType) {
                 case 'cena_barbora':
                     $('#data_WEB').val("barbora_history");
+                    $('#data_WEB_2').val("barbora");
                     break;
                 case 'cena_lats':
-                    $('#data_WEB').val("lat");
+                    $('#data_WEB').val("lats_history");
+                    $('#data_WEB_2').val("lats");
                     break;
                 case 'cena_rimi':
-                    $('#data_WEB').val("rim");
+                    $('#data_WEB').val("rimi");
                     break;
                 // Add more cases as needed for other data types
                 default:
@@ -165,8 +169,9 @@ $(document).ready(function(){
     function drawChart() {
         var dataID = $('#data_ID').val();
         var dataWEB = $('#data_WEB').val();
+        var dataWEB_2 = $('#data_WEB_2').val();
     
-        console.log(dataID, dataWEB); 
+        console.log(dataID, dataWEB, dataWEB_2); 
         // Load the Visualization API and the linechart package.
         google.charts.load('current', { 'packages': ['corechart'] });
     
@@ -176,9 +181,9 @@ $(document).ready(function(){
         function fetchData() {
             // Make AJAX request to history-info.php
             $.ajax({
-                url: 'history-info.php',
+                url: 'data/history-info.php',
                 type: 'GET',
-                data: { dataID: dataID, dataWEB: dataWEB },
+                data: { dataID: dataID, dataWEB: dataWEB, dataWEB_2: dataWEB_2 },
                 success: function (data) {
                     console.log('Data received from history-info.php:', data); // Log the received data
                 
@@ -197,13 +202,31 @@ $(document).ready(function(){
                     dataTable.addColumn('number', 'Cena');
                 
                     // Populate DataTable with the received data
-                    jsonData.forEach(function(entry) {
-                        if (entry[1] !== null) { // Check if price data is available
-                            var datetime = new Date(entry[0]); // Parse timestamp string into a Date object
-                            dataTable.addRow([datetime, entry[1]]);
-                        }
+                    jsonData.filter(entry => entry.length === 2 && typeof entry[1] === 'number')
+                    .forEach(function(entry) {
+                        var datetime = new Date(entry[0]); // Parse timestamp string into a Date object
+                        var price = entry[1]; // Get the price value from the first array element
+                        dataTable.addRow([datetime, price]);
                     });
+
+                    var secondNestedArray = jsonData[0];
                 
+                    // Extract elements of the second nested array
+                    var number = secondNestedArray[0]; // Get the first element of the array
+                    var url = secondNestedArray[1]; // Get the second element of the array
+
+                    // Output both the number and the URL simultaneously
+                    if (number !== 0) {
+                        document.getElementById('akcijaContainer').textContent = number;
+                    }else{
+                        document.getElementById('akcijaContainer').textContent = ""; 
+                    }
+                   
+                    var urlContainer = document.getElementById('urlContainer');
+                    urlContainer.innerHTML = '<a href="' + url + '" target="_blank">' + url + '</a>';
+                                        
+                 
+                            
                     // Set chart options
                     var options = {
                         curveType: 'function',
@@ -230,12 +253,17 @@ $(document).ready(function(){
                             }
                         }
                     };
+
+                    
                     
                 
                     // Instantiate and draw the chart
                     var chart = new google.visualization.LineChart(document.getElementById('chartContainer'));
                 
                     chart.draw(dataTable, options);
+                    
+
+                    
                 },
                 error: function (xhr, status, error) {
                     console.error('Error fetching data:', error);

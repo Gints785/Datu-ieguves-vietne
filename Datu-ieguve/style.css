@@ -15,7 +15,7 @@
     
 }
 body{
-    padding-left: 10rem;
+    padding-left: 11rem;
     overflow: hidden;
     height:100%;
 }
@@ -148,6 +148,9 @@ header .navbar a:hover {
     transform: scale(1.1); 
    
 }
+
+
+
 .button-container {
     margin-top: 1rem; 
     display: flex;
@@ -264,6 +267,10 @@ width: 95%;
     background:#18a758; 
     
 }
+
+
+
+
 
 .info-container{
 
@@ -635,6 +642,11 @@ transform: translateY(-1rem);
 
 
 
+    
+        
+        
+
+
     @keyframes blinker{
         50% {
             opacity: .4;
@@ -785,6 +797,8 @@ background: var(--secondcolor);
       
     }
 
+  
+
     .title .btn{
       padding: .5rem 1rem;
     
@@ -808,10 +822,10 @@ background: var(--secondcolor);
     }
     table{
        
-        width: 99% ;
+        width: 100%;
         border-collapse: none;
         border-spacing:0;
-        padding-left: 1rem;
+       
  
     }
 
@@ -858,6 +872,7 @@ background: var(--secondcolor);
         grid-template-columns: 30% 70%;
         align-items: center;
        }
+
 
 
 

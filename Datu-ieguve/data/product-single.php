@@ -1,6 +1,6 @@
 <?php
 
-    require("connectDB.php");
+    require("../connectDB.php");
 
     if(isset($_POST['id'])){
         $id = pg_escape_string($savienojums, $_POST['id']);

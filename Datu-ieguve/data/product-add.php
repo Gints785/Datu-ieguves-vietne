@@ -1,5 +1,5 @@
 <?php
-require("connectDB.php");
+require("../connectDB.php");
 
 if (isset($_POST['id']) && isset($_POST['artikuls'])) {
     $id = $_POST['id'];

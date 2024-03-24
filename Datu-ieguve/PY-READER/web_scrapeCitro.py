@@ -2,12 +2,16 @@ import pandas as pd
 from selenium import webdriver
 from datetime import datetime
 import re
+import time
 import math
 import psycopg2
 from selenium.webdriver.common.by import By
 import logging
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+
+# Add a logger
+logger = logging.getLogger(__name__)
 
 # Read data from Excel file
 conn = psycopg2.connect(
@@ -19,10 +23,12 @@ conn = psycopg2.connect(
 )
 
 # Read data from the PostgreSQL database
-query = "SELECT \"Artikuls\", \"Nosaukums\", \"Barbora\", \"Lats\", \"Citro\", \"Rimi\" FROM web_preces_db WHERE \"Citro\" IS NOT NULL AND TRIM(\"Citro\") <> ''"
+query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"citro\" IS NOT NULL AND TRIM(\"citro\") <> ''"
 cursor = conn.cursor()
 cursor.execute(query)
+  
 
+    
 # Fetch the data and create a DataFrame
 columns = [desc[0] for desc in cursor.description]
 data = cursor.fetchall()
@@ -36,34 +42,38 @@ conn.close()
 driver = webdriver.Firefox()
 
 # Define the base URLs
-#base_urls = [
-    "https://ventspils.citro.lv/product-category/alkoholiskie-dzerieni/",
-    "https://ventspils.citro.lv/product-category/augli-darzeni/",
-    "https://ventspils.citro.lv/product-category/berniem/",
-    "https://ventspils.citro.lv/product-category/dzerieni/",
-    "https://ventspils.citro.lv/product-category/dzivniekiem/",
-    "https://ventspils.citro.lv/product-category/galas-zivju-produkti/",
-    "https://ventspils.citro.lv/product-category/garsvielas/",
-    "https://ventspils.citro.lv/product-category/graudu-izstradajumi/",
-    "https://ventspils.citro.lv/product-category/higienas-preces/",
-    "https://ventspils.citro.lv/product-category/kafija-teja/",
-    "https://ventspils.citro.lv/product-category/konditoreja/",
-    "https://ventspils.citro.lv/product-category/konservejumi/",
-    "https://ventspils.citro.lv/product-category/kulinarija/",
-    "https://ventspils.citro.lv/product-category/maizes-izstradajumi-2/",
-    "https://ventspils.citro.lv/product-category/piena-produkti-olas/",
-    "https://ventspils.citro.lv/product-category/saimniecibas-preces/",
-    "https://ventspils.citro.lv/product-category/saldejums/",
-    "https://ventspils.citro.lv/product-category/saldeti-produkti/",
-    "https://ventspils.citro.lv/product-category/saldumi-uzkodas/",
-    "https://ventspils.citro.lv/product-category/sausas-zupas-buljoni/"
+base_urls = [
+    "https://rezekne.citro.lv/product-category/alkoholiskie-dzerieni/",
+    #"https://ventspils.citro.lv/product-category/augli-darzeni/",
+    #"https://ventspils.citro.lv/product-category/berniem/",
+    #"https://ventspils.citro.lv/product-category/dzerieni/",
+    #"https://ventspils.citro.lv/product-category/dzivniekiem/",
+    #"https://ventspils.citro.lv/product-category/galas-zivju-produkti/",
+    #"https://ventspils.citro.lv/product-category/garsvielas/",
+    #"https://ventspils.citro.lv/product-category/graudu-izstradajumi/",
+    #"https://ventspils.citro.lv/product-category/higienas-preces/",
+    #"https://ventspils.citro.lv/product-category/kafija-teja/",
+    #"https://ventspils.citro.lv/product-category/konditoreja/",
+    #"https://ventspils.citro.lv/product-category/konservejumi/",
+    #"https://ventspils.citro.lv/product-category/kulinarija/",
+    #"https://ventspils.citro.lv/product-category/maizes-izstradajumi-2/",
+    #"https://ventspils.citro.lv/product-category/piena-produkti-olas/",
+    #"https://ventspils.citro.lv/product-category/saimniecibas-preces/",
+    #"https://ventspils.citro.lv/product-category/saldejums/",
+    #"https://ventspils.citro.lv/product-category/saldeti-produkti/",
+    #"https://ventspils.citro.lv/product-category/saldumi-uzkodas/",
+    #"https://ventspils.citro.lv/product-category/sausas-zupas-buljoni/"
     # Add other URLs as needed
 ]
 
+
 found_product_names = []
 found_product_prices = []
-found_product_artikuls = []  # Add a new list to store Artikuls
+found_product_artikuls = []
 found_product_dates = []
+found_product_discount = []
+found_product_url = []
+found_product_dates_7 = []
 
 total_products_not_found = 0
 max_pages_per_category = 100
@@ -73,30 +83,27 @@ total_products_found_count = 0
 today_date = datetime.now().strftime("%d/%m/%y")
 
 # Extract Artikuls from the Excel file
-product_names_in_db = df['Citro'].tolist()
-artikuls_in_db = df['Artikuls'].tolist()
+product_names_in_db = df['citro'].tolist()
+artikuls_in_db = df['artikuls'].tolist()
 
 def is_nan_or_empty(value):
     return isinstance(value, float) and math.isnan(value)
 
 for base_url in base_urls:
-    title_match = re.search(r"https://ventspils.citro.lv/([^/]+)", base_url)
+    title_match = re.search(r"https://rezekne.citro.lv/([^/]+)", base_url)
     title = title_match.group(1) if title_match else "Unknown"
 
     products_not_found = 0
     products_found_count = 0
     button_selector = "input.age_input"
     combined_selector = 'ins span.woocommerce-Price-amount.amount bdi, span.price > span.woocommerce-Price-amount.amount bdi'
-    
+    page_number = 0
 
     # Start the loop from 1, handle page 0 separately
-    for page_number in range(1, max_pages_per_category + 1):
-        # Adjust the URL construction based on the page_number
-        if page_number == 1:
-            url = base_url  # No need for "page/1" for the first page
-        else:
-            url = f"{base_url}page/{page_number}/"
-
+    while True:
+        url = f"{base_url}page/{page_number}/"
+        driver.get(url)
+        
         try:
             button = driver.find_element(By.CSS_SELECTOR, button_selector)
             button.click()
@@ -104,25 +111,35 @@ for base_url in base_urls:
         except:
             pass
 
+
+      
         driver.get(url)
         price_elements = driver.find_elements(By.CSS_SELECTOR, combined_selector)
         if not price_elements:
             break
 
-   
+
+        page_number += 1    
         
 
         scraped_product_names = [name_element.text.strip() for name_element in driver.find_elements(By.CSS_SELECTOR, "h2.woocommerce-loop-product__title")]
-
+       
         # Extract prices directly from the parent of the price element using a more specific CSS selector
         scraped_product_prices = []
         for price_element in price_elements:
             parent_element = price_element.find_element(By.XPATH, "./..")  # Get the parent element
             scraped_product_prices.append(parent_element.text.strip().replace('€', ''))
-
+            
         for scraped_name, scraped_price in zip(scraped_product_names, scraped_product_prices):
             scraped_name_cleaned = scraped_name.lower()
-
+                # Logging outside the loop
+        
+            logger.info(f'Products found in category "{title}" on page {page_number}: {products_found_count}')
+            logger.info(f'Total products names: {found_product_names}')
+            logger.info(f'Total products prices: {found_product_prices}')
+            logger.info(f'=================================================')
+               
+          
             # Check if the scraped name exactly matches any product name in the Excel file
             matching_products = [
                 (product_name, artikul)
@@ -141,12 +158,15 @@ for base_url in base_urls:
                 )
                 products_found_count += 1
 
+               
+    
+
     print(f'Products found in category "{title}": {products_found_count}')
     total_products_not_found += products_not_found
     total_products_found_count += products_found_count
 
 # ... (rest of the code remains unchanged)
-
+   
 driver.quit()
 
 print(f'===========================================================')

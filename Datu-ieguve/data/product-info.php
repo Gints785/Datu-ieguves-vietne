@@ -1,5 +1,5 @@
 <?php
-require('connectDB.php');
+require('../connectDB.php');
 
 
 $select_product_SQL = "SELECT * FROM web_preces_db ORDER BY artikuls";

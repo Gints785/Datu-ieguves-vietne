@@ -1,5 +1,5 @@
 <?php
-require("connectDB.php");
+require("../connectDB.php");
 
 
 $select_data_SQL = 'SELECT * FROM "data" ORDER BY "artikuls"';

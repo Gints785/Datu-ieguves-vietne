@@ -145,6 +145,7 @@ for base_url in base_urls:
     total_products_not_found += products_not_found
     total_products_found_count += products_found_count
 
+   
 # ... (rest of the code remains unchanged)
 
 driver.quit()
