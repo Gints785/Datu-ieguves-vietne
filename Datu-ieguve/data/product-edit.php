@@ -16,7 +16,7 @@ if (isset($_POST['id'])) {
         citro = '$p_citro',
         rimi = '$p_rimi',
         alkoutlet = '$p_alkoutlet' 
-        WHERE preceid = $id";
+        WHERE id = $id";
     $update_web_result = pg_query($savienojums, $update_web_SQL);
 
     if (!$update_web_result) {

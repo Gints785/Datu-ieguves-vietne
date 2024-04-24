@@ -4,10 +4,7 @@ let header = document.querySelector('header')
 
 
 
-window.onscroll = function(){
-    menu.classList.remove('fa-times')
-    header.classList.remove('active')  
-}
+
 
 
 if(window.history.replaceState){

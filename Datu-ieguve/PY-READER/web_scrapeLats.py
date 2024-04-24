@@ -73,6 +73,7 @@ for base_url in base_urls:
         price_elements = driver.find_elements("css selector", "div.-oPrice")
 
         product_elements = driver.find_elements("css selector", "div.-oProduct")
+      
         product_data = []
         product_url = []
         for url_element in product_elements:
@@ -183,10 +184,10 @@ try:
                 # Price has changed, update both price and date
                 update_main_table_query = f"""
                     UPDATE {table_name}
-                    SET "lats_cena" = %s, "lats_datums" = %s, "lats_datums_7" = %s, lats_akcija = %s
+                    SET "lats_nosaukums" = %s, "lats_cena" = %s, "lats_datums" = %s, "lats_datums_7" = %s, lats_akcija = %s, lats_url = %s
                     WHERE "artikuls" = CAST(%s AS text)
                 """
-                cursor.execute(update_main_table_query, (values[found_products_df.columns.get_loc('lats_cena')], values[found_products_df.columns.get_loc('lats_datums')],values[found_products_df.columns.get_loc('lats_datums_7')],values[found_products_df.columns.get_loc('lats_akcija')], values[found_products_df.columns.get_loc('artikuls')]))
+                cursor.execute(update_main_table_query, ( values[found_products_df.columns.get_loc('lats_nosaukums')], values[found_products_df.columns.get_loc('lats_cena')], values[found_products_df.columns.get_loc('lats_datums')],values[found_products_df.columns.get_loc('lats_datums_7')],values[found_products_df.columns.get_loc('lats_akcija')],values[found_products_df.columns.get_loc('lats_url')], values[found_products_df.columns.get_loc('artikuls')]))
 
                 # Insert old row into history table
                 insert_history_query = f"""

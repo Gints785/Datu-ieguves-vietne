@@ -11,7 +11,7 @@ if (isset($_POST['id']) && isset($_POST['artikuls'])) {
     $p_alkoutlet = isset($_POST['alkoutlet']) ? $_POST['alkoutlet'] : '';
 
 
-    $select_nosaukums_SQL = "SELECT nosaukums FROM data WHERE artikuls = '$p_artikuls'";
+    $select_nosaukums_SQL = "SELECT nosaukums FROM preces WHERE artikuls = '$p_artikuls'";
     $select_nosaukums_result = pg_query($savienojums, $select_nosaukums_SQL);
 
     if ($select_nosaukums_result && pg_num_rows($select_nosaukums_result) > 0) {

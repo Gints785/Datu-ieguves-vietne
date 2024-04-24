@@ -4,7 +4,7 @@
 
     if(isset($_POST['id'])){
         $id = pg_escape_string($savienojums, $_POST['id']);
-        $select_pieteikums_SQL = "SELECT * FROM web_preces_db WHERE preceid = $id";
+        $select_pieteikums_SQL = "SELECT * FROM web_preces_db WHERE id = $id";
         $select_pieteikums_result = pg_query($savienojums, $select_pieteikums_SQL);
 
         if(!$select_pieteikums_result){
@@ -21,7 +21,7 @@
             'citro' => $row['citro'],
             'rimi' => $row['rimi'],
             'alkoutlet' => $row['alkoutlet'],
-            'id' => $row['preceid']
+            'id' => $row['id']
     
         );
     }

@@ -16,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"defer> </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
-    
+    <script src="script-database.js" defer></script>
     <script src="script.js" defer></script>
 
 </head>
@@ -29,15 +29,54 @@
      <div class="title-reader"  >
 
         <div class="ind-container">
-       
-    
-        <button class="btn" id="">Palaist datu lasītāju</button>
+        <form action="">
+          
+            
+        </form>
+
+        <button class="btn"  id="new">Palaist datu lasītāju</button>
         
-    
+        
         
 
 
     </div>
+
+ 
+
+
+        <div class="modal_conform">
+            <div class="conform">
+              
+                <h4 id="productFormHeading">Vai tiešām vēlies palaist datu lāsītāju?</h4>
+                <form id="checkGroup">
+
+                    <div class="fromElements" id="filter" >
+                        <input class="check" type="checkbox" id="" name="filter" value="" checked>
+                        <label > Barbora</label>
+                        <input class="check" type="checkbox" id="" name="filter" value="" checked>
+                        <label  > Lats</label>
+                        <input class="check" type="checkbox" id="" name="filter" value="" checked>
+                        <label > Citro</label>
+                        <input class="check" type="checkbox" id="" name="filter" value="" checked>
+                        <label > Rimi</label>
+                        <input class="check" type="checkbox" id="" name="filter" value="" checked>
+                        <label > Alkoutlet</label>
+
+
+
+                       
+                    </div>
+                    <div class="buttons">
+                        <button class="btn_2" name="submit">Jā</button>
+                        <button class="btn_2" name="cancel">Nē</button>
+                    </div>
+                </form>
+            </div>
+    </div>
+
+    
+
 
 </body>
 </html>

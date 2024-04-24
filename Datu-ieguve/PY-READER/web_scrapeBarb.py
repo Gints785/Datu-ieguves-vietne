@@ -154,7 +154,6 @@ for base_url in base_urls:
                 href_attribute = url_element.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
                 product_url.append(href_attribute)
     
-  
              
               
 
@@ -228,7 +227,7 @@ logger.info(f'Total products found: {total_products_found_count}')
 logger.info(f'===========================================================')
 
 # Create a DataFrame for found products with Product Name, Price, and Artikuls
-found_products_df = pd.DataFrame({'barbora_nosaukums': found_product_names, 'barbora_cena': found_product_prices, 'artikuls': found_product_artikuls, 'barbora_datums': [today_date_str] * len(found_product_names), 'barbora_akcija': found_product_discount,'barbora_url': found_product_url, 'barbora_datums_7': [today_date_str] * len(found_product_names) })
+found_products_df = pd.DataFrame({'barbora_nosaukums': found_product_names, 'barbora_cena': found_product_prices, 'barbora_datums': [today_date_str] * len(found_product_names), 'barbora_datums_7': [today_date_str] * len(found_product_names), 'barbora_akcija': found_product_discount,'barbora_url': found_product_url, 'artikuls': found_product_artikuls })
 print(found_products_df)  
 # Establish a connection to the PostgreSQL database
 try:
@@ -255,10 +254,13 @@ try:
     # Iterate through the rows of the DataFrame and insert or update data in the database tables
     for index, row in found_products_df.iterrows():
     # Convert date to string format before insertion into the database
+        
         values = tuple(str(row[column]) if column == 'barbora_cena' else row[column] for column in found_products_df.columns)
         values = list(values)  # Convert tuple to list to modify values
         values[found_products_df.columns.get_loc('barbora_datums_7')] = row['barbora_datums']  # Assign value from barbora_datums
         values = tuple(values)
+
+
         # Check if the product exists in the main table
         check_product_query = f"SELECT * FROM {table_name} WHERE \"artikuls\" = CAST(%s AS text)"
         cursor.execute(check_product_query, (values[found_products_df.columns.get_loc('artikuls')],))
@@ -278,10 +280,10 @@ try:
                 # Price has changed, update both price and date
                 update_main_table_query = f"""
                     UPDATE {table_name}
-                    SET "barbora_cena" = %s, "barbora_datums" = %s, "barbora_datums_7" = %s, barbora_akcija = %s
+                    SET "barbora_nosaukums" = %s, "barbora_cena" = %s, "barbora_datums" = %s, "barbora_datums_7" = %s, "barbora_akcija" = %s, "barbora_url" = %s
                     WHERE "artikuls" = CAST(%s AS text)
                 """
-                cursor.execute(update_main_table_query, (values[found_products_df.columns.get_loc('barbora_cena')], values[found_products_df.columns.get_loc('barbora_datums')],values[found_products_df.columns.get_loc('barbora_datums_7')],values[found_products_df.columns.get_loc('barbora_akcija')], values[found_products_df.columns.get_loc('artikuls')]))
+                cursor.execute(update_main_table_query, (values[found_products_df.columns.get_loc('barbora_nosaukums')], values[found_products_df.columns.get_loc('barbora_cena')], values[found_products_df.columns.get_loc('barbora_datums')],values[found_products_df.columns.get_loc('barbora_datums_7')],values[found_products_df.columns.get_loc('barbora_akcija')],values[found_products_df.columns.get_loc('barbora_url')], values[found_products_df.columns.get_loc('artikuls')]))
 
                 # Insert old row into history table
                 insert_history_query = f"""
@@ -332,6 +334,7 @@ try:
             except Exception as e:
                 logger.error(f"Error inserting into {history_table_name}: {e}")
                 logger.error("Values causing the issue: %s", values)
+                
 
 
     conn.commit()

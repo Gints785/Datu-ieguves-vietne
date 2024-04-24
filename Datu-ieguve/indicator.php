@@ -7,9 +7,7 @@
 
 <div class="status open">Barbora</div>
 <div class="ind-info">     
-                <div>Active</div>
-                <div>In Progress</div>
-                <div>Dead</div> 
+                <div>Aktīvs</div>
 </div>  
 <div class="status dead">Lats</div>
 <div class="ind-info">     

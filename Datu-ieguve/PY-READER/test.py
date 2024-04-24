@@ -6,7 +6,7 @@ import time
 driver = webdriver.Firefox()
 
 # URL of the webpage you want to scrape
-url = 'https://www.barbora.lv/piena-produkti-un-olas'  # Replace with the actual URL
+url = 'https://alkoutlet.lv/vins-un-vina-dzerieni.html/'  # Replace with the actual URL
 
 # Open the webpage
 driver.get(url)
@@ -15,15 +15,16 @@ driver.get(url)
 time.sleep(1)
 
 # Specify the CSS selectors for the two sets of elements
-selector1 = '.tw-flex.tw-flex-shrink-0.tw-flex-row.tw-mr-1 span.tw-text-b-paragraph-xs.tw-font-bold.tw-text-gray-400.lg\\:tw-text-b-paragraph-sm.tw-line-through.tw-decoration-b-red-500'
-cents_selector = '.tw-flex.tw-flex-shrink-0.tw-flex-row.tw-mr-1 span.tw-text-b-paragraph-xs.tw-font-bold.tw-text-gray-400.lg\\:tw-text-b-paragraph-sm'
-
+selector1 = 'span span.price'
+cents_selector = 'span span.price'
 
 try:
     # Find all elements with the specified selectors
     elements1 = driver.find_elements(By.CSS_SELECTOR, selector1)
     cents_elements = driver.find_elements(By.CSS_SELECTOR, cents_selector)
-    
+
+    print(f"{elements1}")
+    print(f"{cents_elements}")
     # Check if elements are found
     if elements1 and cents_elements:
         print(f"Found {len(elements1)} elements for {selector1}")
@@ -33,16 +34,25 @@ try:
         for element1, cents_element in zip(elements1, cents_elements):
             value1 = element1.text.strip()
             cents_value = cents_element.text.strip()
-            
-            # Remove euro symbol if present in cents_value
-            cents_value = cents_value.replace('€', '')
-            
-            # Check if cents_value contains the euro symbol
-            if '€' in cents_value:
-                continue  # Skip the value if it contains the euro symbol
-                
-            print("Extracted akcija:", value1)
-         
+
+            # Extract whole and decimal parts
+            matches1 = value1.split()
+
+            if len(matches1) >= 1:
+                whole_part = matches1[0]
+
+                # Check if there's at least one element in cents
+                if len(cents_value) >= 1:
+                    decimal_part = cents_value
+
+                    # Combine the values and print the result
+                    combined_value = f"{whole_part}.{decimal_part}"
+                    print("Extracted Text:", combined_value)
+                else:
+                    # If cents are missing, print only the whole part
+                    print("Extracted Text:", whole_part)
+            else:
+                print("No matches found in element1")
 
     else:
         print("No elements found with the specified selectors.")

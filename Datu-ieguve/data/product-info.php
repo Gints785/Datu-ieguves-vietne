@@ -1,6 +1,39 @@
 <?php
 require('../connectDB.php');
 
+$select_preces_SQL = "SELECT * FROM preces WHERE stop_prece = false";
+$select_preces_result = pg_query($savienojums, $select_preces_SQL);
+
+if(!$select_preces_result){
+    die("Kļūda!".pg_last_error($savienojums));
+}
+
+while($row = pg_fetch_assoc($select_preces_result)){
+    // Check if the record with the same artikuls exists in web_preces_db
+    $select_web_preces_SQL = "SELECT * FROM web_preces_db WHERE artikuls = '{$row['artikuls']}'";
+    $select_web_preces_result = pg_query($savienojums, $select_web_preces_SQL);
+
+    if(!$select_web_preces_result){
+        die("Kļūda!".pg_last_error($savienojums));
+    }
+
+    // If the record with the same artikuls doesn't exist in web_preces_db, insert it
+    if(pg_num_rows($select_web_preces_result) == 0){
+        $insert_SQL = "INSERT INTO web_preces_db (artikuls, nosaukums, barbora, lats, citro, rimi, alkoutlet) 
+        VALUES ('{$row['artikuls']}', '{$row['nosaukums']}', '', '', '', '', '')";
+        $insert_result = pg_query($savienojums, $insert_SQL);
+
+        if(!$insert_result){
+            die("Insert error: " . pg_last_error($savienojums));
+        }
+    }
+}
+
+
+
+
+
+
 
 $select_product_SQL = "SELECT * FROM web_preces_db ORDER BY artikuls";
 $select_product_result = pg_query($savienojums, $select_product_SQL);
@@ -18,7 +51,7 @@ while($row = pg_fetch_assoc($select_product_result)){
         'citro' => $row['citro'],
         'rimi' => $row['rimi'],
         'alkoutlet' => $row['alkoutlet'],
-        'id' => $row['preceid']
+        'id' => $row['id']
       
 
     );

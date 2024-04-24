@@ -24,9 +24,15 @@ switch ($dataWEB) {
     case 'lats_history':
         $columnsToSelect = "lats_datums, lats_cena";
         break;
-    case 'rim':
-        // Assuming default columns are already set for 'rim'
+    case 'citro_history':
+        $columnsToSelect = "citro_datums, citro_cena";
+        break;        
+    case 'rimi_history':
+        $columnsToSelect = "rimi_datums, rimi_cena";      
         break;
+    case 'alkoutlet_history':
+        $columnsToSelect = "alkoutlet_datums, alkoutlet_cena";      
+        break;    
     default:
         // Handle default case or error condition
         break;
@@ -34,14 +40,20 @@ switch ($dataWEB) {
 
 switch ($dataWEB_2) {
     case 'barbora':
-        $columnsToSelect_2 = "barbora_akcija, barbora_url";
+        $columnsToSelect_2 = "barbora_nosaukums ,barbora_akcija, barbora_url, barbora_datums, barbora_cena";
         break;
     case 'lats':
-        $columnsToSelect_2 = "lats_akcija, lats_url";
+        $columnsToSelect_2 = "lats_nosaukums ,lats_akcija, lats_url,lats_datums, lats_cena";
         break;
-    case 'rim':
-        // Assuming default columns are already set for 'rim'
+    case 'citro':
+        $columnsToSelect_2 = "citro_nosaukums ,citro_akcija, citro_url,citro_datums, citro_cena";
+        break;    
+    case 'rimi':
+        $columnsToSelect_2 = "rimi_nosaukums ,rimi_akcija, rimi_url, rimi_datums, rimi_cena";
         break;
+    case 'alkoutlet':
+        $columnsToSelect_2 = "alkoutlet_nosaukums ,alkoutlet_akcija, alkoutlet_url, alkoutlet_datums, alkoutlet_cena";
+        break;    
     default:
         // Handle default case or error condition
         break;
@@ -80,68 +92,102 @@ if ($result) {
                 case 'barbora_datums':
                 case 'lats_datums':
                 case 'citro_datums':
-                    // Convert the timestamp to a PHP date object
+                case 'rimi_datums':
+                case 'alkoutlet_datums':
                     $date = new DateTime($columnValue);
-                    // Format the date as needed and add it to the formatted data array
                     $formattedData[] = $date->format('Y-m-d H:i:s');
                     break;
                 case 'barbora_cena':
                 case 'lats_cena':
                 case 'citro_cena':
-                    // Convert to float and add it to the formatted data array
+                case 'rimi_cena':
+                case 'alkoutlet_cena':
+
                     $formattedData[] = (float)$columnValue;
                     break;
                 default:
-                    // For other columns, just add the value as it is
                     $formattedData[] = $columnValue;
                     break;
             }
         }
 
-        // Add the formatted data for this row to the main data array
+     
         $data[] = $formattedData;
     }
 } else {
-    // Handle error if query fails
+  
     echo "Error executing query: " . pg_last_error($savienojums);
 }
 
 if ($result2) {
     while ($row = pg_fetch_assoc($result2)) {
-        // Create an array to hold the formatted data for this row
-        $formattedData = array();
+     
+        $formattedData_2 = array();
 
-        // Iterate over each column in the row
+       
         foreach ($row as $columnName => $columnValue) {
-            // You may need to adjust the column names based on your second query
+       
             switch ($columnName) {
                 case 'barbora_akcija':
                 case 'lats_akcija':
-                    // Format or process data as needed and add it to the formatted data array
-                    $formattedData[] = (float) $columnValue;
+                case 'citro_akcija':    
+                case 'rimi_akcija':
+                case 'alkoutlet_akcija':
+                
+                    $formattedData_2[] = (float) $columnValue;
                     break;
                 case 'barbora_url':
                 case 'lats_url':
-                    // Assuming URLs are directly usable
-                    $formattedData[] = $columnValue;
+                case 'citro_url':
+                case 'rimi_url':
+                case 'alkoutlet_url':
+                  
+                    $formattedData_2[] = $columnValue;
                     break;
+                case 'barbora_nosaukums':
+                case 'lats_nosaukums': 
+                case 'citro_nosaukums':         
+                case 'rimi_nosaukums':
+                case 'alkoutlet_nosaukums':                               
+                    $formattedData_2[] = $columnValue;
+                    break;    
+                case 'barbora_cena':
+                case 'lats_cena':
+                case 'citro_cena':       
+                case 'rimi_cena':    
+                case 'alkoutlet_cena':                         
+                    $formattedData_2[] = (float) $columnValue;
+                    break;   
+                case 'barbora_datums':
+                case 'lats_datums':   
+                case 'citro_datums':    
+                case 'rimi_datums':   
+                case 'alkoutlet_datums':      
+                    
+                    $date2 = new DateTime($columnValue);
+                    $formattedData_2[] = $date2->format('d.m.Y');
+           
+                    break;               
                 default:
-                    // For other columns, just add the value as it is
-                    $formattedData[] = $columnValue;
+                
+                    $formattedData_2[] = $columnValue;
                     break;
             }
         }
 
-        // Add the formatted data for this row to the main data array
-        $data[] = $formattedData;
+       
+        $data_info[] = $formattedData_2;
     }
 } else {
-    // Handle error if query fails
     echo "Error executing the second query: " . pg_last_error($savienojums);
 }
-// Close the PostgreSQL connection
 pg_close($savienojums);
 
-// Return data as JSON
-echo json_encode($data);
+$response = array(
+    'data' => $data,
+    'data_info' => $data_info
+);
+
+// Encode the combined data as JSON and echo it
+echo json_encode($response);
 ?>
