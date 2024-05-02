@@ -1,39 +1,24 @@
 <?php
 require("../connectDB.php");
 
-
-
-$page = isset($_GET['page']) ? intval($_GET['page']) : 1; // Current page number
-$batch_size = isset($_GET['batch_size']) ? intval($_GET['batch_size']) : 20; // Number of rows per batch
-
-// Calculate the offset based on the current page and batch size
-$offset = ($page - 1) * $batch_size;
-
 $select_data_SQL = "
     SELECT p.* 
     FROM preces p
     LEFT JOIN web_preces_db w ON p.artikuls = w.artikuls
     WHERE p.stop_prece = false 
     AND (
-        (w.barbora <> '') OR
-        (w.lats <> '') OR
-        (w.citro <> '') OR
-        (w.rimi <> '') OR
-        (w.alkoutlet <> '')
+        (w.barbora IS NOT NULL AND w.barbora <> '') OR
+        (w.lats IS NOT NULL AND w.lats <> '') OR
+        (w.citro IS NOT NULL AND w.citro <> '') OR
+        (w.rimi IS NOT NULL AND w.rimi <> '') OR
+        (w.alkoutlet IS NOT NULL AND w.alkoutlet <> '')
     )
-    ORDER BY p.id LIMIT $batch_size OFFSET $offset";
-   
+    ORDER BY p.artikuls";
 $select_data_result = pg_query($savienojums, $select_data_SQL);
 
 if(!$select_data_result){
     die("Kļūda!".pg_last_error($savienojums));
 }
-
-
-
-
-
-
 
 $data = array(); 
 while($row = pg_fetch_assoc($select_data_result)){
@@ -86,9 +71,6 @@ while($row = pg_fetch_assoc($select_data_result)){
     $alkoutlet_akcija = isset($alkoutlet_row['alkoutlet_akcija']) ? $alkoutlet_row['alkoutlet_akcija'] : '';
     $date_alkoutlet = isset($alkoutlet_row['alkoutlet_datums']) ? date('Y-m-d', strtotime($alkoutlet_row['alkoutlet_datums'])) : '';
     $date_alkoutlet_7 = isset($alkoutlet_row['alkoutlet_datums_7']) ? date('Y-m-d', strtotime($alkoutlet_row['alkoutlet_datums_7'])) : '';
-
-
-
     
 
     
@@ -127,10 +109,6 @@ while($row = pg_fetch_assoc($select_data_result)){
 
     );
 }
-
-
-
-
 
 
 $jsonstring = json_encode($data);

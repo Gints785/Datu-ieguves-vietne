@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="style-reader.css" />
     <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"defer> </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
@@ -31,10 +31,10 @@
         </div>
         <div class="button-container">
         <select id="kateg" class="kat">
-            <option value="1"></option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
+           
+        </select>
+        <select id="precgroup" class="pgr">
+           
         </select>
         <input class="input_style" type="text" id="artikuls" placeholder="Artikuls" />
         <button class="btn" id="Price_selection">Atlasīt</button>
@@ -66,6 +66,17 @@
             </tr>
             <tbody id="preces_info"></tbody>
         </table>
+        <div id="pagination" style="margin-bottom:3rem;">
+            <button id="prevPage" class="material-symbols-outlined" style="border-right: solid 1px grey; padding-left:7px;">arrow_back_ios</button>
+            <div class="" style="display: inline-block;">
+            <input type="number" id="pageNumInput" min="1" value="1"  style="width: 25px;  0.3rem; display: inline-block;   color: grey;  font-weight: bold;  background: none;  " oninput="checkInputLength(this)">
+            <p style="display: inline-block; font-size: 13px;">OF &nbsp&nbsp</p>
+            <span id="totalPages" style="font-size: 13px;"></span>
+            </div>
+            <button id="nextPage" class="material-symbols-outlined" style="border-left: solid 1px grey; padding-left:7px;">arrow_forward_ios</button>
+        
+        </div>
+
     </div>
       
 
@@ -120,7 +131,21 @@
                 </div>
             </div>
         </div>
+        <script>
+    
+    function checkInputLength(input) {
+        if (input.value.length > 4) {
+            input.value = input.value.slice(0, 4);
+        }
+        var value = parseInt(input.value);
+        var max = parseInt(input.getAttribute('max'));
 
+        if (value > max) {
+            input.value = max;
+        }
+    }
+</script>
+       
     
 </body>
 </html>

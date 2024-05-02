@@ -22,11 +22,15 @@ conn = psycopg2.connect(
 # Initialize WebDriver
 driver = webdriver.Firefox()
 
+driver.set_page_load_timeout(600)
+
+driver.set_script_timeout(600)
+
 # Define the base URLs
 base_urls = [
     "https://ventspils.citro.lv/product-category/alkoholiskie-dzerieni/",
     "https://ventspils.citro.lv/product-category/augli-darzeni/",
-    #"https://ventspils.citro.lv/product-category/berniem/",
+    "https://ventspils.citro.lv/product-category/berniem/",
     "https://ventspils.citro.lv/product-category/dzerieni/",
     "https://ventspils.citro.lv/product-category/dzivniekiem/",
     "https://ventspils.citro.lv/product-category/galas-zivju-produkti/",
@@ -34,7 +38,7 @@ base_urls = [
     "https://ventspils.citro.lv/product-category/graudu-izstradajumi/",
     "https://ventspils.citro.lv/product-category/higienas-preces/",
     "https://ventspils.citro.lv/product-category/kafija-teja/",
-    "https://ventspils.citro.lv/product-category/konditoreja/",
+    "https://ventspils.citro.lv/product-category/konditoreja/"
     "https://ventspils.citro.lv/product-category/konservejumi/",
     "https://ventspils.citro.lv/product-category/kulinarija/",
     "https://ventspils.citro.lv/product-category/maizes-izstradajumi-2/",

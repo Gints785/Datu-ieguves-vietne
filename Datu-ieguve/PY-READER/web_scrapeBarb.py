@@ -47,7 +47,16 @@ driver = webdriver.Firefox()
 # Define the base URLs
 base_urls = [
     "https://www.barbora.lv/piena-produkti-un-olas",
-    "https://www.barbora.lv/augli-un-darzeni"
+    "https://www.barbora.lv/augli-un-darzeni",
+    "https://www.barbora.lv/maize-un-konditorejas-izstradajumi",
+    "https://www.barbora.lv/gala-zivs-un-gatava-kulinarija",
+    "https://www.barbora.lv/bakaleja",
+    "https://www.barbora.lv/saldeta-partika",
+    "https://www.barbora.lv/dzerieni",
+    "https://www.barbora.lv/zidainu-un-bernu-preces",
+    "https://www.barbora.lv/kosmetika-un-higiena",
+    "https://www.barbora.lv/viss-tirisanai-un-majdzivniekiem",
+    "https://www.barbora.lv/majai-un-atputai"
     # Add other URLs as needed
 ]
 
@@ -265,15 +274,17 @@ try:
         check_product_query = f"SELECT * FROM {table_name} WHERE \"artikuls\" = CAST(%s AS text)"
         cursor.execute(check_product_query, (values[found_products_df.columns.get_loc('artikuls')],))
         existing_data = cursor.fetchone()
-
+        
         if existing_data:
             existing_price = float(existing_data[2])
             new_price = float(values[found_products_df.columns.get_loc('barbora_cena')].replace(',', '.'))
 
-            existing_discount_str = existing_data[4]
+           
+            existing_discount_str = existing_data[3]
+        
             existing_discount = float(existing_discount_str) if existing_discount_str else 0.0
 
-
+            
             
             
             if existing_price != new_price:

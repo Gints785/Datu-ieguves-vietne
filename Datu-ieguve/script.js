@@ -3,8 +3,18 @@ $(document).ready(function(){
     // console.log("jQuery is ready");
 
     let edit = false;
-    fetchpreces();
+   
+    fetchkategorijas();
+    fetchPrecugrupas();
 
+
+    let pageSwitchEnabled = true; 
+
+
+    let currentPage = 1;
+    const batchSize = 30; // Change this value as needed
+    fetchpreces(currentPage);
+    getTotalPagesAndUpdateMaxInput();
 
  
     
@@ -12,48 +22,139 @@ $(document).ready(function(){
 
 
     $(document).on('click', '#Reset_price_selection', function() {
-    
+        $('#pagination').show();
         fetchpreces();
         $('#artikuls').val('');
+        pageSwitchEnabled=true;   
     });
     
 
-
-
-
-    function fetchpreces() {
+    function fetchpreces(page) {
         $.ajax({
             url: 'data/preces-info.php',
             type: 'GET',
-            success: function (response) {
+            data: { 
+                page: page,
+                batch_size: batchSize
+            },
+            success: function(response) {
                 const preces_info = JSON.parse(response);
                 displayPreces(preces_info);
+             
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error("AJAX Error:", status, error);
             }
         });
     }
 
+
+
+    $('#prevPage').click(function() {
+        if (currentPage > 1) {
+            currentPage--; 
+            fetchpreces(currentPage); 
+            updatePageNumber(); 
+        }
+    });
+
+    
+    $('#nextPage').click(function() {
+        var totalPages = parseInt($('#totalPages').text()); 
+        if (currentPage < totalPages) { 
+            currentPage++; 
+            fetchpreces(currentPage); 
+            updatePageNumber(); 
+        }
+    });
+    
+   
+    function updatePageNumber() {
+        $('#pageNumInput').val(currentPage);
+    }
+
+    
+    $('#pageNumInput').change(function() {
+        const newPage = parseInt($(this).val());
+        if (newPage >= 1) {
+            currentPage = newPage; 
+            fetchpreces(currentPage); 
+        } else {
+            
+            $(this).val(currentPage);
+        }
+    });
+    
+    function getTotalPagesAndUpdateMaxInput() {
+        $.ajax({
+            url: 'data/get-total-pages_2.php',
+            type: 'GET',
+            data: { batch_size: batchSize }, // Send the batch size parameter if needed
+            success: function(response) {
+                var totalPages = parseInt(response);
+                $('#totalPages').text(totalPages); // Update the total pages display
+                $('#pageNumInput').attr('max', totalPages); // Set the max attribute of the input field
+             
+
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+            }
+        });
+    }
+
+
+
+
+
+
     $('#Price_selection').click(function() {
-        const enteredArtikuls = $('#artikuls').val().trim().split(/\s+/); 
+        const enteredArtikulsRaw = $('#artikuls').val().trim();
+        const enteredArtikuls = enteredArtikulsRaw ? enteredArtikulsRaw.split(/\s+/) : 0; 
         console.log("Entered artikuls:", enteredArtikuls);
         
-        
-        if ($('#artikuls').val().trim() === '') {
-            return; 
-        }
-        
+        const enteredKategorija = $('#kateg').val();
+        console.log("Entered Kategorija:", enteredKategorija);
+
+        const enteredPrecugrupa = $('#precgroup').val();
+        console.log("Entered Precugrupa:", enteredPrecugrupa);
+        if (enteredArtikuls.length > 0 || enteredKategorija || enteredPrecugrupa) {
+            
+            pageSwitchEnabled=false;   
+            $('#pagination').hide();
+            
         $.ajax({
-            url: 'data/preces-info.php',
+            url: 'data/preces-filter.php',
             type: 'GET',
             success: function (response) {
                 const preces_info = JSON.parse(response);
-                console.log("All artikuls in preces_info:", preces_info.map(preces => preces.artikuls)); 
-                const filteredPreces = preces_info.filter(preces => enteredArtikuls.includes(preces.artikuls)); 
-                console.log("Filtered artikuls:", filteredPreces.map(preces => preces.artikuls)); 
-                displayPreces(filteredPreces);
-                
+         
+                console.log("All artikuls in preces_info:", preces_info.map(preces => preces.artikuls));
+                console.log("All kategorijas in preces_info:", preces_info.map(preces => preces.kateg_id));
+                console.log("All precugrupas in preces_info:", preces_info.map(preces => preces.grupas_id));
+
+                let filteredPreces = preces_info;
+
+                // Filter by kategorija first
+                let filteredPrecesAndKategorijaAndPrecugrupa = filteredPreces;
+                if (enteredKategorija !== '') {
+                    filteredPrecesAndKategorijaAndPrecugrupa = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => preces.kateg_id === enteredKategorija);
+                }
+
+                // If kategorija is selected or if no kategorija is selected but precugrupa is, then filter by precugrupa
+                if (enteredKategorija !== '' || enteredPrecugrupa !== '') {
+                    if (enteredPrecugrupa !== '') {
+                        filteredPrecesAndKategorijaAndPrecugrupa = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => preces.grupas_id === enteredPrecugrupa);
+                    }
+                }
+
+                // Filter by artikuls within the filtered category and precugrupa
+                let filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls = filteredPrecesAndKategorijaAndPrecugrupa;
+                if (enteredArtikuls.length > 0) {
+                    filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => enteredArtikuls.includes(preces.artikuls));
+                }
+
+                displayPreces(filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls);
                 
                 $('#artikuls').val('');
             },
@@ -61,9 +162,16 @@ $(document).ready(function(){
                 console.error("AJAX Error:", status, error);
             }
         });
+        }else{
+        
+        $('#pagination').show();
+        fetchProducts();   
+        
+        }
     });
 
     function displayPreces(preces_info) {
+        
         let template = '';
         const today = new Date().toISOString().slice(0, 10);
         const sevenDaysAgo = new Date();
@@ -72,6 +180,7 @@ $(document).ready(function(){
         console.log("Today's Date:", today); 
         
         preces_info.forEach(preces_info => {
+            console.log("preces_info", preces_info); 
             const isPriceStable_barbora = preces_info.date_barbora_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_barbora));
             const isPriceStable_lats = preces_info.date_lats_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_lats));
             const isPriceStable_citro = preces_info.date_citro_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_citro));
@@ -458,12 +567,82 @@ $(document).ready(function(){
 
 
 
+    function fetchPrecugrupas() {
+        $.ajax({
+            url: 'data/precugrupa.php',
+            type: 'GET',
+            success: function (response) {
+                const precugrupa_info = JSON.parse(response);
+
+                displayPrecugrupas(precugrupa_info);
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+            }
+        });
+    }
+    function displayPrecugrupas(precugrupa_info) {
+        var selectBox = document.getElementById('precgroup'); 
+        selectBox.innerHTML = '';
+        
+        // Add default option
+        var defaultOption = document.createElement('option');
+        defaultOption.value = ''; 
+        defaultOption.textContent = '-Visas pr.grupas-'; 
+        selectBox.appendChild(defaultOption);
+    
+        // Populate options from retrieved data
+        precugrupa_info.forEach(function(precugrupa) {
+            var option = document.createElement('option');
+            option.value = precugrupa.id; 
+            option.textContent = precugrupa.nosaukums; 
+            selectBox.appendChild(option);
+        });
+    }
 
 
 
 
 
 
+
+
+
+
+
+    function fetchkategorijas() {
+        $.ajax({
+            url: 'data/kategorija.php',
+            type: 'GET',
+            success: function (response) {
+                const kategorija_info = JSON.parse(response);
+
+                displayKategorijas(kategorija_info);
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+            }
+        });
+    }
+    function displayKategorijas(kategorija_info) {
+        var selectBox = document.getElementById('kateg'); // Assuming 'kateg' is the ID of your select element
+        selectBox.innerHTML = ''; // Clear existing options
+        
+        // Add default option
+        var defaultOption = document.createElement('option');
+        defaultOption.value = ''; // Set the value of the default option as needed
+        defaultOption.textContent = '-Visas kategorijas-'; // Text for the default option
+        selectBox.appendChild(defaultOption);
+    
+        // Populate options from retrieved data
+        kategorija_info.forEach(function(kategorija) {
+            var option = document.createElement('option');
+            option.value = kategorija.id; // Assuming 'id' is the key for the ID of the category
+            option.textContent = kategorija.nosaukums; // Assuming 'nosaukums' is the key for the name of the category
+            selectBox.appendChild(option);
+        });
+    }
+   
 
 
 

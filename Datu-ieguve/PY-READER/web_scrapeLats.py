@@ -22,16 +22,20 @@ conn = psycopg2.connect(
 # Initialize WebDriver
 driver = webdriver.Firefox()
 
+driver.set_page_load_timeout(600)
+
+driver.set_script_timeout(600)
+
 # Define the base URLs
 base_urls = [
     "https://www.e-latts.lv/augli-un-darzeni.2.g",
-    #"https://www.e-latts.lv/piena-produkti-majoneze-un-olas.1.g",
-    #"https://www.e-latts.lv/maize-un-konditorejas-izstradajumi.3.g",
-    #"https://www.e-latts.lv/gala-zivis-un-gatava-kulinarija.4.g",
-    #"https://www.e-latts.lv/bakaleja.5.g",
-    #"https://www.e-latts.lv/saldeta-partika.6.g",
-    #"https://www.e-latts.lv/dzerieni.7.g",
-    #"https://www.e-latts.lv/alkoholiskie-dzerieni.531.g",
+    "https://www.e-latts.lv/piena-produkti-majoneze-un-olas.1.g",
+    "https://www.e-latts.lv/maize-un-konditorejas-izstradajumi.3.g",
+    "https://www.e-latts.lv/gala-zivis-un-gatava-kulinarija.4.g",
+    "https://www.e-latts.lv/bakaleja.5.g",
+    "https://www.e-latts.lv/saldeta-partika.6.g",
+    "https://www.e-latts.lv/dzerieni.7.g",
+    "https://www.e-latts.lv/alkoholiskie-dzerieni.531.g"
     # Add other URLs as needed
 ]
 

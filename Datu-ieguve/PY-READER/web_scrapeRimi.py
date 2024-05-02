@@ -32,6 +32,21 @@ driver = webdriver.Firefox()
 base_urls = [
     "https://www.rimi.lv/e-veikals/lv/produkti/augli-un-darzeni/c/SH-2",
     "https://www.rimi.lv/e-veikals/lv/produkti/gatavots-rimi/c/SH-17",
+    "https://www.rimi.lv/e-veikals/lv/produkti/veganiem-un-vegetariesiem/c/SH-16",
+    "https://www.rimi.lv/e-veikals/lv/produkti/gala-zivis-un-gatava-kulinarija/c/SH-6",
+    "https://www.rimi.lv/e-veikals/lv/produkti/piena-produkti-un-olas/c/SH-11",
+    "https://www.rimi.lv/e-veikals/lv/produkti/maize-un-konditoreja/c/SH-7",
+    "https://www.rimi.lv/e-veikals/lv/produkti/saldetie-edieni/c/SH-12",
+    "https://www.rimi.lv/e-veikals/lv/produkti/iepakota-partika/c/SH-4",
+    "https://www.rimi.lv/e-veikals/lv/produkti/saldumi-un-uzkodas/c/SH-13",
+    "https://www.rimi.lv/e-veikals/lv/produkti/dzerieni/c/SH-5",
+    "https://www.rimi.lv/e-veikals/lv/produkti/alkoholiskie-dzerieni/c/SH-1",
+    "https://www.rimi.lv/e-veikals/lv/produkti/vina-darzs/c/SH-18",
+    "https://www.rimi.lv/e-veikals/lv/produkti/skaistumkopsanai-un-higienai/c/SH-14",
+    "https://www.rimi.lv/e-veikals/lv/produkti/zidainiem-un-berniem/c/SH-15",
+    "https://www.rimi.lv/e-veikals/lv/produkti/sadzives-kimija/c/SH-10",
+    "https://www.rimi.lv/e-veikals/lv/produkti/majdzivniekiem/c/SH-8",
+    "https://www.rimi.lv/e-veikals/lv/produkti/majai-darzam-un-atputai/c/SH-3"
 
     # Add other URLs as needed
 ]

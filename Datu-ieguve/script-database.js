@@ -1,23 +1,125 @@
 $(document).ready(function(){
     //console.log("jQurey strāda!")
     let edit = false;
+    fetchPrecugrupas()
+    
+    fetchkategorijas()
+    let filteredProducts = [];
+    let artikuls = [];
+    let KATEGORIJA = '';
+    let PRECUGRUPA = '';
+  
+    let pageSwitchEnabled = true; 
 
-    fetchProducts()
+
+    let currentPage = 1;
+    const batchSize = 30; // Change this value as needed
+    fetchProducts();
+    getTotalPagesAndUpdateMaxInput();
+
+    // Function to fetch products based on page number
+    function fetchProducts(page) {
+        $.ajax({
+            url: 'data/product-info.php',
+            type: 'GET',
+            data: { 
+                page: page,
+                batch_size: batchSize
+            },
+            success: function(response) {
+                const preces_info = JSON.parse(response);
+                displayProducts(preces_info);
+             
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+            }
+        });
+    }
+
+    
+    $('#prevPage').click(function() {
+        if (currentPage > 1) {
+            currentPage--; 
+            fetchProducts(currentPage); 
+            updatePageNumber(); 
+        }
+    });
+
+    
+    $('#nextPage').click(function() {
+        var totalPages = parseInt($('#totalPages').text()); 
+        if (currentPage < totalPages) { 
+            currentPage++; 
+            fetchProducts(currentPage); 
+            updatePageNumber(); 
+        }
+    });
+    
    
+    function updatePageNumber() {
+        $('#pageNumInput').val(currentPage);
+    }
+
+    
+    $('#pageNumInput').change(function() {
+        const newPage = parseInt($(this).val());
+        if (newPage >= 1) {
+            currentPage = newPage; 
+            fetchProducts(currentPage); 
+        } else {
+            
+            $(this).val(currentPage);
+        }
+    });
+    
+    function getTotalPagesAndUpdateMaxInput() {
+        $.ajax({
+            url: 'data/get-total-pages.php',
+            type: 'GET',
+            data: { batch_size: batchSize }, // Send the batch size parameter if needed
+            success: function(response) {
+                var totalPages = parseInt(response);
+                $('#totalPages').text(totalPages); // Update the total pages display
+                $('#pageNumInput').attr('max', totalPages); // Set the max attribute of the input field
+             
+
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+            }
+        });
+    }
+
+   
+
+
+
+  
     $(document).on('click', '#Reset_price_selection', function() {
       
-        fetchProducts();
+        $('#pagination').show();
         $('#dataArtikuls').val('');
-        enteredArtikuls = [];
+        pageSwitchEnabled=true;   
+        console.log('filteredProducts', filteredProducts);
+        fetchProducts(currentPage);
+        artikuls = [];
+        KATEGORIJA = '';
+        PRECUGRUPA = '';
+        
+      
     });
-    let enteredArtikuls = [];
+    
+   
    
     
    
 
    $('#productForma').submit(e => {
     e.preventDefault();
-    console.log("Entered artikuls2:", enteredArtikuls);
+    
+
+   
     const initialData = $('#productForma').data('initialData');
     console.log('Initial Data:', initialData);
     const postData = {
@@ -57,11 +159,14 @@ $(document).ready(function(){
             } else if (response === 'neeksiste') {
                 alert('Šāds artikuls neeksistē!');
             } else if (response === 'success') {
-           
+                
                 const url = edit === false ? 'data/product-add.php' : 'data/product-edit.php';
                 $.post(url, postData, (response) => {
                     $("#productForma").trigger('reset');
-                    fetchProducts(enteredArtikuls);
+                    console.log("Filtered Products:", filteredProducts); 
+
+                    fetchProducts();
+
                     $(".modal").hide();
                     edit = false;
                     showAlert('Veiksmīgi pievienots!');
@@ -78,8 +183,12 @@ $(document).ready(function(){
         const url = edit === false ? 'data/product-add.php' : 'data/product-edit.php';
         $.post(url, postData, (response) => {
             $("#productForma").trigger('reset');
-           
-            fetchProducts(enteredArtikuls)
+            console.log("Filtered Products:", filteredProducts); 
+            if (pageSwitchEnabled) {
+                fetchProducts(currentPage);              
+            } else {
+                getProductInfo();
+            }
             $(".modal").hide();
             edit = false;
         
@@ -133,47 +242,90 @@ $(document).ready(function(){
     })
 
 
-    function fetchProducts(enteredArtikuls = []) {
+    
+    $('#Price_selection').click(function() {
+    
+       
+        console.log("CALLED:");
+        const enteredArtikuls = $('#dataArtikuls').val().trim() ? $('#dataArtikuls').val().trim().split(/\s+/) : [];
+        console.log("Entered artikuls:", enteredArtikuls);
+        artikuls = enteredArtikuls;
+        const enteredKategorija = $('#kateg').val();
+        console.log("Entered Kategorija:", enteredKategorija);
+        KATEGORIJA = enteredKategorija;
+        const enteredPrecugrupa = $('#precgroup').val();
+        console.log("Entered Precugrupa:", enteredPrecugrupa);
+        PRECUGRUPA = enteredPrecugrupa;
+        
+        if (enteredArtikuls.length > 0 || enteredKategorija || enteredPrecugrupa) {
+        getProductInfo();
+        pageSwitchEnabled=false;   
+        }else{
+        
+        $('#pagination').show();
+        fetchProducts();   
+        
+        }
+    });
+    
+    // Function to handle AJAX request and processing
+    function getProductInfo() {
+        $('#pagination').hide();
+       
         $.ajax({
-            url: 'data/product-info.php',
+            url: 'data/product-filter.php',
             type: 'GET',
-            success: function(response) {
+            success: function (response) {
+               
+
                 const preces_info = JSON.parse(response);
-                const filteredPreces = filterPrecesByArtikuls(preces_info, enteredArtikuls);
-                displayProducts(filteredPreces);
+                
+                console.log("All artikuls in preces_info:", preces_info.map(preces => preces.artikuls));
+                console.log("All kategorijas in preces_info:", preces_info.map(preces => preces.kateg_id));
+                console.log("All precugrupas in preces_info:", preces_info.map(preces => preces.grupas_id));
+    
+                let filteredPreces = preces_info;
+               
+                // Filter by kategorija first
+                let filteredPrecesAndKategorijaAndPrecugrupa = filteredPreces;
+                if (KATEGORIJA !== '') {
+                    filteredPrecesAndKategorijaAndPrecugrupa = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => preces.kateg_id === KATEGORIJA);
+                }
+    
+                // If kategorija is selected or if no kategorija is selected but precugrupa is, then filter by precugrupa
+                if (KATEGORIJA !== '' || PRECUGRUPA !== '') {
+                    if (PRECUGRUPA !== '') {
+                        filteredPrecesAndKategorijaAndPrecugrupa = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => preces.grupas_id === PRECUGRUPA);
+                    }
+                }
+    
+                // Filter by artikuls within the filtered category and precugrupa
+                let filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls = filteredPrecesAndKategorijaAndPrecugrupa;
+                if (artikuls.length > 0) {
+                    filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => artikuls.includes(preces.artikuls));
+                }
+                
+                filteredProducts = filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls;
+                console.log("Filtered Products:", filteredProducts); 
+                displayProducts(filteredProducts);
+              
+                $('#dataArtikuls').val('');
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error("AJAX Error:", status, error);
             }
         });
     }
-    
-    $('#Price_selection').click(function() {
-        enteredArtikuls = $('#dataArtikuls').val().trim().split(/\s+/);
-        console.log("Entered artikuls:", enteredArtikuls);
-    
-        if ($('#dataArtikuls').val().trim() === '') {
-            return;
-        }
-        
-        fetchProducts(enteredArtikuls);
-        
-        $('#dataArtikuls').val('');
-    });
-    
-    function filterPrecesByArtikuls(preces_info, enteredArtikuls) {
-        if (enteredArtikuls.length === 0) {
-            return preces_info;
-        }
-        return preces_info.filter(preces => enteredArtikuls.includes(preces.artikuls));
-    }
+   
     
     function displayProducts(preces_info) {
+        filteredProducts = preces_info;
         let template = '';
         preces_info.forEach(preces_info => {
     
             template += `
                 <tr productID="${preces_info.id}">
+                    <td>${preces_info.id}</td>
                     <td>${preces_info.artikuls}</td>
                     <td>${preces_info.nosaukums}</td>
                     <td>${preces_info.barbora}</td>
@@ -189,7 +341,6 @@ $(document).ready(function(){
         });
         $('#prod_info').html(template);
     }
-
 
 
 
@@ -318,7 +469,7 @@ function handleCrossClick(event) {
     
 }
 function disable() {
-   
+    console.log('disable called!');
     
     listSection.style.display = 'none';
    
@@ -337,7 +488,7 @@ function handleFiles(files) {
 
     dropArea.style.border ='3px solid rgba(209, 209, 209, 0.607)';
     dropArea.style.borderStyle  = 'dashed';
-    listSection.style.display = 'block';
+   
 
     console.log('Handling files');
     
@@ -347,7 +498,7 @@ function handleFiles(files) {
         const file = files[i];
         const fileName = file.name; // Get the file name
         console.log('Dropped file:', fileName);
-        
+        listSection.style.display = 'block' ;  
 
         // Create HTML structure for the file
         const listItem = document.createElement('li');
@@ -485,4 +636,87 @@ function showAlert(message) {
             alertDiv.remove();
         });
     }, 1100);
+}
+
+
+
+
+
+
+
+
+function fetchPrecugrupas() {
+    $.ajax({
+        url: 'data/precugrupa.php',
+        type: 'GET',
+        success: function (response) {
+            const precugrupa_info = JSON.parse(response);
+
+            displayPrecugrupas(precugrupa_info);
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", status, error);
+        }
+    });
+}
+function displayPrecugrupas(precugrupa_info) {
+    var selectBox = document.getElementById('precgroup'); 
+    selectBox.innerHTML = '';
+    
+    // Add default option
+    var defaultOption = document.createElement('option');
+    defaultOption.value = ''; 
+    defaultOption.textContent = '-Visas pr.grupas-'; 
+    selectBox.appendChild(defaultOption);
+
+    // Populate options from retrieved data
+    precugrupa_info.forEach(function(precugrupa) {
+        var option = document.createElement('option');
+        option.value = precugrupa.id; 
+        option.textContent = precugrupa.nosaukums; 
+        selectBox.appendChild(option);
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+function fetchkategorijas() {
+    $.ajax({
+        url: 'data/kategorija.php',
+        type: 'GET',
+        success: function (response) {
+            const kategorija_info = JSON.parse(response);
+
+            displayKategorijas(kategorija_info);
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", status, error);
+        }
+    });
+}
+function displayKategorijas(kategorija_info) {
+    var selectBox = document.getElementById('kateg'); // Assuming 'kateg' is the ID of your select element
+    selectBox.innerHTML = ''; // Clear existing options
+    
+    // Add default option
+    var defaultOption = document.createElement('option');
+    defaultOption.value = ''; // Set the value of the default option as needed
+    defaultOption.textContent = '-Visas kategorijas-'; // Text for the default option
+    selectBox.appendChild(defaultOption);
+
+    // Populate options from retrieved data
+    kategorija_info.forEach(function(kategorija) {
+        var option = document.createElement('option');
+        option.value = kategorija.id; // Assuming 'id' is the key for the ID of the category
+        option.textContent = kategorija.nosaukums; // Assuming 'nosaukums' is the key for the name of the category
+        selectBox.appendChild(option);
+    });
 }

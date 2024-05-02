@@ -29,9 +29,9 @@ driver = webdriver.Firefox()
 # Define the base URLs
 base_urls = [
     "https://alkoutlet.lv/vins-un-vina-dzerieni.html/",
-    "https://alkoutlet.lv/stiprie.html/",
-    "https://alkoutlet.lv/alus-sidri-kokteili.html/",
-    "https://alkoutlet.lv/bezalkoholiskie.html/",
+    #"https://alkoutlet.lv/stiprie.html/",
+    #"https://alkoutlet.lv/alus-sidri-kokteili.html/",
+    #"https://alkoutlet.lv/bezalkoholiskie.html/",
     # Add other URLs as needed
 ]
 
