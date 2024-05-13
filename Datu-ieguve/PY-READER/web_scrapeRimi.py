@@ -41,12 +41,12 @@ base_urls = [
     "https://www.rimi.lv/e-veikals/lv/produkti/saldumi-un-uzkodas/c/SH-13",
     "https://www.rimi.lv/e-veikals/lv/produkti/dzerieni/c/SH-5",
     "https://www.rimi.lv/e-veikals/lv/produkti/alkoholiskie-dzerieni/c/SH-1",
-    "https://www.rimi.lv/e-veikals/lv/produkti/vina-darzs/c/SH-18",
-    "https://www.rimi.lv/e-veikals/lv/produkti/skaistumkopsanai-un-higienai/c/SH-14",
-    "https://www.rimi.lv/e-veikals/lv/produkti/zidainiem-un-berniem/c/SH-15",
-    "https://www.rimi.lv/e-veikals/lv/produkti/sadzives-kimija/c/SH-10",
-    "https://www.rimi.lv/e-veikals/lv/produkti/majdzivniekiem/c/SH-8",
-    "https://www.rimi.lv/e-veikals/lv/produkti/majai-darzam-un-atputai/c/SH-3"
+    #"https://www.rimi.lv/e-veikals/lv/produkti/vina-darzs/c/SH-18",
+    #"https://www.rimi.lv/e-veikals/lv/produkti/skaistumkopsanai-un-higienai/c/SH-14",
+    #"https://www.rimi.lv/e-veikals/lv/produkti/zidainiem-un-berniem/c/SH-15",
+    #"https://www.rimi.lv/e-veikals/lv/produkti/sadzives-kimija/c/SH-10",
+    #"https://www.rimi.lv/e-veikals/lv/produkti/majdzivniekiem/c/SH-8",
+    #"https://www.rimi.lv/e-veikals/lv/produkti/majai-darzam-un-atputai/c/SH-3"
 
     # Add other URLs as needed
 ]
@@ -91,7 +91,7 @@ for base_url in base_urls:
 
 
 
-    for page_number in range(0, 100):  # Adjusted the range to start from page 1
+    for page_number in range(1, 250):  # Adjusted the range to start from page 1
         url = f"{base_url}?currentPage={page_number}"
         driver.get(url)
         elements1 = driver.find_elements("css selector", selector1)
@@ -307,3 +307,4 @@ finally:
     conn.close()
 
 logger.info("Data written to the database successfully.")
+220804-20811

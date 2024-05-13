@@ -131,6 +131,81 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="modal_export">
+            <div class="apply">
+                <div class="close_modal"><i class="fas fa-times"></i></div>
+                <h1 id="productFormHeading" style="margin-bottom:25px;">Eksportēt cenas</h1>
+                <p style="margin-bottom: 2rem;">Varat izvēlēties eksportējamās kolonnas, atzīmējot izvēles rūtiņu blakus kolonnas nosaukumam.
+                     Jums ir arī iespēja piešķirt eksportējamo nosaukumu.</p>
+                     <hr style="border:solid 3px rgb(171, 171, 171); margin-bottom:1rem; border-radius: 3px; ">
+                <h2 style="color:rgba(64,74,181,255);">Eksporta konfigurācija</h2>   
+                <p>Faila nosaukums</p>  
+                <form id="export_check">
+
+                        <div class="fromElements">
+                            <input type="text" class="inp" >
+                            <p style="margin-bottom:2rem;">Nepievienojiet failu tipu beigās</p>
+                                <ul class="checkbox">
+                                    <div class="column">
+                                        <li><label for="artikuls"><input type="checkbox" id="artikuls" checked="true"> artikuls</label></li>                     
+                                        <li><label for="nosaukums"><input type="checkbox"  id="nosaukums" checked="true"> nosaukums</label></li>                              
+                                        <li><label for="pard_cena1"><input type="checkbox"id="pard_cena1" checked="true"> pard_cena1</label></li>                            
+                                    </div>
+                                    <div class="column">
+                                        <li><label class="main" for="barbora"><input type="checkbox" id="barbora" checked="true"> barbora</label></li>  
+                                        <li><label for="barbora_cena"><input type="checkbox" id="barbora_cena" checked="true"> barbora_cena</label></li>                  
+                                        <li><label for="barbora_pilnā_cena"><input type="checkbox" id="barbora_pilnā_cena" checked="true"> barbora_pilnā_cena</label></li> 
+                                        <li><label for="barbora_datums"><input type="checkbox" id="barbora_datums" checked="true"> barbora_datums</label></li> 
+                                        <li><label for="barbora_datums_7"><input type="checkbox" id="barbora_datums_7" checked="true"> barbora_datums_7</label></li> 
+                                    </div>
+                                    <div class="column">
+                                        <li><label class="main" for="lats"><input type="checkbox" id="lats" checked="true"> lats</label></li>  
+                                        <li><label for="lats_cena"><input type="checkbox" id="lats_cena" checked="true"> lats_cena</label></li>                    
+                                        <li><label for="lats_pilnā_cena"><input type="checkbox" id="lats_pilnā_cena" checked="true"> lats_pilnā_cena</label></li>
+                                        <li><label for="lats_datums"><input type="checkbox" id="lats_datums" checked="true"> lats_datums</label></li>                    
+                                        <li><label for="lats_datums_7"><input type="checkbox" id="lats_datums_7" checked="true"> lats_datums_7</label></li>
+                                    </div>
+                                    <div class="column">     
+                                        <li><label class="main" for="citro"><input type="checkbox" id="citro" checked="true"> citro</label></li>                        
+                                        <li><label for="citro_cena"><input type="checkbox" id="citro_cena" checked="true"> citro_cena</label></li>         
+                                        <li><label for="citro_pilnā_cena"><input type="checkbox"id="citro_pilnā_cena" checked="true"> citro_pilnā_cena</label></li>
+                                        <li><label for="citro_datums"><input type="checkbox" id="citro_datums" checked="true"> citro_datums</label></li>         
+                                        <li><label for="citro_datums_7"><input type="checkbox"id="citro_datums_7" checked="true"> citro_datums_7</label></li>
+                                    </div>
+                                    <div class="column"> 
+                                        <li><label class="main" for="rimi"><input type="checkbox" id="rimi" checked="true"> rimi</label></li>   
+                                        <li><label for="rimi_cena"><input type="checkbox" id="rimi_cena" checked="true"> rimi_cena</label></li>                            
+                                        <li><label for="rimi_pilnā_cena"><input type="checkbox" id="rimi_pilnā_cena" checked="true"> rimi_pilnā_cena</label></li>
+                                        <li><label for="rimi_datums"><input type="checkbox" id="rimi_datums" checked="true"> rimi_datums</label></li>                            
+                                        <li><label for="rimi_datums_7"><input type="checkbox" id="rimi_datums_7" checked="true"> rimi_datums_7</label></li>
+                                    </div>
+                                    <div class="column">  
+                                        <li><label class="main" for="alkoutlet"><input type="checkbox" id="alkoutlet" checked="true"> alkoutlet</label></li>      
+                                        <li><label for="alkoutlet_cena"><input type="checkbox" id="alkoutlet_cena" checked="true"> alkoutlet_cena</label></li>                   
+                                        <li><label for="alkoutlet_pilnā_cena"><input type="checkbox" id="alkoutlet_pilnā_cena" checked="true"> alkoutlet_pilnā_cena</label></li>
+                                        <li><label for="alkoutlet_datums"><input type="checkbox" id="alkoutlet_datums" checked="true"> alkoutlet_datums</label></li>                            
+                                        <li><label for="alkoutlet_datums_7"><input type="checkbox" id="alkoutlet_datums_7" checked="true"> alkoutlet_datums_7</label></li>
+                                    </div>
+                                </ul>
+                            
+                        </div>
+                    <input id="sub_export" type="submit" name="export" value="Eksportēt" class="btn" >
+                </form>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
         <script>
     
     function checkInputLength(input) {
@@ -144,6 +219,47 @@
             input.value = max;
         }
     }
+
+
+    ['alkoutlet', 'rimi', 'citro', 'lats', 'barbora'].forEach(function(brand) {
+            var mainCheckbox = document.getElementById(brand);
+            var relatedCheckboxes = document.querySelectorAll('input[type="checkbox"][id^="' + brand + '_"]:not(#' + brand + ')');
+
+            mainCheckbox.addEventListener('change', function() {
+                // If main checkbox is checked, check all related checkboxes
+                if (this.checked) {
+                    relatedCheckboxes.forEach(function(checkbox) {
+                        checkbox.checked = true;
+                    });
+                } else {
+                    // If main checkbox is unchecked, uncheck all related checkboxes
+                    relatedCheckboxes.forEach(function(checkbox) {
+                        checkbox.checked = false;
+                    });
+                }
+            });
+
+            // JavaScript code to handle related checkbox deselection
+            relatedCheckboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    // If any related checkbox is unchecked, uncheck the main checkbox
+                    if (!this.checked) {
+                        mainCheckbox.checked = false;
+                    } else {
+                        // Check if all related checkboxes are checked, if so, check the main checkbox
+                        var allChecked = true;
+                        relatedCheckboxes.forEach(function(checkbox) {
+                            if (!checkbox.checked) {
+                                allChecked = false;
+                            }
+                        });
+                        if (allChecked) {
+                            mainCheckbox.checked = true;
+                        }
+                    }
+                });
+            });
+        });
 </script>
        
     

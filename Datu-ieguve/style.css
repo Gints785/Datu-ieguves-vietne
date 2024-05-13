@@ -95,6 +95,15 @@ header{
  
 }
 
+.date7, .date{
+ user-select: none; 
+ position:absolute; 
+ color: rgba(128, 128, 128, 0);
+
+}
+
+
+
 #pagination{
     display: flex;
     justify-content: center;
@@ -104,9 +113,8 @@ header{
     font-weight: bold;
     margin-left: 42%;
     border-radius: 4.6rem;
-    background: #f0f0f066;
+    border: solid 2px rgba(202, 202, 202, 0.959);
     
-    border: solid 2px rgb(202, 202, 202);
     
 }
 .material-symbols-outlined{
@@ -299,7 +307,6 @@ width: 95%;
 
 
 .info-container{
-
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(15rem,1fr));
     grid-gap:1rem; 
@@ -767,6 +774,76 @@ transform: translateY(-1rem);
         align-items: center;
         
     }
+    .checkbox{
+        display: flex;
+        
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+    .column {
+        flex: 1;
+    }
+    
+    .modal_export  {
+        position: fixed;
+ 
+        background: rgba(0, 0, 0, .5);
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        
+    }
+    .checkbox input,.checkbox label{
+        display:inline-block;
+        vertical-align:middle;	
+    }
+    .checkbox label{margin-right:20px;}
+
+    .modal_export .fromElements{
+        display: block;
+    }
+    .checkbox input{
+        width: 1.7rem;	
+        height: 1.7rem;
+    }
+   
+
+
+    .modal_export .apply{
+      
+        opacity: 1;
+        background: #f2f2f2;
+        width: 115rem;
+        border-radius: 1rem;
+        box-shadow: 0 .5rem 1rem #666;
+        padding: 3rem;
+        position: relative;
+    }
+
+    .modal_export p {
+        font-size: 1.4rem;
+        font-weight: 500;
+        
+        text-align: left;
+        color: rgb(111, 111, 111);
+    }
+    .inp{
+        width: 55% !important;
+        border: 0  !important;
+        border-bottom: 2px solid rgb(180, 180, 180) !important; 
+        outline: 0  !important;
+        font-size: 1.3rem  !important;
+        padding: 7px 0  !important;
+        background: transparent  !important;
+        transition: border-color 0.2s  !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+    }
+
 
     .modal.modalActive{
     
@@ -906,7 +983,13 @@ background: var(--secondcolor);
        
 
     }
-    .apply input{
+    .modal .apply input{
+        width: 95%;
+        border-radius: .4rem;
+
+    
+    }
+    .modal_import .apply input{
         width: 95%;
         border-radius: .4rem;
 
@@ -1014,7 +1097,7 @@ background: var(--secondcolor);
         width: 100%;
         border-collapse: none;
         border-spacing:0;
-        margin-bottom: 1rem;
+        margin-bottom: 2.5rem;
  
     }
 
@@ -1038,8 +1121,13 @@ background: var(--secondcolor);
        
         
     }
+    ul{
+        list-style: none; 
+    }
     
-
+        .main{
+            margin-bottom:1rem;
+        }
   
       
        .btn-edit{
@@ -1059,9 +1147,10 @@ background: var(--secondcolor);
 
        .fromElements{
        
-      
+        margin-bottom: 2rem;
         font-size: 1.5rem;
        }
+
 
 
     .form_import{

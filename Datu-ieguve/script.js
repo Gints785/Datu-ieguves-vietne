@@ -165,7 +165,7 @@ $(document).ready(function(){
         }else{
         
         $('#pagination').show();
-        fetchProducts();   
+        fetchpreces();   
         
         }
     });
@@ -177,14 +177,14 @@ $(document).ready(function(){
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
         const sevenDaysAgoString = sevenDaysAgo.toISOString().slice(0, 10);
-        console.log("Today's Date:", today); 
+        //console.log("Today's Date:", today); 
         
         preces_info.forEach(preces_info => {
-            console.log("preces_info", preces_info); 
+            //console.log("preces_info", preces_info); 
             const isPriceStable_barbora = preces_info.date_barbora_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_barbora));
             const isPriceStable_lats = preces_info.date_lats_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_lats));
             const isPriceStable_citro = preces_info.date_citro_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_citro));
-            console.log("Date from Server: cena citro", preces_info.citro_akcija);
+            //console.log("Date from Server: cena citro", preces_info.citro_akcija);
             const isPriceStable_rimi = preces_info.date_rimi_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_rimi));
             const isPriceStable_alkoutlet = preces_info.date_alkoutlet_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_alkoutlet));
             //console.log("Date from Server: barbora_string7", sevenDaysAgoString);
@@ -193,39 +193,73 @@ $(document).ready(function(){
     
             template += `
                 <tr>
-                    <td>${preces_info.artikuls}</td>
-                    <td>${preces_info.nosaukums}</td>
-                    <td style="text-align:center;">${preces_info.cena}</td>
+                    <td class="top">${preces_info.artikuls}</td>
+                    <td class="top">${preces_info.nosaukums}</td>
+                    <td class="top" style="text-align:center;">${preces_info.cena}</td>
+
+
 
                     <td class="hoverable-number" style="${isPriceStable_barbora ? 'background-color: #ffff23b3;' : ''}" data_ID="${preces_info.artikuls}" data-type="cena_barbora">
-                        <a href="#"><span class="product-data hoverable-pointer" >${preces_info.cena_barbora} <span style="text-decoration: line-through; font-weight: 400;  font-size:10px; ">${preces_info.barbora_akcija}</span> </span></a>
+                            <a href="#">
+                                <span class="product-data hoverable-pointer" >
+                                    <span class="cena">${preces_info.cena_barbora}</span>  
+                                    <span class="akcija" style="text-decoration: line-through; font-weight: 400;  font-size:10px; ">${preces_info.barbora_akcija}</span> 
+                                </span>
+                            </a>
                         <p class="time" style="display: ${preces_info.cena_barbora && preces_info.date_barbora !== today ? 'inline' : 'none'}; ${preces_info.barbora_akcija ? '' : 'padding-left: .8rem;'}"><i class="fa-solid fa-clock"></i></p>
-                        <p class="akc" style="display: ${preces_info.barbora_akcija ? 'inline' : 'none'};">%</p>
+                        <p class="akc" style="display: ${preces_info.barbora_akcija ? 'inline' : 'none'};">%</p><p class="date7" >${preces_info.date_barbora_7}</p><p class="date" >${preces_info.date_barbora}</p>
                     </td>
+
+
 
                     <td class="hoverable-number" style="${isPriceStable_lats ? 'background-color: #ffff23b3;' : ''}" data_ID="${preces_info.artikuls}" data-type="cena_lats">
-                        <a href="#"><span class="product-data hoverable-pointer" >${preces_info.cena_lats} <span style="text-decoration: line-through; font-weight: 400;  font-size:10px; ">${preces_info.lats_akcija}</span> </span></a>
+                            <a href="#">
+                                <span class="product-data hoverable-pointer"> 
+                                    <span class="cena">${preces_info.cena_lats}</span>  
+                                    <span class="akcija" style="text-decoration: line-through; font-weight: 400;  font-size:10px; ">${preces_info.lats_akcija}</span> 
+                                </span>
+                            </a>
                         <p class="time" style="display: ${preces_info.cena_lats && preces_info.date_lats !== today ? 'inline' : 'none'}; ${preces_info.lats_akcija ? '' : 'padding-left: .8rem;'}"><i class="fa-solid fa-clock"></i></p>
-                        <p class="akc" style="display: ${preces_info.lats_akcija ? 'inline' : 'none'};">%</p>
+                        <p class="akc" style="display: ${preces_info.lats_akcija ? 'inline' : 'none'};">%</p><p class="date7" >${preces_info.date_lats_7}</p><p class="date" >${preces_info.date_lats}</p>
                     </td>
+
+
 
                     <td class="hoverable-number" style="${isPriceStable_citro ? 'background-color: #ffff23b3;' : ''}" data_ID="${preces_info.artikuls}" data-type="cena_citro">
-                        <a href="#"><span class="product-data hoverable-pointer" >${preces_info.cena_citro} <span style="text-decoration: line-through; font-weight: 400;  font-size:10px; ">${preces_info.citro_akcija}</span> </span></a>
+                            <a href="#">
+                                <span class="product-data hoverable-pointer" >
+                                    <span class="cena">${preces_info.cena_citro}</span> 
+                                    <span class="akcija" style="text-decoration: line-through; font-weight: 400;  font-size:10px; ">${preces_info.citro_akcija}</span> 
+                                </span>
+                            </a>
                         <p class="time" style="display: ${preces_info.cena_citro && preces_info.date_citro !== today ? 'inline' : 'none'}; ${preces_info.citro_akcija ? '' : 'padding-left: .8rem;'}"><i class="fa-solid fa-clock"></i></p>
-                        <p class="akc" style="display: ${preces_info.citro_akcija ? 'inline' : 'none'};">%</p>
+                        <p class="akc" style="display: ${preces_info.citro_akcija ? 'inline' : 'none'};">%</p><p class="date7" >${preces_info.date_citro_7}</p><p class="date" >${preces_info.date_citro}</p>
                     </td>
 
+
+
                     <td class="hoverable-number" style="${isPriceStable_rimi ? 'background-color: #ffff23b3;' : ''}" data_ID="${preces_info.artikuls}" data-type="cena_rimi">
-                        <a href="#"><span class="product-data hoverable-pointer" >${preces_info.cena_rimi} <span style="text-decoration: line-through; font-weight: 400;  font-size:10px; ">${preces_info.rimi_akcija}</span> </span></a>
+                            <a href="#">
+                                <span class="product-data hoverable-pointer" >
+                                    <span class="cena">${preces_info.cena_rimi}</span> 
+                                    <span class="akcija" style="text-decoration: line-through; font-weight: 400;  font-size:10px; ">${preces_info.rimi_akcija}</span> 
+                                </span>
+                            </a>
                         <p class="time" style="display: ${preces_info.cena_rimi && preces_info.date_rimi !== today ? 'inline' : 'none'}; ${preces_info.rimi_akcija ? '' : 'padding-left: .8rem;'}"><i class="fa-solid fa-clock"></i></p>
-                        <p class="akc" style="display: ${preces_info.rimi_akcija ? 'inline' : 'none'};">%</p>
+                        <p class="akc" style="display: ${preces_info.rimi_akcija ? 'inline' : 'none'};">%</p><p class="date7" >${preces_info.date_rimi_7}</p><p class="date" >${preces_info.date_rimi}</p>
                     </td>
+
 
 
                     <td class="hoverable-number" style="${isPriceStable_alkoutlet ? 'background-color: #ffff23b3;' : ''}" data_ID="${preces_info.artikuls}" data-type="cena_alkoutlet">
-                        <a href="#"><span class="product-data hoverable-pointer" >${preces_info.cena_alkoutlet} <span style="text-decoration: line-through; font-weight: 400;  font-size:10px; ">${preces_info.alkoutlet_akcija}</span> </span></a>
+                            <a href="#">
+                                <span class="product-data hoverable-pointer" >
+                                    <span class="cena">${preces_info.cena_alkoutlet}</span>
+                                    <span class="akcija" style="text-decoration: line-through; font-weight: 400;  font-size:10px; ">${preces_info.alkoutlet_akcija}</span>
+                                </span>
+                            </a>
                         <p class="time" style="display: ${preces_info.cena_alkoutlet && preces_info.date_alkoutlet !== today ? 'inline' : 'none'}; ${preces_info.alkoutlet_akcija ? '' : 'padding-left: .8rem;'}"><i class="fa-solid fa-clock"></i></p>
-                        <p class="akc" style="display: ${preces_info.alkoutlet_akcija ? 'inline' : 'none'};">%</p>
+                        <p class="akc" style="display: ${preces_info.alkoutlet_akcija ? 'inline' : 'none'};">%</p><p class="date7" >${preces_info.date_alkoutlet_7}</p><p class="date" >${preces_info.date_alkoutlet}</p>
                     </td>
                 </tr>
             `;
@@ -241,6 +275,7 @@ $(document).ready(function(){
     
     $(document).on('click', '.close_modal',(e)=>{
         $(".modal").hide()
+        $(".modal_export").hide()
         edit = false
         $("#dataForma").trigger('reset')
        
@@ -648,67 +683,77 @@ $(document).ready(function(){
 
 
 
+    $(document).on('click', '#export',(e)=>{
+       $(".modal_export").css('display' ,'flex')
+  
+       $('#artikuls').prop('disabled', false).css({
+            'background-color': '#f6f6f6',
+           'cursor': 'auto'
+        });
+    })
 
 
 
-
-
-
-
-
-
-
-
+    document.getElementById('export_check').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
     
-    document.getElementById('export').addEventListener('click', function() {
+        // Your export logic
         var tableBody = document.getElementById('preces_info');
         var rows = tableBody.querySelectorAll('tr');
-    
+        var customName = document.querySelector('.inp').value.trim();
+        var filename = customName ? customName : 'exported_data';
         var data = [];
     
        
-        var columnNamesRow = [
-            "Artikuls",
-            "Preces nosaukums",
-            "Cena datubāze",
-            "Barbora",
-            "Lats",
-            "Citro",
-            "Rimi",
-            "Alkoutlet"
-        ];
+        var columnIndexes = [];
+        var columnNamesRow = [];
+        document.querySelectorAll('.column input[type="checkbox"]:not(.main input[type="checkbox"])').forEach(function(checkbox, index) {
+            if (checkbox && checkbox.checked) {
+                columnIndexes.push(index);
+                columnNamesRow.push(checkbox.getAttribute('id'));
+            }
+        });
         data.push(columnNamesRow);
-    
-      
+
         rows.forEach(function(row) {
             var rowData = [];
-            row.querySelectorAll('td').forEach(function(cell) {
-                rowData.push(cell.innerText);
+            row.querySelectorAll('td.top,span.cena,span.akcija,p.date,p.date7').forEach(function(cell, cellIndex) {
+                // Check if the column index corresponds to a selected column
+                if (columnIndexes.includes(cellIndex)) {
+                    rowData.push(cell.innerText);
+                }
             });
             data.push(rowData);
         });
+        
     
         var wb = XLSX.utils.book_new();
         var ws = XLSX.utils.aoa_to_sheet(data);
     
-
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    
     
         var wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
     
-      
         var buf = new ArrayBuffer(wbout.length);
         var view = new Uint8Array(buf);
         for (var i = 0; i < wbout.length; i++) {
             view[i] = wbout.charCodeAt(i) & 0xFF;
         }
     
-
         var blob = new Blob([buf], {type: 'application/octet-stream'});
     
-        saveAs(blob, 'exported_data.xlsx');
+        saveAs(blob, filename + '.xlsx');
+        event.target.submit();
     });
+
+
+
+
+
+
+
+
+
 });
 
 

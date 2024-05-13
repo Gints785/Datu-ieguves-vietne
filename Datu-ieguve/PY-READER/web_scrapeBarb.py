@@ -46,9 +46,9 @@ driver = webdriver.Firefox()
 
 # Define the base URLs
 base_urls = [
-    "https://www.barbora.lv/piena-produkti-un-olas",
-    "https://www.barbora.lv/augli-un-darzeni",
-    "https://www.barbora.lv/maize-un-konditorejas-izstradajumi",
+    #"https://www.barbora.lv/piena-produkti-un-olas",
+    #"https://www.barbora.lv/augli-un-darzeni",
+    #"https://www.barbora.lv/maize-un-konditorejas-izstradajumi",
     "https://www.barbora.lv/gala-zivs-un-gatava-kulinarija",
     "https://www.barbora.lv/bakaleja",
     "https://www.barbora.lv/saldeta-partika",
