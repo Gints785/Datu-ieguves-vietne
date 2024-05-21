@@ -783,7 +783,7 @@ transform: translateY(-1rem);
         flex: 1;
     }
     
-    .modal_export  {
+    .modal_export,.modal_export_list  {
         position: fixed;
  
         background: rgba(0, 0, 0, .5);
@@ -809,6 +809,7 @@ transform: translateY(-1rem);
     .checkbox input{
         width: 1.7rem;	
         height: 1.7rem;
+        margin-right: .7rem;
     }
    
 
@@ -817,14 +818,24 @@ transform: translateY(-1rem);
       
         opacity: 1;
         background: #f2f2f2;
-        width: 115rem;
+        width: 130rem;
+        border-radius: 1rem;
+        box-shadow: 0 .5rem 1rem #666;
+        padding: 3rem;
+        position: relative;
+    }
+    .modal_export_list .apply{
+      
+        opacity: 1;
+        background: #f2f2f2;
+        width: 60rem;
         border-radius: 1rem;
         box-shadow: 0 .5rem 1rem #666;
         padding: 3rem;
         position: relative;
     }
 
-    .modal_export p {
+    .modal_export p,.modal_export_list p {
         font-size: 1.4rem;
         font-weight: 500;
         

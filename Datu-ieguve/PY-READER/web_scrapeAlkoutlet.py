@@ -5,6 +5,9 @@ from datetime import datetime
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
+import signal
+import subprocess
+import sys
 import time
 import re
 import math
@@ -43,12 +46,22 @@ today_date_str = today_date.strftime("%Y-%m-%d %H:%M:%S")
 
 # Extract Artikuls from the PostgreSQL database
 cursor = conn.cursor()
+
+update_query = """
+        UPDATE statuss
+        SET alkoutlet = 'status in-progress';
+    """
+
+# Execute the update query
+cursor.execute(update_query)
+conn.commit()
+
 query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\", \"alkoutlet\" FROM web_preces_db WHERE \"alkoutlet\" IS NOT NULL AND TRIM(\"alkoutlet\") <> ''"
 cursor.execute(query)
 columns = [desc[0] for desc in cursor.description]
 df = pd.DataFrame(cursor.fetchall(), columns=columns)
 
-
+logger.info("Status is set to "'status in-progress'".")
 cursor.close()
 
 def is_nan_or_empty(value):
@@ -312,7 +325,11 @@ try:
                 logger.error(f"Error inserting into {history_table_name}: {e}")
                 logger.error("Values causing the issue: %s", values)
 
-
+    update_query = """
+        UPDATE statuss
+        SET alkoutlet = 'status open';
+    """
+    cursor.execute(update_query)
     conn.commit()
     logger.info("Changes committed successfully.")
 except Exception as e:
@@ -320,6 +337,12 @@ except Exception as e:
     logger.error("Error occurred during database operation: %s", e)
     logger.error("Values causing the issue: %s", values)
     logger.exception("Error details:")
+    update_query = """
+        UPDATE statuss
+        SET alkoutlet = 'status dead';
+    """
+  
+    cursor.execute(update_query)
 finally:
     cursor.close()
     conn.close()

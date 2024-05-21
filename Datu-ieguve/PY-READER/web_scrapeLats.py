@@ -47,6 +47,14 @@ today_date_str = today_date.strftime("%Y-%m-%d %H:%M:%S")
 
 # Extract Artikuls from the PostgreSQL database
 cursor = conn.cursor()
+update_query = """
+        UPDATE statuss
+        SET lats = 'status in-progress';
+    """
+
+# Execute the update query
+cursor.execute(update_query)
+conn.commit()
 query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"lats\" IS NOT NULL AND TRIM(\"lats\") <> ''"
 cursor.execute(query)
 columns = [desc[0] for desc in cursor.description]
@@ -243,8 +251,15 @@ try:
             except Exception as e:
                 logger.error(f"Error inserting into {history_table_name}: {e}")
                 logger.error("Values causing the issue: %s", values)
-
-
+    update_query = """
+        UPDATE statuss
+        SET citro = 'status open';
+    """
+    update_query = """
+        UPDATE statuss
+        SET lats = 'status open';
+    """
+    cursor.execute(update_query)
     conn.commit()
     logger.info("Changes committed successfully.")
 except Exception as e:
@@ -252,6 +267,12 @@ except Exception as e:
     logger.error("Error occurred during database operation: %s", e)
     logger.error("Values causing the issue: %s", values)
     logger.exception("Error details:")
+    update_query = """
+        UPDATE statuss
+        SET lats = 'status dead';
+    """
+  
+    cursor.execute(update_query)
 finally:
     cursor.close()
     conn.close()

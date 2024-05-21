@@ -16,8 +16,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"defer> </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
-    <script src="script-database.js" defer></script>
-    <script src="script.js" defer></script>
+    <script src="script-reader.js" defer></script>
+    <script src="script-sse.js" defer></script>
+
+
 
 </head>
 <body>
@@ -25,6 +27,7 @@
         //require("connectDB.php");
         require("nav.php");
         require("indicator.php");
+       
     ?>
      <div class="title-reader"  >
 
@@ -49,34 +52,29 @@
             <div class="conform">
               
                 <h4 id="productFormHeading">Vai tiešām vēlies palaist datu lāsītāju?</h4>
+                <hr>
                 <form id="checkGroup">
 
                     <div class="fromElements" id="filter" >
-                        <input class="check" type="checkbox" id="" name="filter" value="" checked>
-                        <label > Barbora</label>
-                        <input class="check" type="checkbox" id="" name="filter" value="" checked>
-                        <label  > Lats</label>
-                        <input class="check" type="checkbox" id="" name="filter" value="" checked>
-                        <label > Citro</label>
-                        <input class="check" type="checkbox" id="" name="filter" value="" checked>
-                        <label > Rimi</label>
-                        <input class="check" type="checkbox" id="" name="filter" value="" checked>
-                        <label > Alkoutlet</label>
-
-
-
-                       
+                        <ul class="checkbox">
+                            <div class="column">  
+                                <li id="BarboraLi"><label for="Barbora"><input type="checkbox" id="Barbora" checked="true"> Barbora</label></li>                   
+                                <li id="LatsLi"><label for="Lats"><input type="checkbox" id="Lats" checked="true"> Lats</label></li>
+                                <li id="CitroLi"><label for="Citro"><input type="checkbox" id="Citro" checked="true"> Citro</label></li>                            
+                                <li id="RimiLi"><label for="Rimi"><input type="checkbox" id="Rimi" checked="true"> Rimi</label></li>
+                                <li id="AlkoutletLi"><label for="Alkoutlet"><input type="checkbox" id="Alkoutlet" checked="true"> Alkoutlet</label></li>                                
+                            </div>    
+                        </ul>                       
                     </div>
                     <div class="buttons">
-                        <button class="btn_2" name="submit">Jā</button>
-                        <button class="btn_2" name="cancel">Nē</button>
+                        <button class="btn_2" id="launchScripts">Jā</button>
+                        <div class="btn_2" id="close_modal" name="cancel">Nē</div>
                     </div>
                 </form>
             </div>
-    </div>
+        </div>
 
     
-
 
 </body>
 </html>

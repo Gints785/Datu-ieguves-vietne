@@ -41,7 +41,7 @@ base_urls = [
     "https://www.rimi.lv/e-veikals/lv/produkti/saldumi-un-uzkodas/c/SH-13",
     "https://www.rimi.lv/e-veikals/lv/produkti/dzerieni/c/SH-5",
     "https://www.rimi.lv/e-veikals/lv/produkti/alkoholiskie-dzerieni/c/SH-1",
-    #"https://www.rimi.lv/e-veikals/lv/produkti/vina-darzs/c/SH-18",
+    "https://www.rimi.lv/e-veikals/lv/produkti/vina-darzs/c/SH-18",
     #"https://www.rimi.lv/e-veikals/lv/produkti/skaistumkopsanai-un-higienai/c/SH-14",
     #"https://www.rimi.lv/e-veikals/lv/produkti/zidainiem-un-berniem/c/SH-15",
     #"https://www.rimi.lv/e-veikals/lv/produkti/sadzives-kimija/c/SH-10",
@@ -62,6 +62,15 @@ today_date_str = today_date.strftime("%Y-%m-%d %H:%M:%S")
 
 # Extract Artikuls from the PostgreSQL database
 cursor = conn.cursor()
+update_query = """
+        UPDATE statuss
+        SET rimi = 'status in-progress';
+    """
+
+# Execute the update query
+cursor.execute(update_query)
+conn.commit()
+
 query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"rimi\" IS NOT NULL AND TRIM(\"rimi\") <> ''"
 cursor.execute(query)
 columns = [desc[0] for desc in cursor.description]
@@ -91,7 +100,7 @@ for base_url in base_urls:
 
 
 
-    for page_number in range(1, 250):  # Adjusted the range to start from page 1
+    for page_number in range(1, 2000):  # Adjusted the range to start from page 1
         url = f"{base_url}?currentPage={page_number}"
         driver.get(url)
         elements1 = driver.find_elements("css selector", selector1)
@@ -294,7 +303,11 @@ try:
                 logger.error(f"Error inserting into {history_table_name}: {e}")
                 logger.error("Values causing the issue: %s", values)
 
-
+    update_query = """
+        UPDATE statuss
+        SET rimi = 'status open';
+    """
+    cursor.execute(update_query)
     conn.commit()
     logger.info("Changes committed successfully.")
 except Exception as e:
@@ -302,9 +315,14 @@ except Exception as e:
     logger.error("Error occurred during database operation: %s", e)
     logger.error("Values causing the issue: %s", values)
     logger.exception("Error details:")
+    update_query = """
+        UPDATE statuss
+        SET rimi = 'status dead';
+    """
+  
+    cursor.execute(update_query)
 finally:
     cursor.close()
     conn.close()
 
 logger.info("Data written to the database successfully.")
-220804-20811

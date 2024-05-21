@@ -1,0 +1,2 @@
+Renamed script: Alkoutlet.py to web_scrapeAlkoutlet.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeAlkoutlet.py, , 

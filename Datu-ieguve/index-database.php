@@ -18,7 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
     <script src="script-modal.js" defer></script>
     <script src="script-database.js" defer></script>
-   
+    <script src="script-sse.js" defer></script>
 
 </head>
 
@@ -43,8 +43,9 @@
         <input class="input_style" type="text"  id="dataArtikuls" placeholder="Artikuls" />
         <button class="btn" id="Price_selection">Atlasīt</button>
         <button class="btn" id="Reset_price_selection">Notīrīt</button>
-        <button class="btn" id="new">Pievienot jaunu</button>
+        <!--<button class="btn" id="new">Pievienot jaunu</button>-->
         <button class="btn" id="import">Importēt</button>
+        <button class="btn2" id="export_list">Eksportēt</button>
        
         </div>
     
@@ -55,7 +56,7 @@
     <div class="container">
         <table>
             <tr class="first">
-                <th>ID</th>
+                <p><th>ID</th></p>
                 <th>Artikuls</th>
                 <th >Preces nosaukums</th>
                 <th>Barbora</th>
@@ -165,6 +166,25 @@
             </div>
         </div>
   
+
+        <div class="modal_export_list">
+            <div class="apply">
+                <div class="close_modal"><i class="fas fa-times"></i></div>
+                <h1 id="productFormHeading" style="margin-bottom:25px;">Eksportēt cenas</h1>
+                     <hr style="border:solid 3px rgb(171, 171, 171); margin-bottom:1rem; border-radius: 3px; ">
+                <h2 style="color:rgba(64,74,181,255);">Eksporta konfigurācija</h2>   
+                <p>Faila nosaukums</p>  
+                <form id="export_check">
+
+                        <div class="fromElements">
+                            <input type="text" class="inp" >
+                            <p style="margin-bottom:2rem;">Nepievienojiet failu tipu beigās</p>
+                            
+                        </div>
+                    <input id="sub_export" type="submit" name="export" value="Eksportēt" class="btn" >
+                </form>
+                </div>
+            </div>
 
 
 

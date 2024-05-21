@@ -720,3 +720,73 @@ function displayKategorijas(kategorija_info) {
         selectBox.appendChild(option);
     });
 }
+
+$(document).on('click', '.close_modal',(e)=>{
+    $(".modal").hide()
+    $(".modal_export_list").hide()
+    edit = false
+    $("#dataForma").trigger('reset')
+   
+  
+})
+
+
+
+$(document).on('click', '#export_list',(e)=>{
+    $(".modal_export_list").css('display' ,'flex')
+
+    $('#artikuls').prop('disabled', false).css({
+         'background-color': '#f6f6f6',
+        'cursor': 'auto'
+     });
+ })
+
+
+
+
+ document.getElementById('export_check').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Your export logic
+    var tableBody = document.getElementById('prod_info');
+    var rows = tableBody.querySelectorAll('tr');
+    var customName = document.querySelector('.inp').value.trim();
+    var filename = customName ? customName : 'exported_data';
+    var data = [];
+
+    var columnNamesRow = ['artikuls', 'nosaukums', 'barbora', 'lats', 'citro', 'rimi', 'alkoutlet']; // Predefined column names
+    // Modify the above array with your predefined column names
+
+    data.push(columnNamesRow);
+
+    rows.forEach(function(row) {
+        var rowData = [];
+        var cells = row.querySelectorAll('td');
+        cells.forEach(function(cell, index) {
+            // Exclude the first column (ID column)
+            if (index !== 0) {
+                rowData.push(cell.innerText);
+            }
+        });
+        data.push(rowData);
+    });
+    
+
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.aoa_to_sheet(data);
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    var wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
+
+    var buf = new ArrayBuffer(wbout.length);
+    var view = new Uint8Array(buf);
+    for (var i = 0; i < wbout.length; i++) {
+        view[i] = wbout.charCodeAt(i) & 0xFF;
+    }
+
+    var blob = new Blob([buf], {type: 'application/octet-stream'});
+
+    saveAs(blob, filename + '.xlsx');
+    event.target.submit();
+});

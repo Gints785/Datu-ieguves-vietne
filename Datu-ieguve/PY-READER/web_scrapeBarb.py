@@ -31,7 +31,16 @@ except Exception as e:
 # Read data from the PostgreSQL database
 query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"barbora\" IS NOT NULL AND TRIM(\"barbora\") <> ''"
 cursor = conn.cursor()
+update_query = """
+        UPDATE statuss
+        SET barbora = 'status in-progress';
+    """
+
+# Execute the update query
+cursor.execute(update_query)
+conn.commit()
 cursor.execute(query)
+
 
 # Fetch the data and create a DataFrame
 columns = [desc[0] for desc in cursor.description]
@@ -46,9 +55,9 @@ driver = webdriver.Firefox()
 
 # Define the base URLs
 base_urls = [
-    #"https://www.barbora.lv/piena-produkti-un-olas",
-    #"https://www.barbora.lv/augli-un-darzeni",
-    #"https://www.barbora.lv/maize-un-konditorejas-izstradajumi",
+    "https://www.barbora.lv/piena-produkti-un-olas",
+    "https://www.barbora.lv/augli-un-darzeni",
+    "https://www.barbora.lv/maize-un-konditorejas-izstradajumi",
     "https://www.barbora.lv/gala-zivs-un-gatava-kulinarija",
     "https://www.barbora.lv/bakaleja",
     "https://www.barbora.lv/saldeta-partika",
@@ -346,7 +355,11 @@ try:
                 logger.error(f"Error inserting into {history_table_name}: {e}")
                 logger.error("Values causing the issue: %s", values)
                 
-
+    update_query = """
+        UPDATE statuss
+        SET barbora = 'status open';
+    """
+    cursor.execute(update_query)
 
     conn.commit()
     logger.info("Changes committed successfully.")
@@ -355,6 +368,12 @@ except Exception as e:
     logger.error("Error occurred during database operation: %s", e)
     logger.error("Values causing the issue: %s", values)
     logger.exception("Error details:")
+    update_query = """
+        UPDATE statuss
+        SET barbora = 'status dead';
+    """
+  
+    cursor.execute(update_query)
 finally:
     cursor.close()
     conn.close()

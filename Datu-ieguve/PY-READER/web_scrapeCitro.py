@@ -44,11 +44,10 @@ base_urls = [
     "https://ventspils.citro.lv/product-category/maizes-izstradajumi-2/",
     "https://ventspils.citro.lv/product-category/piena-produkti-olas/",
     "https://ventspils.citro.lv/product-category/saimniecibas-preces/",
-    "https://ventspils.citro.lv/product-category/saldejums/",
-    "https://ventspils.citro.lv/product-category/saldeti-produkti/",
-    "https://ventspils.citro.lv/product-category/saldumi-uzkodas/",
-    "https://ventspils.citro.lv/product-category/sausas-zupas-buljoni/",
-
+    #"https://ventspils.citro.lv/product-category/saldejums/",
+    #"https://ventspils.citro.lv/product-category/saldeti-produkti/",
+    #"https://ventspils.citro.lv/product-category/saldumi-uzkodas/",
+    #"https://ventspils.citro.lv/product-category/sausas-zupas-buljoni/",
 
     # Add other URLs as needed
 ]
@@ -64,6 +63,14 @@ today_date_str = today_date.strftime("%Y-%m-%d %H:%M:%S")
 
 # Extract Artikuls from the PostgreSQL database
 cursor = conn.cursor()
+update_query = """
+        UPDATE statuss
+        SET citro = 'status in-progress';
+    """
+
+# Execute the update query
+cursor.execute(update_query)
+conn.commit()
 query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"citro\" IS NOT NULL AND TRIM(\"citro\") <> ''"
 cursor.execute(query)
 
@@ -295,7 +302,11 @@ try:
                 logger.error(f"Error inserting into {history_table_name}: {e}")
                 logger.error("Values causing the issue: %s", values)
 
-
+    update_query = """
+        UPDATE statuss
+        SET citro = 'status open';
+    """
+    cursor.execute(update_query)
     conn.commit()
     logger.info("Changes committed successfully.")
 except Exception as e:
@@ -303,6 +314,12 @@ except Exception as e:
     logger.error("Error occurred during database operation: %s", e)
     logger.error("Values causing the issue: %s", values)
     logger.exception("Error details:")
+    update_query = """
+        UPDATE statuss
+        SET citro = 'status dead';
+    """
+  
+    cursor.execute(update_query)
 finally:
     cursor.close()
     conn.close()

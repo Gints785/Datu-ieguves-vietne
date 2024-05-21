@@ -21,6 +21,26 @@ color: var(--secondcolor);
 
 }
 
+
+li{
+  padding: .4rem;
+  margin: .5rem;
+ 
+  border-radius: 0.2rem;
+}
+li:hover{
+  background-color: #b9e4ff44;
+}
+hr{
+  border: solid 2px rgba(171, 171, 171, 0.585);
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+   
+}
+.checked {
+  background-color: rgb(230, 230, 230);
+  
+}
 .modal_conform  {
 position: fixed;
 
@@ -46,9 +66,9 @@ display: flex;
 opacity: 1;
 background: #eee;
 
-border-radius: .5rem;
+border-radius: 1rem;
 box-shadow: 0 .5rem 1rem #666;
-padding: 2rem;
+padding: 3rem;
 position: relative;
 }
 
@@ -95,8 +115,15 @@ color: var(--secondcolor);
 color: #eee;
 
 }
+.title-reader .btn.disabled {
+  background-color: #6c757d; /* Darker color for disabled state */
+  cursor: not-allowed; /* Change cursor to not-allowed */
+  pointer-events: none; /* Disable hover and click events */
+}
 
-
+#export_list {
+  margin-left: auto;
+}
 
 
 .ind-container {

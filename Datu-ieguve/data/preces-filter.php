@@ -13,7 +13,7 @@ $select_data_SQL = "
         (w.rimi IS NOT NULL AND w.rimi <> '') OR
         (w.alkoutlet IS NOT NULL AND w.alkoutlet <> '')
     )
-    ORDER BY p.artikuls";
+    ORDER BY p.id";
 $select_data_result = pg_query($savienojums, $select_data_SQL);
 
 if(!$select_data_result){
