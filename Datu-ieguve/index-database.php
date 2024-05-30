@@ -88,7 +88,7 @@
                 <h1 id="productFormHeading">Pievienot produktu</h1>
                 <form id="productForma">
 
-                    <div class="fromElements">
+                    <div class="formElements">
                         <label>Artikuls <span>*</span></label>
                         <input type="text" id="artikuls" required>
                         <label>Barbora </label>
@@ -176,7 +176,7 @@
                 <p>Faila nosaukums</p>  
                 <form id="export_check">
 
-                        <div class="fromElements">
+                        <div class="formElements">
                             <input type="text" class="inp" >
                             <p style="margin-bottom:2rem;">Nepievienojiet failu tipu beigās</p>
                             

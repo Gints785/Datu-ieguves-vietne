@@ -37,7 +37,7 @@
             
         </form>
 
-        <button class="btn"  id="new">Palaist datu lasītāju</button>
+        <button class="btn disabled"  id="new">Palaist datu lasītāju</button>
         
         
         
@@ -55,7 +55,7 @@
                 <hr>
                 <form id="checkGroup">
 
-                    <div class="fromElements" id="filter" >
+                    <div class="formElements" id="filter" >
                         <ul class="checkbox">
                             <div class="column">  
                                 <li id="BarboraLi"><label for="Barbora"><input type="checkbox" id="Barbora" checked="true"> Barbora</label></li>                   

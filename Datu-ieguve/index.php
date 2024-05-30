@@ -109,7 +109,7 @@
                     </div>
                 </div>
                     <form id="dataForma">
-                        <div class="fromElements">
+                        <div class="formElements">
                         
 
 
@@ -130,6 +130,8 @@
                    
                       
                     </form>
+                    <button class="btn3" id="export_history">Eksportēt vēsturi</button>
+               
                 </div>
             </div>
         </div>
@@ -146,7 +148,7 @@
                 <p>Faila nosaukums</p>  
                 <form id="export_check">
 
-                        <div class="fromElements">
+                        <div class="formElements">
                             <input type="text" class="inp" >
                             <p style="margin-bottom:2rem;">Nepievienojiet failu tipu beigās</p>
                                 <ul class="checkbox">

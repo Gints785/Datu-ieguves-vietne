@@ -14,12 +14,19 @@ function logMessage($message) {
     file_put_contents($log_file, $log_message, FILE_APPEND);
 }
 
+function customErrorHandler($errno, $errstr, $errfile, $errline) {
+    $error_message = "[$errno] $errstr in $errfile at line $errline";
+    logError($error_message);
+}
+
+set_error_handler("customErrorHandler");
+
 // Function to fetch statuses from the PostgreSQL table
 function fetchStatuses() {
     global $savienojums;
     $query = "SELECT barbora, lats, citro, rimi, alkoutlet FROM statuss";
     $result = pg_query($savienojums, $query);
-    logMessage("Checking.");
+    
     if ($result) {
         $statuses = [];
         while ($row = pg_fetch_assoc($result)) {
@@ -30,6 +37,31 @@ function fetchStatuses() {
         logMessage("Error fetching statuses from database: " . pg_last_error($savienojums));
         return [];
     }
+}
+
+function fetchButtonState() {
+    global $savienojums;
+    $query = "SELECT button_state FROM statuss";
+    $result = pg_query($savienojums, $query);
+
+    if ($result) {
+        $row = pg_fetch_assoc($result);
+        $buttonState = ($row['button_state'] === 't') ? true : false;
+        logMessage("Button state fetched: " . ($buttonState ? 'true' : 'false'));
+    } else {
+        logMessage("Error fetching button state from database: " . pg_last_error($savienojums));
+        return false;
+    }
+
+    // Create the button data object
+    $buttonData = json_encode(['button_state' => $buttonState]);
+    logMessage($buttonData);
+    // Send the button state using SSE protocol
+    echo "data: $buttonData\n\n";
+    ob_flush();
+    flush();
+
+    return $buttonState; // Return the button state as well
 }
 
 // Fetch current statuses
@@ -66,8 +98,12 @@ foreach ($currentStatuses as $currentStatus) {
 while (true) {
     // Fetch current statuses
     $currentStatuses = fetchStatuses();
+    
+    // Fetch button state
+    $buttonState = fetchButtonState();
 
     if (!empty($currentStatuses)) {
+    
         // Check if there's any change compared to the previous read
         if ($currentStatuses != $lastStatuses) {
             foreach ($currentStatuses as $currentStatus) {
@@ -77,9 +113,12 @@ while (true) {
                     
                     // Log the data before sending
                     logMessage("Sending data: $data");
+                    $buttonData = json_encode(['button_state' => $buttonState]);
+                    logMessage("Sending button state: $buttonData");
 
                     // Send the JSON object
                     echo "data: $data\n\n";
+
                     ob_flush();
                     flush();
                 }
@@ -87,9 +126,11 @@ while (true) {
             // Update last read statuses
             $lastStatuses = $currentStatuses;
         }
+       
+        // Send button state
+     
     } else {
-        logMessage("No statuses found in the database.");
-        echo "data: {\"error\": \"No statuses found\"}\n\n";
+        logMessage("No statuses found in the database.");       
         ob_flush();
         flush();
         exit();

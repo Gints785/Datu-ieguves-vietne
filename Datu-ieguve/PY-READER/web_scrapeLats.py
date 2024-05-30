@@ -47,10 +47,12 @@ today_date_str = today_date.strftime("%Y-%m-%d %H:%M:%S")
 
 # Extract Artikuls from the PostgreSQL database
 cursor = conn.cursor()
+cursor.execute("UPDATE statuss SET button_state = false;")  
 update_query = """
-        UPDATE statuss
-        SET lats = 'status in-progress';
-    """
+                UPDATE statuss
+                SET button_state = false,
+                    lats = 'status in-progress';
+            """
 
 # Execute the update query
 cursor.execute(update_query)
@@ -252,12 +254,9 @@ try:
                 logger.error(f"Error inserting into {history_table_name}: {e}")
                 logger.error("Values causing the issue: %s", values)
     update_query = """
-        UPDATE statuss
-        SET citro = 'status open';
-    """
-    update_query = """
-        UPDATE statuss
-        SET lats = 'status open';
+    UPDATE statuss
+    SET button_state = true,
+        lats = 'status open';
     """
     cursor.execute(update_query)
     conn.commit()

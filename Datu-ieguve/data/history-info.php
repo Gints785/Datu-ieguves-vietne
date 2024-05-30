@@ -13,25 +13,25 @@ $dataID = $_GET['dataID'];
 $dataWEB = $_GET['dataWEB'];
 $dataWEB_2 = $_GET['dataWEB_2'];
 
-$columnsToSelect = "datums, cena"; // Default columns
+$columnsToSelect = "datums, cena, akcija"; // Default columns
 $columnsToSelect_2 = "akcija, url";
 
 // Adjust columns based on the table name if needed
 switch ($dataWEB) {
     case 'barbora_history':
-        $columnsToSelect = "barbora_datums, barbora_cena";
+        $columnsToSelect = "barbora_datums, barbora_cena, barbora_akcija";
         break;
     case 'lats_history':
-        $columnsToSelect = "lats_datums, lats_cena";
+        $columnsToSelect = "lats_datums, lats_cena, lats_akcija";
         break;
     case 'citro_history':
-        $columnsToSelect = "citro_datums, citro_cena";
+        $columnsToSelect = "citro_datums, citro_cena, citro_akcija";
         break;        
     case 'rimi_history':
-        $columnsToSelect = "rimi_datums, rimi_cena";      
+        $columnsToSelect = "rimi_datums, rimi_cena, rimi_akcija";      
         break;
     case 'alkoutlet_history':
-        $columnsToSelect = "alkoutlet_datums, alkoutlet_cena";      
+        $columnsToSelect = "alkoutlet_datums, alkoutlet_cena, alkoutlet_akcija";      
         break;    
     default:
         // Handle default case or error condition
@@ -105,6 +105,15 @@ if ($result) {
 
                     $formattedData[] = (float)$columnValue;
                     break;
+                case 'barbora_akcija':
+                case 'lats_akcija':
+                case 'citro_akcija':    
+                case 'rimi_akcija':
+                case 'alkoutlet_akcija':
+                    $formattedData[] = (float)$columnValue;
+                    break;    
+
+
                 default:
                     $formattedData[] = $columnValue;
                     break;

@@ -3,7 +3,7 @@ import psycopg2
 from selenium import webdriver
 from datetime import datetime
 from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import NoSuchWindowException, InvalidSessionIdException
 from selenium.webdriver.common.by import By
 import signal
 import subprocess
@@ -48,9 +48,10 @@ today_date_str = today_date.strftime("%Y-%m-%d %H:%M:%S")
 cursor = conn.cursor()
 
 update_query = """
-        UPDATE statuss
-        SET alkoutlet = 'status in-progress';
-    """
+                UPDATE statuss
+                SET button_state = false,
+                    alkoutlet = 'status in-progress';
+            """
 
 # Execute the update query
 cursor.execute(update_query)
@@ -115,7 +116,7 @@ for base_url in base_urls:
     
 
 
-    for page_number in range(1, 100):  # Adjusted the range to start from page 1
+    for page_number in range(1, 100):  
        
 
         url = f"{base_url}?p={page_number}"
@@ -129,28 +130,51 @@ for base_url in base_urls:
 
       
            
-
-        price_elements = driver.find_elements("css selector", "span.price-container span.price-wrapper span.price")
-        filtered_elements.clear()
-        for element in price_elements:
-            # Check if any ancestor of the element has the class 'old-price'
-             
-            ancestor_with_old_price = driver.execute_script("""
-                var el = arguments[0];
-                while (el.parentElement) {
-                    el = el.parentElement;
-                    if (el.classList.contains('old-price')) {
-                        return true;
+        try:
+            price_elements = driver.find_elements("css selector", "span.price-container span.price-wrapper span.price")
+            filtered_elements.clear()
+            for element in price_elements:
+                # Check if any ancestor of the element has the class 'old-price'
+                
+                ancestor_with_old_price = driver.execute_script("""
+                    var el = arguments[0];
+                    while (el.parentElement) {
+                        el = el.parentElement;
+                        if (el.classList.contains('old-price')) {
+                            return true;
+                        }
                     }
-                }
-                return false;
-            """, element)
- 
-            # If no ancestor has the class 'old-price', add the element to the filtered list
-            if not ancestor_with_old_price:
-                
-                filtered_elements.append(element)
-                
+                    return false;
+                """, element)
+    
+                # If no ancestor has the class 'old-price', add the element to the filtered list
+                if not ancestor_with_old_price:
+                    
+                    filtered_elements.append(element)
+                    
+        except NoSuchWindowException:
+            cursor = conn.cursor()
+            update_query = """
+                UPDATE statuss
+                SET button_state = true,
+                    alkoutlet = 'status dead';
+            """
+            cursor.execute(update_query) 
+            print("Browsing context has been discarded. The browser window has been closed unexpectedly.")
+            conn.commit()
+            cursor.close()
+        except InvalidSessionIdException:
+            cursor = conn.cursor()
+            update_query = """
+                UPDATE statuss
+                SET button_state = true,
+                    alkoutlet = 'status dead';
+            """
+            cursor.execute(update_query) 
+            print("WebDriver session does not exist or is not active.")
+            conn.commit()
+            cursor.close()
+        
 
           
         product_elements = driver.find_elements("css selector", 'div.product-item-info[id^="product-item-info_"]')
@@ -214,7 +238,7 @@ for base_url in base_urls:
                     else:
                         print(f'Unable to extract price for product "{scraped_name}"')
 
-# Close the browser tab
+# Close the browser table
 driver.quit()
 
 print(f'===========================================================')
@@ -324,27 +348,42 @@ try:
             except Exception as e:
                 logger.error(f"Error inserting into {history_table_name}: {e}")
                 logger.error("Values causing the issue: %s", values)
-
+   
     update_query = """
-        UPDATE statuss
-        SET alkoutlet = 'status open';
+    UPDATE statuss
+    SET button_state = true,
+        alkoutlet = 'status open';
     """
     cursor.execute(update_query)
     conn.commit()
     logger.info("Changes committed successfully.")
+except NoSuchWindowException:
+    logger.error("The browser window has been closed unexpectedly.")
+    
+    update_query = """
+    UPDATE statuss
+    SET button_state = true,
+        alkoutlet = 'status dead';
+    """
+    cursor.execute(update_query) 
+    conn.commit()  
 except Exception as e:
     conn.rollback()
     logger.error("Error occurred during database operation: %s", e)
     logger.error("Values causing the issue: %s", values)
     logger.exception("Error details:")
+    
     update_query = """
-        UPDATE statuss
-        SET alkoutlet = 'status dead';
+    UPDATE statuss
+    SET button_state = true,
+        alkoutlet = 'status dead';
     """
   
-    cursor.execute(update_query)
+    cursor.execute(update_query) 
 finally:
+    
     cursor.close()
     conn.close()
+
 
 logger.info("Data written to the database successfully.")

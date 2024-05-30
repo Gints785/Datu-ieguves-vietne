@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
             $log_message = "Renamed script: $oldName to $newName\n";
             file_put_contents($log_file, $log_message, FILE_APPEND);
+       
         }
 
         // Define the path to the scripts.py Python script
@@ -53,37 +54,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Prepare the command to execute, passing the list of renamed scripts as arguments
         $command = "python \"$scriptsPath\" " . implode(" ", array_values($renamedCheckboxes));
-        $log_message = "script: $command, $output, $returnCode\n";
+        $log_message = "script: $command, $output\n";
         file_put_contents($log_file, $log_message, FILE_APPEND);
-        // Launch the scripts.py Python script with the renamed scripts as arguments
-     
-        exec($command, $output, $returnCode);
-        // Check if the execution was successful
-        if ($returnCode === 0) {
-            // Scripts executed successfully
-            $sql = "UPDATE statuss SET button_state = false";
-            $result = pg_query($savienojums, $sql);
+
+        
+        // Open command prompt and run the script
+        $cmd = "start cmd /c \"$command\"";
+        $process = popen($cmd, "r");
+        if ($process !== false) {
+            pclose($process);
             logMessage("Python scripts executed successfully.");
-
-        } else {
-            // Error executing Python scripts
             $sql = "UPDATE statuss SET button_state = false";
             $result = pg_query($savienojums, $sql);
-
-            logMessage("Error executing Python scripts.");
+        } else {
+            logMessage("Failed to open command prompt.");
+          
         }
+
+      
     } else {
-        $sql = "UPDATE statuss SET button_state = false";
-        $result = pg_query($savienojums, $sql);
-        // selectedCheckboxes parameter is not set
    
+        // selectedCheckboxes parameter is not set
         logMessage("No selected checkboxes received.");
     }
 } else {
     $sql = "UPDATE statuss SET button_state = false";
     $result = pg_query($savienojums, $sql);
     // Invalid request method
-
     logMessage("Invalid request method.");
 }
 file_put_contents($log_file, $log_message, FILE_APPEND);

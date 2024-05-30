@@ -257,7 +257,7 @@ $(document).ready(function(){
         console.log("Entered Precugrupa:", enteredPrecugrupa);
         PRECUGRUPA = enteredPrecugrupa;
         
-        if (enteredArtikuls.length > 0 || enteredKategorija || enteredPrecugrupa) {
+        if (enteredArtikuls !== null || enteredKategorija || enteredPrecugrupa) {
         getProductInfo();
         pageSwitchEnabled=false;   
         }else{

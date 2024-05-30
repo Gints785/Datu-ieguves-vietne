@@ -4,7 +4,7 @@
 
   padding: 0 1.5rem;
   color: #686868;
-  height: 54%;
+  height: calc(100% - 55px);
   justify-content: space-between;
   z-index: 999;
   margin: 1rem;
@@ -116,9 +116,10 @@ color: #eee;
 
 }
 .title-reader .btn.disabled {
-  background-color: #6c757d; /* Darker color for disabled state */
+  background-color: #d2d2d2; /* Darker color for disabled state */
   cursor: not-allowed; /* Change cursor to not-allowed */
   pointer-events: none; /* Disable hover and click events */
+  color:rgba(0, 0, 0, 0.174);
 }
 
 #export_list {
@@ -144,26 +145,67 @@ color: #eee;
 
 }
 
-
-
-.ind-info {
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.16);
-  border: 3px solid rgba(255, 255, 255, 0.3);
-
-  -webkit-backdrop-filter: blur(5px);
-
-  font-size: 1.5rem;
-    
-    border-radius: 5px;
-position: absolute;
-display: none;
-top: 19px;
-text-align: center;
-padding: 1rem;
-
+*:focus,
+*:active {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
 }
+
+
+.wrapper {
+  display: inline-flex;
+  list-style: none;
+}
+
+.wrapper .status {
+  position: relative;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .tooltip {
+  position: absolute;
+  top: 0;
+  font-size: 14px;
+  background: #ffffff;
+  color: #ffffff;
+  padding: 5px 8px;
+  border-radius: 5px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .tooltip::before {
+  position: absolute;
+  content: "";
+  height: 8px;
+  width: 8px;
+  background: #ffffff;
+  bottom: 27px;
+  left: 50%;
+  transform: translate(-50%) rotate(45deg);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .status:hover .tooltip {
+  top: 20px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.wrapper .status:hover .tooltip,
+.wrapper .status:hover .tooltip::before {
+  background: #448cce;
+  
+}
+
+
+
+
 
 .indicator{
     background:#f3f3f3;
@@ -186,6 +228,15 @@ padding: 1rem;
 }
 .in-progress:hover +.ind-info{
   display: block;
+}
+.status.open .tooltip .placeholder::before {
+  content: "gatavs";
+}
+.status.dead .tooltip .placeholder::before {
+  content: "kļūda";
+}
+.in-progress .tooltip .placeholder::before {
+  content: "procesā";
 }
 
 .status {

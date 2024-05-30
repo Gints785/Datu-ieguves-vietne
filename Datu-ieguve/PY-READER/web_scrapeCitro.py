@@ -64,9 +64,10 @@ today_date_str = today_date.strftime("%Y-%m-%d %H:%M:%S")
 # Extract Artikuls from the PostgreSQL database
 cursor = conn.cursor()
 update_query = """
-        UPDATE statuss
-        SET citro = 'status in-progress';
-    """
+                UPDATE statuss
+                SET button_state = false,
+                    citro = 'status in-progress';
+            """
 
 # Execute the update query
 cursor.execute(update_query)
@@ -303,8 +304,9 @@ try:
                 logger.error("Values causing the issue: %s", values)
 
     update_query = """
-        UPDATE statuss
-        SET citro = 'status open';
+    UPDATE statuss
+    SET button_state = true,
+        citro = 'status open';
     """
     cursor.execute(update_query)
     conn.commit()

@@ -51,9 +51,7 @@ function launchPythonScripts() {
     });
     console.log(selectedCheckboxes);
 
-    var newButton = document.getElementById('new');
-    newButton.disabled = true;
-    newButton.classList.add('disabled');
+
 
 
 
@@ -69,15 +67,12 @@ function launchPythonScripts() {
     // Define what happens on successful data submission
     xhr.onload = function() {
         if (xhr.status === 200) {
-            newButton.disabled = false;
-            newButton.classList.remove('disabled');
+           
             console.log('Python scripts executed successfully.');
    
             
         } else {
-            wButton.disabled = false;
-            newButton.classList.remove('disabled');
- 
+        
             console.log('Error executing Python scripts.');
         }
     };
@@ -96,7 +91,7 @@ function launchPythonScripts() {
 
 // Add event listener to trigger the execution of the PHP script when the button is clicked
 document.getElementById('launchScripts').addEventListener('click', function(event) {
-    event.preventDefault();
+    
     // Launch Python scripts by calling the function
     launchPythonScripts();
 });

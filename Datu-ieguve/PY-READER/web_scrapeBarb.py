@@ -2,6 +2,7 @@ import pandas as pd
 from selenium import webdriver
 from datetime import datetime
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchWindowException, InvalidSessionIdException
 import re
 import psycopg2
 import math
@@ -32,10 +33,10 @@ except Exception as e:
 query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"barbora\" IS NOT NULL AND TRIM(\"barbora\") <> ''"
 cursor = conn.cursor()
 update_query = """
-        UPDATE statuss
-        SET barbora = 'status in-progress';
-    """
-
+                UPDATE statuss
+                SET button_state = false,
+                    barbora = 'status in-progress';
+            """
 # Execute the update query
 cursor.execute(update_query)
 conn.commit()
@@ -116,12 +117,34 @@ for base_url in base_urls:
     products_found_count = 0
 
     while True:
-        url = f"{base_url}?page={page_number}"
-        driver.get(url)
-        elements1 = driver.find_elements(By.CSS_SELECTOR, selector1)
-      
-        cents_elements = driver.find_elements(By.CSS_SELECTOR, cents_selector)
-
+        try:
+            url = f"{base_url}?page={page_number}"
+            driver.get(url)
+            elements1 = driver.find_elements(By.CSS_SELECTOR, selector1)
+        
+            cents_elements = driver.find_elements(By.CSS_SELECTOR, cents_selector)
+        except NoSuchWindowException:
+                cursor = conn.cursor()
+                update_query = """
+                    UPDATE statuss
+                    SET button_state = true,
+                        barbora = 'status dead';
+                """
+                cursor.execute(update_query) 
+                print("Browsing context has been discarded. The browser window has been closed unexpectedly.")
+                conn.commit()
+                cursor.close()
+        except InvalidSessionIdException:
+            cursor = conn.cursor()
+            update_query = """
+                UPDATE statuss
+                SET button_state = true,
+                    barbora = 'status dead';
+            """
+            cursor.execute(update_query) 
+            print("WebDriver session does not exist or is not active.")
+            conn.commit()
+            cursor.close() 
      
        
         
@@ -164,15 +187,37 @@ for base_url in base_urls:
        
   
         while True:
-            product_elements = driver.find_elements(By.CSS_SELECTOR, "[id^='fti-product-card-category-page-']")
-            product_url = []
-            product_data = []
-            for url_element in product_elements:
+            try:
+                product_elements = driver.find_elements(By.CSS_SELECTOR, "[id^='fti-product-card-category-page-']")
+                product_url = []
+                product_data = []
+                for url_element in product_elements:
 
-                href_attribute = url_element.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
-                product_url.append(href_attribute)
+                    href_attribute = url_element.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
+                    product_url.append(href_attribute)
     
-             
+            except NoSuchWindowException:
+                cursor = conn.cursor()
+                update_query = """
+                    UPDATE statuss
+                    SET button_state = true,
+                        barbora = 'status dead';
+                """
+                cursor.execute(update_query) 
+                print("Browsing context has been discarded. The browser window has been closed unexpectedly.")
+                conn.commit()
+                cursor.close()
+            except InvalidSessionIdException:
+                cursor = conn.cursor()
+                update_query = """
+                    UPDATE statuss
+                    SET button_state = true,
+                        barbora = 'status dead';
+                """
+                cursor.execute(update_query) 
+                print("WebDriver session does not exist or is not active.")
+                conn.commit()
+                cursor.close() 
               
 
             for product_element in product_elements:
@@ -189,15 +234,36 @@ for base_url in base_urls:
                 else:
                   
                     product_data.append(discounted_price)
-
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            name_elements = driver.find_elements("css selector", "span.tw-block")
-            scraped_product_names.extend([name_element.text.strip() for name_element in name_elements])
-            logger.info(product_data)
-            
-            price_elements = driver.find_elements("css selector", "div.b-product-price-current")
-            scraped_product_prices.extend([float(price_element.text.strip().replace('€', '').replace(',', '.')) for price_element in price_elements])
-
+            try:
+                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                name_elements = driver.find_elements("css selector", "span.tw-block")
+                scraped_product_names.extend([name_element.text.strip() for name_element in name_elements])
+                logger.info(product_data)
+                
+                price_elements = driver.find_elements("css selector", "div.b-product-price-current")
+                scraped_product_prices.extend([float(price_element.text.strip().replace('€', '').replace(',', '.')) for price_element in price_elements])
+            except NoSuchWindowException:
+                cursor = conn.cursor()
+                update_query = """
+                    UPDATE statuss
+                    SET button_state = true,
+                        barbora = 'status dead';
+                """
+                cursor.execute(update_query) 
+                print("Browsing context has been discarded. The browser window has been closed unexpectedly.")
+                conn.commit()
+                cursor.close()
+            except InvalidSessionIdException:
+                cursor = conn.cursor()
+                update_query = """
+                    UPDATE statuss
+                    SET button_state = true,
+                        barbora = 'status dead';
+                """
+                cursor.execute(update_query) 
+                print("WebDriver session does not exist or is not active.")
+                conn.commit()
+                cursor.close()
       
            
     
@@ -356,8 +422,9 @@ try:
                 logger.error("Values causing the issue: %s", values)
                 
     update_query = """
-        UPDATE statuss
-        SET barbora = 'status open';
+    UPDATE statuss
+    SET button_state = true,
+        barbora = 'status open';
     """
     cursor.execute(update_query)
 
