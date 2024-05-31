@@ -2,6 +2,8 @@ $(document).ready(function(){
     // Uncomment to check if jQuery is loaded and function is executed
     // console.log("jQuery is ready");
 
+    // nosaukums failam,akcijas topam
+
     let edit = false;
    
     fetchkategorijas();
@@ -183,12 +185,12 @@ $(document).ready(function(){
         
         preces_info.forEach(preces_info => {
             //console.log("preces_info", preces_info); 
-            const isPriceStable_barbora = preces_info.date_barbora_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_barbora));
-            const isPriceStable_lats = preces_info.date_lats_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_lats));
-            const isPriceStable_citro = preces_info.date_citro_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_citro));
+            const isPriceStable_barbora = preces_info.date_barbora_7 >= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_barbora));
+            const isPriceStable_lats = preces_info.date_lats_7 >= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_lats));
+            const isPriceStable_citro = preces_info.date_citro_7 >= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_citro));
             //console.log("Date from Server: cena citro", preces_info.citro_akcija);
-            const isPriceStable_rimi = preces_info.date_rimi_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_rimi));
-            const isPriceStable_alkoutlet = preces_info.date_alkoutlet_7 <= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_alkoutlet));
+            const isPriceStable_rimi = preces_info.date_rimi_7 >= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_rimi));
+            const isPriceStable_alkoutlet = preces_info.date_alkoutlet_7 >= sevenDaysAgoString && !isNaN(parseFloat(preces_info.cena_alkoutlet));
             //console.log("Date from Server: barbora_string7", sevenDaysAgoString);
             //console.log("Date from Server: barbora_date7", preces_info.date_lats_7);
             //console.log("Date from Server: barbora", preces_info.date_lats);
@@ -198,7 +200,7 @@ $(document).ready(function(){
                     <td class="top">${preces_info.artikuls}</td>
                     <td class="top">${preces_info.nosaukums}</td>
                     <td class="top" style="text-align:center;">${preces_info.cena}</td>
-
+                    <td class="top" style="text-align:center;">${preces_info.papild_info}</td>
 
 
                     <td class="hoverable-number" style="${isPriceStable_barbora ? 'background-color: #ffff23b3;' : ''}" data_ID="${preces_info.artikuls}" data-type="cena_barbora">
@@ -436,6 +438,7 @@ $(document).ready(function(){
                     var name = firstNestedArray[0];
                     var date = firstNestedArray[3];
                     var price = firstNestedArray[4];
+                    var shop = firstNestedArray[5];
                     if (price !== 0) {
                         document.getElementById('priceContainer').textContent = price;
                     }else{
@@ -468,6 +471,7 @@ $(document).ready(function(){
                     urlContainer.innerHTML = '<a href="' + url + '" target="_blank">' + url + '</a>';
 
                     document.getElementById('productFormHeading').textContent = name; 
+                    document.getElementById('website').textContent = shop; 
                                         
                  
                             
@@ -673,9 +677,13 @@ $(document).ready(function(){
                     
                         // Extract the content of the element with ID "productFormHeading"
                         var productFormHeading = document.getElementById('productFormHeading').textContent;
+                        var website = document.getElementById('website').textContent;
+                        var combinedText = website + " - " + productFormHeading;
                     
                         // Create an array to store the exported data
                         var exportedData = [];
+
+                        
                     
                         // Loop through each row in the DataTable
                         for (var row = 0; row < numRows; row++) {
@@ -718,16 +726,24 @@ $(document).ready(function(){
                     
                         // Insert the column headers
                         exportedData.unshift(['datums', 'cena', 'pilnā cena']);
+
+                        var websiteRow = [website, '', '']; // Create a row with the website name and empty cells for the other columns
+                        exportedData.unshift(websiteRow);
                     
                         // Create a new workbook
                         var wb = XLSX.utils.book_new();
                     
                         // Convert the exported data to a worksheet
                         var ws = XLSX.utils.aoa_to_sheet(exportedData);
-                    
+
+
+                        // Define the range for merging cells
+                        var range = XLSX.utils.decode_range('A1:C1');
+                        ws['!merges'] = [{ s: range.s, e: range.e }];
+
                         // Append the worksheet to the workbook
                         XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-                    
+                        
                         // Write the workbook to binary format
                         var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
                     
@@ -744,7 +760,7 @@ $(document).ready(function(){
                         // Create a download link
                         var link = document.createElement('a');
                         link.href = window.URL.createObjectURL(blob);
-                        link.download = productFormHeading + '.xlsx'; // Use the productFormHeading as the default file name
+                        link.download = combinedText + '.xlsx'; // Use the productFormHeading as the default file name
                         link.click();
                         exportedData = [];
                         

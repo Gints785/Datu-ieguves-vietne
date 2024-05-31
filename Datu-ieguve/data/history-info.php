@@ -129,10 +129,11 @@ if ($result) {
 }
 
 if ($result2) {
+  
     while ($row = pg_fetch_assoc($result2)) {
      
         $formattedData_2 = array();
-
+        $specific_name = '';
        
         foreach ($row as $columnName => $columnValue) {
        
@@ -154,12 +155,25 @@ if ($result2) {
                     $formattedData_2[] = $columnValue;
                     break;
                 case 'barbora_nosaukums':
-                case 'lats_nosaukums': 
-                case 'citro_nosaukums':         
-                case 'rimi_nosaukums':
-                case 'alkoutlet_nosaukums':                               
                     $formattedData_2[] = $columnValue;
-                    break;    
+                    $specific_name = 'Barbora'; 
+                    break;
+                case 'lats_nosaukums':
+                    $formattedData_2[] = $columnValue;
+                    $specific_name = 'Lats'; 
+                    break;
+                case 'citro_nosaukums':
+                    $formattedData_2[] = $columnValue;
+                    $specific_name = 'Citro'; 
+                    break;
+                case 'rimi_nosaukums':
+                    $formattedData_2[] = $columnValue;
+                    $specific_name = 'Rimi'; 
+                    break;
+                case 'alkoutlet_nosaukums':
+                    $formattedData_2[] = $columnValue;
+                    $specific_name = 'Alkoutlet'; 
+                    break;
                 case 'barbora_cena':
                 case 'lats_cena':
                 case 'citro_cena':       
@@ -182,6 +196,9 @@ if ($result2) {
                     $formattedData_2[] = $columnValue;
                     break;
             }
+        }
+        if (!empty($specific_name)) {
+            array_splice($formattedData_2, 5, 0, $specific_name);
         }
 
        

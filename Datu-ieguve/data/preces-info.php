@@ -96,6 +96,7 @@ while($row = pg_fetch_assoc($select_data_result)){
         'artikuls' => $row['artikuls'],
         'nosaukums' => $row['nosaukums'],
         'cena' => number_format($row['pard_cena1'], 2, '.', ','),
+        'papild_info' => $row['papild_info'] !== null ? $row['papild_info'] : "",
         'kateg_id' => $row['kateg_id'],
         'grupas_id' => $row['grupas_id'],
 

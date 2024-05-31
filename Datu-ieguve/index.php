@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="style-reader.css" />
     <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"defer> </script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"defer> </script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js" defer></script>
@@ -60,6 +61,7 @@
                 <th>Artikuls</th>
                 <th >Preces nosaukums</th>
                 <th style="text-align:center;">Cena datubāze</th>
+                <th style="text-align:center;">Akcija</th>
                 <th style="text-align:center;">Barbora</th>
                 <th style="text-align:center;">Lats</th>
                 <th style="text-align:center;">Citro</th>
@@ -87,6 +89,10 @@
             <div class="apply_chart" >
                 <div class="close_modal"><i class="fas fa-times"></i></div>
                 <div class="r1">
+                    <div class="r2" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;">
+                        <p>Veikals:</p>    
+                        <p id="website">Citro</p>
+                    </div>
                     <div class="r2">
                         <p>Nosaukums:</p>    
                         <p id="productFormHeading">Produkts</p>
