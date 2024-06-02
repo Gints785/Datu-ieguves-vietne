@@ -10,7 +10,7 @@ Projekts ir programmatūras risinājums datu pārvaldībai un analīzei. Tas pie
 
 **Reāllaika cenu pārbaude:** Lietotāji var pārbaudīt preču cenas reāllaikā, lai vienmēr būtu informēti par jaunākajām tirgus tendencēm.
 ### Izmantotie Rīki un Tehnoloģijas
-**Visual Studio:** Galvenā attīstības vide (IDE) projekta izstrādei. Tā nodrošina integrētu izstrādes vidi, kas atvieglo koda rakstīšanu, atkļūdošanu un testēšanu.
+**Visual Studio:** Galvenā izstrādes vide (IDE) projekta izstrādei. Tā nodrošina integrētu izstrādes vidi, kas atvieglo koda rakstīšanu, atkļūdošanu un testēšanu.
 
 **XAMPP:** Lokālais serveris, kas apvieno Apache, MySQL, PHP un Perl. XAMPP ir izmantots, lai nodrošinātu servera vidi.
 
