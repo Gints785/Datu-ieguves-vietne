@@ -1,6 +1,5 @@
 # Datu ieguves un manipulācijas vietnē
-[KEPDD_DIMV_GK.docx](https://github.com/user-attachments/files/15526234/KEPDD_DIMV_GK.docx)
-
+[KEPDD_DIMV_GK.docx](https://github.com/user-attachments/files/15740893/KEPDD_DIMV_GK.docx)
 Projekts ir programmatūras risinājums datu pārvaldībai un analīzei. Tas piedāvā tādas funkcijas kā datu filtrēšana, eksportēšanas iespējas un reāllaika cenu pārbaude, lai vienkāršotu preču cenu analīzes.
 
 ### Funkcijas
