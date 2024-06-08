@@ -1,49 +1,43 @@
 <?php
 require("../connectDB.php");
-require_once '../vendor/autoload.php'; // Include the Composer autoloader for PhpSpreadsheet
+require_once '../vendor/autoload.php'; 
 require("../script-database.js");
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
-// Log the received parameters to the debug log file
 $log_file = 'debug.log';
 $log_message = '';
-
 $log_message .= "Contents of \$_FILES array: " . print_r($_FILES, true) . "\n";
-
+// Pārbauda, vai fails ir augšupielādēts
 if(isset($_FILES["file"])) {
-    // Check if file was uploaded without errors
+    // Pārbauda, vai nav augšupielādes kļūdas
     if($_FILES["file"]["error"] == 0) {
         $file_name = $_FILES["file"]["name"];
         $log_message = "Received file: $file_name\n";
-
-        // Append additional information about the file
         $log_message .= "File size: " . $_FILES["file"]["size"] . " bytes\n";
         $log_message .= "Temporary file path: " . $_FILES["file"]["tmp_name"] . "\n";
         $log_message .= "File type: " . $_FILES["file"]["type"] . "\n";
 
-        // Check file extension
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        // Pārbauda, vai fails ir Excel
         if($file_ext == "xls" || $file_ext == "xlsx") {
-            // Load the Excel file
-            $spreadsheet = IOFactory::load($_FILES["file"]["tmp_name"]);
-
-            // Get the active sheet
-            $sheet = $spreadsheet->getActiveSheet();
-
-            // Iterate through each row of the active sheet
+            // Ielādēt Excel izklājlapu
+            $spreadsheet = IOFactory::load($_FILES["file"]["tmp_name"]);    
+            $sheet = $spreadsheet->getActiveSheet();       
+            // Iziet katru izklājlapas rindu
             foreach ($sheet->getRowIterator() as $row) {
-                // Get cell values for the current row
+                //Izvedo rindu datu masīvu
                 $rowData = [];
-                $cellIterator = $row->getCellIterator();
-                $cellIterator->setIterateOnlyExistingCells(false); // Loop through all cells, even if empty
 
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(false);
+                // Iziet katru rindas šūnu
                 foreach ($cellIterator as $cell) {
+                    // Iegūstiet šūnas vērtību un pievienojiet rindas datu masīvam
                     $rowData[] = $cell->getValue();
                 }
-
-                // Check if there are non-empty cells to update
+                // Izveido masīvu, lai saglabātu atjaunināmās kolonnas
                 $updateColumns = [];
+                // Pārbauda, vai šūnas dati nav tukši, un izveidojo atjaunināšanas kolonnu masīvu
                 if (!empty($rowData[2])) {
                     $updateColumns[] = "barbora = '" . $rowData[2] . "'";
                 }
@@ -59,40 +53,28 @@ if(isset($_FILES["file"])) {
                 if (!empty($rowData[6])) {
                     $updateColumns[] = "alkoutlet = '" . $rowData[6] . "'";
                 }
-
-                // Construct and execute SQL UPDATE query only if there are non-empty cells to update
-                if (!empty($updateColumns)) {
-                    // Construct SQL UPDATE query
+                // Pārbauda, vai ir jāatjaunina kolonnas
+                if (!empty($updateColumns)) {     
+                    // Izveido SQL vaicājumu  
                     $sql = "UPDATE web_preces_db SET ";
                     $sql .= implode(", ", $updateColumns);
-                    $sql .= " WHERE artikuls = '" . $rowData[0] . "'";
-
-                    // Execute SQL query using appropriate method for PgSql
+                    $sql .= " WHERE artikuls = '" . $rowData[0] . "'";       
+                    // Izpildīta SQL vaicājumu  
                     $result = pg_query($sql);
                     if (!$result) {
                         $log_message .= "Error updating data: " . pg_last_error() . "\n";
                     }
                 }
             }
-
-            // Log success message
             $log_message .= "Data updated successfully!\n";
-        } else {
-            // Log error message for invalid file extension
-            $log_message .= "Error: Only Excel files are allowed!\n";
-          
-          
+        } else {  
+            $log_message .= "Error: Only Excel files are allowed!\n"; 
         }
-    } else {
-        // Log error message for file upload error
-        $log_message .= "Error uploading file: ";
-        
+    } else {  
+        $log_message .= "Error uploading file: ";     
     }
 } else {
-    // Log error message if 'file' parameter is not set
     $log_message .= "Error: 'file' parameter is not set!\n";
 }
-
-// Append the log message to the debug log file
 file_put_contents($log_file, $log_message, FILE_APPEND);
 ?>

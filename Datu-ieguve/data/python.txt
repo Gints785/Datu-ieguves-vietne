@@ -287,3 +287,143 @@ Renamed script: Alkoutlet.py to web_scrapeAlkoutlet.py
 script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeAlkoutlet.py, 
 2024-05-31 07:39:46 - Python scripts executed successfully.
 script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeAlkoutlet.py, 
+Renamed script: Barbora.py to web_scrapeBarb.py
+Renamed script: Lats.py to web_scrapeLats.py
+Renamed script: Citro.py to web_scrapeCitro.py
+Renamed script: Rimi.py to web_scrapeRimi.py
+Renamed script: Alkoutlet.py to web_scrapeAlkoutlet.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py web_scrapeLats.py web_scrapeCitro.py web_scrapeRimi.py web_scrapeAlkoutlet.py, 
+2024-05-31 10:44:15 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py web_scrapeLats.py web_scrapeCitro.py web_scrapeRimi.py web_scrapeAlkoutlet.py, 
+Renamed script: Alkoutlet.py to web_scrapeAlkoutlet.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeAlkoutlet.py, 
+2024-06-02 11:31:35 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeAlkoutlet.py, 
+Renamed script: Alkoutlet.py to web_scrapeAlkoutlet.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeAlkoutlet.py, 
+2024-06-02 11:35:52 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeAlkoutlet.py, 
+Renamed script: Alkoutlet.py to web_scrapeAlkoutlet.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeAlkoutlet.py, 
+2024-06-02 11:41:36 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeAlkoutlet.py, 
+Renamed script: Alkoutlet.py to web_scrapeAlkoutlet.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeAlkoutlet.py, 
+2024-06-02 11:48:58 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeAlkoutlet.py, 
+Renamed script: Barbora.py to web_scrapeBarb.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py, 
+2024-06-02 12:18:26 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py, 
+Renamed script: Barbora.py to web_scrapeBarb.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py, 
+2024-06-02 12:20:04 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py, 
+Renamed script: Citro.py to web_scrapeCitro.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeCitro.py, 
+2024-06-02 12:45:08 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeCitro.py, 
+Renamed script: Citro.py to web_scrapeCitro.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeCitro.py, 
+2024-06-02 12:45:59 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeCitro.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-02 13:08:18 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-02 13:09:10 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Rimi.py to web_scrapeRimi.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeRimi.py, 
+2024-06-02 13:32:29 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeRimi.py, 
+Renamed script: Barbora.py to web_scrapeBarb.py
+Renamed script: Lats.py to web_scrapeLats.py
+Renamed script: Citro.py to web_scrapeCitro.py
+Renamed script: Rimi.py to web_scrapeRimi.py
+Renamed script: Alkoutlet.py to web_scrapeAlkoutlet.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py web_scrapeLats.py web_scrapeCitro.py web_scrapeRimi.py web_scrapeAlkoutlet.py, 
+2024-06-02 23:30:55 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py web_scrapeLats.py web_scrapeCitro.py web_scrapeRimi.py web_scrapeAlkoutlet.py, 
+Renamed script: Barbora.py to web_scrapeBarb.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py, 
+2024-06-03 06:17:00 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py, 
+Renamed script: Citro.py to web_scrapeCitro.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeCitro.py, 
+2024-06-03 06:22:41 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeCitro.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 06:27:08 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Barbora.py to web_scrapeBarb.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py, 
+2024-06-03 06:32:13 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 06:33:12 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 06:41:46 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 06:45:10 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 06:47:59 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 06:59:15 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 07:02:06 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 07:05:55 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 07:07:56 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 07:10:01 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 07:17:05 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 07:52:16 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Lats.py to web_scrapeLats.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+2024-06-03 14:49:13 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeLats.py, 
+Renamed script: Barbora.py to web_scrapeBarb.py
+Renamed script: Lats.py to web_scrapeLats.py
+Renamed script: Citro.py to web_scrapeCitro.py
+Renamed script: Rimi.py to web_scrapeRimi.py
+Renamed script: Alkoutlet.py to web_scrapeAlkoutlet.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py web_scrapeLats.py web_scrapeCitro.py web_scrapeRimi.py web_scrapeAlkoutlet.py, 
+2024-06-08 15:46:06 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py web_scrapeLats.py web_scrapeCitro.py web_scrapeRimi.py web_scrapeAlkoutlet.py, 
+Renamed script: Barbora.py to web_scrapeBarb.py
+Renamed script: Lats.py to web_scrapeLats.py
+Renamed script: Citro.py to web_scrapeCitro.py
+Renamed script: Rimi.py to web_scrapeRimi.py
+Renamed script: Alkoutlet.py to web_scrapeAlkoutlet.py
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py web_scrapeLats.py web_scrapeCitro.py web_scrapeRimi.py web_scrapeAlkoutlet.py, 
+2024-06-08 15:51:18 - Python scripts executed successfully.
+script: python "C:\xampp\htdocs\Datu-ieguve\PY-READER\scripts.py" web_scrapeBarb.py web_scrapeLats.py web_scrapeCitro.py web_scrapeRimi.py web_scrapeAlkoutlet.py, 

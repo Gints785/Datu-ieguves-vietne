@@ -1,6 +1,6 @@
 <?php
 require("../connectDB.php");
-
+// Vaicājums, lai atlasītu datus no tabulas 'preces' un kreisais savienojums ar tabulu 'web_preces_db'
 $select_data_SQL = "
     SELECT p.* 
     FROM preces p
@@ -14,15 +14,17 @@ $select_data_SQL = "
         (w.alkoutlet IS NOT NULL AND w.alkoutlet <> '')
     )
     ORDER BY p.id";
+//Izpilda SQL vaicājumu
 $select_data_result = pg_query($savienojums, $select_data_SQL);
-
+// Pārbauda, vai vaicājuma izpilde bija veiksmīga
 if(!$select_data_result){
     die("Kļūda!".pg_last_error($savienojums));
 }
-
+//izveido tukšu masīvu, lai saglabātu datus
 $data = array(); 
+// Pāriet cauri katrai datu rindai
 while($row = pg_fetch_assoc($select_data_result)){
- 
+    // Papildu vaicājumi, lai iegūtu papildu informāciju no citām tabulām ('barbora', 'lats', 'citro', 'rimi', 'alkoutlet'), pamatojoties uz lauku 'artikuls'
     //=========================================================================================================
     $select_barbora_SQL = 'SELECT * FROM "barbora" WHERE artikuls = \'' . $row['artikuls'] . '\'';
     $select_barbora_result = pg_query($savienojums, $select_barbora_SQL);

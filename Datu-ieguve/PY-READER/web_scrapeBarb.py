@@ -30,7 +30,7 @@ except Exception as e:
     logger.error("Error while establishing connection to the database: %s", e)
 
 # Read data from the PostgreSQL database
-query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"barbora\" IS NOT NULL AND TRIM(\"barbora\") <> ''"
+query = "SELECT \"id\", \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"barbora\" IS NOT NULL AND TRIM(\"barbora\") <> ''"
 cursor = conn.cursor()
 update_query = """
                 UPDATE statuss
@@ -79,6 +79,7 @@ cents_selector = 'span.tw-text-b-price-xs.tw-font-semibold.lg\\:tw-text-b-price-
 found_product_names = []
 found_product_prices = []
 found_product_artikuls = []
+found_product_id = []
 found_product_dates = []
 found_product_discount = []
 found_product_url = []
@@ -98,6 +99,7 @@ today_date_str = today_date.strftime("%Y-%m-%d %H:%M:%S")
 # Extract Artikuls from the Excel file
 product_names_in_db = df['barbora'].tolist()
 artikuls_in_db = df['artikuls'].tolist()
+id_in_db = df['id'].tolist()
 
 def is_nan_or_empty(value):
     return isinstance(value, float) and math.isnan(value)
@@ -276,7 +278,7 @@ for base_url in base_urls:
             scraped_name_cleaned = scraped_name.lower()
 
             # Check if the scraped name exists in database the product names, and the product name is not empty or NaN
-            for product_name, artikul in zip(product_names_in_db, artikuls_in_db):
+            for product_name, artikul, ids in zip(product_names_in_db, artikuls_in_db, id_in_db):
                 if not is_nan_or_empty(product_name):
                     product_name_cleaned = str(product_name).strip().lower()
 
@@ -284,6 +286,7 @@ for base_url in base_urls:
                         found_product_names.append(scraped_name)
                         found_product_prices.append(f'{scraped_price}')
                         found_product_artikuls.append(artikul)
+                        found_product_id.append(ids)
                         found_product_dates_7.append(today_date_str)  
                         found_product_discount.append(scraped_discount)
                         found_product_url.append(scraped_url)    
@@ -311,21 +314,9 @@ logger.info(f'Total products found: {total_products_found_count}')
 logger.info(f'===========================================================')
 
 # Create a DataFrame for found products with Product Name, Price, and Artikuls
-found_products_df = pd.DataFrame({'barbora_nosaukums': found_product_names, 'barbora_cena': found_product_prices, 'barbora_datums': [today_date_str] * len(found_product_names), 'barbora_datums_7': [today_date_str] * len(found_product_names), 'barbora_akcija': found_product_discount,'barbora_url': found_product_url, 'artikuls': found_product_artikuls })
+found_products_df = pd.DataFrame({'barbora_nosaukums': found_product_names, 'barbora_cena': found_product_prices, 'barbora_datums': [today_date_str] * len(found_product_names), 'barbora_datums_7': [today_date_str] * len(found_product_names), 'barbora_akcija': found_product_discount,'barbora_url': found_product_url, 'web_preces_id': found_product_id , 'artikuls': found_product_artikuls })
 print(found_products_df)  
 # Establish a connection to the PostgreSQL database
-try:
-    logger.info("Attempting to establish connection to the database...")
-    conn = psycopg2.connect(
-        host="localhost",
-        port=5432,
-        user="postgres",
-        password="0000",
-        database="postgres"
-    )
-    logger.info("Connection to the database established successfully.")
-except Exception as e:
-    logger.error("Error while establishing connection to the database: %s", e)
 
 # Define the table names
 table_name = 'barbora'

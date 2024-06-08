@@ -1,3 +1,13 @@
+<?php
+session_start();
+if(!isset($_SESSION['lietotajvards_RCG'])){
+    header("Refresh:0; url=login.php");
+    exit();
+}
+?>
+
+
+
 <header>
     <nav class="navbar">
         <a class="fa1 <?php if(basename($_SERVER['PHP_SELF']) == 'index.php') echo 'current-page'; ?>" href="index.php"><i class="fas fa-tasks"></i><p>Datu krātuve</p></a>

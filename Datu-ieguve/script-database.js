@@ -17,6 +17,18 @@ $(document).ready(function(){
     fetchProducts();
     getTotalPagesAndUpdateMaxInput();
 
+    function showLoading() {
+      
+        $('#loading-screen').show();
+    }
+    
+    
+    function hideLoading() {
+      
+        $('#loading-screen').hide();
+    }
+
+
     // Function to fetch products based on page number
     function fetchProducts(page) {
         $.ajax({
@@ -29,6 +41,7 @@ $(document).ready(function(){
             success: function(response) {
                 const preces_info = JSON.parse(response);
                 displayProducts(preces_info);
+                hideLoading();
              
             },
             error: function(xhr, status, error) {
@@ -340,6 +353,7 @@ $(document).ready(function(){
                 </tr>`;
         });
         $('#prod_info').html(template);
+        $('#rowCount').html(`Skaits: ${preces_info.length}`);
     }
 
 

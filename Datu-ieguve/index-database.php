@@ -31,7 +31,7 @@
     ?>
   <div class="title"  >
         <div class="name">
-            <i class="fas fa-database"></i> Datu lasīšanas krātuve
+            <i class="fas fa-database"></i> Datu lasīšanas krātuve <div id="rowCount" style="display: inline; padding-left: 1.5rem;;">Skaits: 0</div>
         </div>
         <div class="button-container">
         <select id="kateg" class="kat">
@@ -170,7 +170,7 @@
         <div class="modal_export_list">
             <div class="apply">
                 <div class="close_modal"><i class="fas fa-times"></i></div>
-                <h1 id="productFormHeading" style="margin-bottom:25px;">Eksportēt cenas</h1>
+                <h1 id="productFormHeading" style="margin-bottom:25px;">Eksportēt nosaukums</h1>
                      <hr style="border:solid 3px rgb(171, 171, 171); margin-bottom:1rem; border-radius: 3px; ">
                 <h2 style="color:rgba(64,74,181,255);">Eksporta konfigurācija</h2>   
                 <p>Faila nosaukums</p>  
@@ -186,7 +186,7 @@
                 </div>
             </div>
 
-
+            <div id="loading-screen"></div>
 
       
 

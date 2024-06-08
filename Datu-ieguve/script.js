@@ -19,7 +19,16 @@ $(document).ready(function(){
     getTotalPagesAndUpdateMaxInput();
 
  
+    function showLoading() {
+      
+        $('#loading-screen').show();
+    }
     
+    
+    function hideLoading() {
+      
+        $('#loading-screen').hide();
+    }
 
 
 
@@ -44,7 +53,7 @@ $(document).ready(function(){
             success: function(response) {
                 const preces_info = JSON.parse(response);
                 displayPreces(preces_info);
-             
+                hideLoading();
             },
             error: function(xhr, status, error) {
                 console.error("AJAX Error:", status, error);
@@ -115,63 +124,46 @@ $(document).ready(function(){
 
     $('#Price_selection').click(function() {
         const enteredArtikulsRaw = $('#artikuls').val().trim();
+        // Sadala ievadītos artikulus ar atstarpi un noņem priekšējo/beidzošo atstarpi
         const enteredArtikuls = enteredArtikulsRaw ? enteredArtikulsRaw.split(/\s+/) : 0; 
-        console.log("Entered artikuls:", enteredArtikuls);
-        
         const enteredKategorija = $('#kateg').val();
-        console.log("Entered Kategorija:", enteredKategorija);
-
         const enteredPrecugrupa = $('#precgroup').val();
-        console.log("Entered Precugrupa:", enteredPrecugrupa);
+        // Pārbauda, vai ir lietots kāds filtrs (artikuls, kategorija vai precugrupa)
         if (enteredArtikuls !== null || enteredKategorija || enteredPrecugrupa) {
-            
             pageSwitchEnabled=false;   
             $('#pagination').hide();
-            
         $.ajax({
             url: 'data/preces-filter.php',
             type: 'GET',
             success: function (response) {
                 const preces_info = JSON.parse(response);
-         
-                console.log("All artikuls in preces_info:", preces_info.map(preces => preces.artikuls));
-                console.log("All kategorijas in preces_info:", preces_info.map(preces => preces.kateg_id));
-                console.log("All precugrupas in preces_info:", preces_info.map(preces => preces.grupas_id));
-
-                let filteredPreces = preces_info;
-
-                // Filter by kategorija first
-                let filteredPrecesAndKategorijaAndPrecugrupa = filteredPreces;
+                let filteredPrecesAndKategorijaAndPrecugrupa = preces_info;
+                console.log(filteredPrecesAndKategorijaAndPrecugrupa);
+                // Vispirms filtrēt pēc kategorijas
                 if (enteredKategorija !== '') {
                     filteredPrecesAndKategorijaAndPrecugrupa = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => preces.kateg_id === enteredKategorija);
                 }
-
-                // If kategorija is selected or if no kategorija is selected but precugrupa is, then filter by precugrupa
+                // Ja ir atlasīta kategorija vai ja nav atlasīta neviena kategorija, bet ir atlasīta precugrupa, tad filtrē pēc precugrupa
                 if (enteredKategorija !== '' || enteredPrecugrupa !== '') {
                     if (enteredPrecugrupa !== '') {
                         filteredPrecesAndKategorijaAndPrecugrupa = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => preces.grupas_id === enteredPrecugrupa);
                     }
                 }
-
-                // Filter by artikuls within the filtered category and precugrupa
-                let filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls = filteredPrecesAndKategorijaAndPrecugrupa;
+                // Filtrēt pēc artikuliem filtrētajā kategorijā un precugrupa
                 if (enteredArtikuls.length > 0) {
-                    filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => enteredArtikuls.includes(preces.artikuls));
+                    filteredPrecesAndKategorijaAndPrecugrupa = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => enteredArtikuls.includes(preces.artikuls));
                 }
-                console.log('filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls',filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls);
-                displayPreces(filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls);
-                
+                //Rādīt filtrētās preces, pamatojoties uz lietotajiem filtriem
+                displayPreces(filteredPrecesAndKategorijaAndPrecugrupa);           
                 $('#artikuls').val('');
             },
-            error: function (xhr, status, error) {
+            error: function (status, error) {
                 console.error("AJAX Error:", status, error);
             }
         });
-        }else{
-        
+        }else{     
         $('#pagination').show();
-        fetchpreces();   
-        
+        fetchpreces();     
         }
     });
 
@@ -269,6 +261,7 @@ $(document).ready(function(){
             `;
         });
         $('#preces_info').html(template);
+        $('#rowCount').html(`Skaits: ${preces_info.length}`);
       
     }
     

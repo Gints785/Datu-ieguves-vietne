@@ -57,7 +57,7 @@ update_query = """
 # Execute the update query
 cursor.execute(update_query)
 conn.commit()
-query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"lats\" IS NOT NULL AND TRIM(\"lats\") <> ''"
+query = "SELECT \"id\",\"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"lats\" IS NOT NULL AND TRIM(\"lats\") <> ''"
 cursor.execute(query)
 columns = [desc[0] for desc in cursor.description]
 df = pd.DataFrame(cursor.fetchall(), columns=columns)
@@ -70,6 +70,7 @@ def is_nan_or_empty(value):
 found_product_names = []
 found_product_prices = []
 found_product_artikuls = []
+found_product_id = []
 found_product_dates = []
 found_product_discount = []
 found_product_url = []
@@ -85,7 +86,7 @@ for base_url in base_urls:
         url = f"{base_url}?p={page_number}"
         driver.get(url)
         price_elements = driver.find_elements("css selector", "div.-oPrice")
-
+        
         product_elements = driver.find_elements("css selector", "div.-oProduct")
       
         product_data = []
@@ -116,7 +117,7 @@ for base_url in base_urls:
       
    
         scraped_product_prices = [price_element.text.strip().replace('€', '') for price_element in price_elements]
-       
+    
         
         for scraped_name, scraped_price, scraped_discount, scraped_url in zip(scraped_product_names, scraped_product_prices , product_data, product_url):
             scraped_name_cleaned = scraped_name.lower()
@@ -124,8 +125,9 @@ for base_url in base_urls:
             # Iterate directly over DataFrame rows
             for index, row in df.iterrows():
                 product_name_cleaned = str(row['lats']).strip().lower()
-
+                
                 if not is_nan_or_empty(product_name_cleaned) and product_name_cleaned == scraped_name_cleaned:
+                    print(f'Product found in category comparing {product_name_cleaned}       and        {scraped_name_cleaned}')
                     # Extract only the numeric part of the price using regular expressions
                     price_match = re.search(r'(\d+\.\d+)', scraped_price)
                    
@@ -133,6 +135,7 @@ for base_url in base_urls:
                         found_product_names.append(scraped_name)
                         found_product_prices.append(float(price_match.group(1)))  # Convert price to float
                         found_product_artikuls.append(row['artikuls'])  # Store the corresponding Artikuls
+                        found_product_id.append(row['id']) 
                         found_product_dates.append(today_date_str)  
                         found_product_discount.append(scraped_discount)
                         found_product_dates_7.append(today_date_str)  
@@ -151,16 +154,10 @@ print(f'Total products found: {total_products_found_count}')
 print(f'===========================================================')
 
 # Create a DataFrame for found products with Product Name, Price, and Artikuls
-found_products_df = pd.DataFrame({'lats_nosaukums': found_product_names, 'lats_cena': found_product_prices, 'artikuls': found_product_artikuls, 'lats_datums': [today_date_str] * len(found_product_names), 'lats_akcija': found_product_discount,'lats_url': found_product_url, 'lats_datums_7': [today_date_str] * len(found_product_names) })
+found_products_df = pd.DataFrame({'lats_nosaukums': found_product_names, 'lats_cena': found_product_prices, 'web_preces_id': found_product_id, 'artikuls': found_product_artikuls, 'lats_datums': [today_date_str] * len(found_product_names), 'lats_akcija': found_product_discount,'lats_url': found_product_url, 'lats_datums_7': [today_date_str] * len(found_product_names) })
 
 # Establish a connection to the PostgreSQL database
-conn = psycopg2.connect(
-    host="localhost",
-    port=5432,
-    user="postgres",
-    password="0000",
-    database="postgres"
-)
+
 
 # Define the table name where you want to insert the data
 table_name = 'lats'

@@ -44,10 +44,10 @@ base_urls = [
     "https://ventspils.citro.lv/product-category/maizes-izstradajumi-2/",
     "https://ventspils.citro.lv/product-category/piena-produkti-olas/",
     "https://ventspils.citro.lv/product-category/saimniecibas-preces/",
-    #"https://ventspils.citro.lv/product-category/saldejums/",
-    #"https://ventspils.citro.lv/product-category/saldeti-produkti/",
-    #"https://ventspils.citro.lv/product-category/saldumi-uzkodas/",
-    #"https://ventspils.citro.lv/product-category/sausas-zupas-buljoni/",
+    "https://ventspils.citro.lv/product-category/saldejums/",
+    "https://ventspils.citro.lv/product-category/saldeti-produkti/",
+    "https://ventspils.citro.lv/product-category/saldumi-uzkodas/",
+    "https://ventspils.citro.lv/product-category/sausas-zupas-buljoni/",
 
     # Add other URLs as needed
 ]
@@ -72,7 +72,7 @@ update_query = """
 # Execute the update query
 cursor.execute(update_query)
 conn.commit()
-query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"citro\" IS NOT NULL AND TRIM(\"citro\") <> ''"
+query = "SELECT  \"id\", \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"citro\" IS NOT NULL AND TRIM(\"citro\") <> ''"
 cursor.execute(query)
 
 columns = [desc[0] for desc in cursor.description]
@@ -87,6 +87,7 @@ def is_nan_or_empty(value):
 found_product_names = []
 found_product_prices = []
 found_product_artikuls = []
+found_product_id = []
 found_product_dates = []
 found_product_discount = []
 found_product_url = []
@@ -176,6 +177,7 @@ for base_url in base_urls:
                         found_product_names.append(scraped_name)
                         found_product_prices.append(float(price_match.group(1)))  # Convert price to float
                         found_product_artikuls.append(row['artikuls'])  # Store the corresponding Artikuls
+                        found_product_id.append(row['id']) 
                         found_product_dates.append(today_date_str)
                         found_product_discount.append(scraped_discount)
                         found_product_dates_7.append(today_date_str)
@@ -200,16 +202,9 @@ print(f'Total products found: {total_products_found_count}')
 print(f'===========================================================')
 
 # Create a DataFrame for found products with Product Name, Price, and Artikuls
-found_products_df = pd.DataFrame({'citro_nosaukums': found_product_names, 'citro_cena': found_product_prices, 'artikuls': found_product_artikuls, 'citro_datums': [today_date_str] * len(found_product_names), 'citro_akcija': found_product_discount,'citro_url': found_product_url, 'citro_datums_7': [today_date_str] * len(found_product_names) })
+found_products_df = pd.DataFrame({'citro_nosaukums': found_product_names, 'citro_cena': found_product_prices, 'web_preces_id': found_product_id, 'artikuls': found_product_artikuls, 'citro_datums': [today_date_str] * len(found_product_names), 'citro_akcija': found_product_discount,'citro_url': found_product_url, 'citro_datums_7': [today_date_str] * len(found_product_names) })
 
 # Establish a connection to the PostgreSQL database
-conn = psycopg2.connect(
-    host="localhost",
-    port=5432,
-    user="postgres",
-    password="0000",
-    database="postgres"
-)
 
 # Define the table name where you want to insert the data
 table_name = 'citro'

@@ -5,19 +5,13 @@ from datetime import datetime
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoSuchWindowException, InvalidSessionIdException
 from selenium.webdriver.common.by import By
-import signal
-import subprocess
-import sys
-import time
 import re
 import math
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-# Add a logger
 logger = logging.getLogger(__name__)
-# Connect to the PostgreSQL database
 conn = psycopg2.connect(
     host="localhost",
     port=5432,
@@ -25,44 +19,39 @@ conn = psycopg2.connect(
     password="0000",
     database="postgres"
 )
-
-# Initialize WebDriver
 driver = webdriver.Firefox()
-
-# Define the base URLs
+# Definē URL
 base_urls = [
     "https://alkoutlet.lv/vins-un-vina-dzerieni.html/",
-    #"https://alkoutlet.lv/stiprie.html/",
-    #"https://alkoutlet.lv/alus-sidri-kokteili.html/",
+    "https://alkoutlet.lv/stiprie.html/",
+    "https://alkoutlet.lv/alus-sidri-kokteili.html/",
     #"https://alkoutlet.lv/bezalkoholiskie.html/",
-    # Add other URLs as needed
 ]
-
 total_products_found_count = 0
 
-# Get today's date in the format "YYYY-MM-DD"
+# Iegūstiet šodienas datumu formātā "GGGG-MM-DD"
 today_date = datetime.now()
 today_date_str = today_date.strftime("%Y-%m-%d %H:%M:%S")
 
-# Extract Artikuls from the PostgreSQL database
+# Nomainā indikātora statusu uz "in-progress"
 cursor = conn.cursor()
-
 update_query = """
                 UPDATE statuss
                 SET button_state = false,
                     alkoutlet = 'status in-progress';
             """
 
-# Execute the update query
+# Izpilda atjaunināšanas vaicājumu
 cursor.execute(update_query)
 conn.commit()
-
-query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\", \"alkoutlet\" FROM web_preces_db WHERE \"alkoutlet\" IS NOT NULL AND TRIM(\"alkoutlet\") <> ''"
+# Pieprasa datubāzē attiecīgos produkta datus
+query = "SELECT \"id\", \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\", \"alkoutlet\" FROM web_preces_db WHERE \"alkoutlet\" IS NOT NULL AND TRIM(\"alkoutlet\") <> ''"
 cursor.execute(query)
+# Iegūst kolonnu nosaukumus no datu bāzes vaicājuma rezultāta
 columns = [desc[0] for desc in cursor.description]
+# Izveidojo DataFrame no iegūtiem datiem, izmantojot kolonnu nosaukumus
 df = pd.DataFrame(cursor.fetchall(), columns=columns)
 
-logger.info("Status is set to "'status in-progress'".")
 cursor.close()
 
 def is_nan_or_empty(value):
@@ -72,6 +61,7 @@ def is_nan_or_empty(value):
 found_product_names = []
 found_product_prices = []
 found_product_artikuls = []
+found_product_id = []
 found_product_dates = []
 found_product_discount = []
 found_product_url = []
@@ -228,6 +218,7 @@ for base_url in base_urls:
                         found_product_names.append(scraped_name)
                         found_product_prices.append(float(price_match.group(1)))  # Convert price to float
                         found_product_artikuls.append(row['artikuls'])  # Store the corresponding Artikuls
+                        found_product_id.append(row['id']) 
                         found_product_dates.append(today_date_str)  
                         found_product_discount.append(scraped_discount)
                         found_product_dates_7.append(today_date_str)  
@@ -246,16 +237,10 @@ print(f'Total products found: {total_products_found_count}')
 print(f'===========================================================')
 
 # Create a DataFrame for found products with Product Name, Price, and Artikuls
-found_products_df = pd.DataFrame({'alkoutlet_nosaukums': found_product_names, 'alkoutlet_cena': found_product_prices, 'artikuls': found_product_artikuls, 'alkoutlet_datums': [today_date_str] * len(found_product_names), 'alkoutlet_akcija': found_product_discount,'alkoutlet_url': found_product_url, 'alkoutlet_datums_7': [today_date_str] * len(found_product_names) })
+found_products_df = pd.DataFrame({'alkoutlet_nosaukums': found_product_names, 'alkoutlet_cena': found_product_prices, 'artikuls': found_product_artikuls, 'web_preces_id': found_product_id, 'alkoutlet_datums': [today_date_str] * len(found_product_names), 'alkoutlet_akcija': found_product_discount,'alkoutlet_url': found_product_url, 'alkoutlet_datums_7': [today_date_str] * len(found_product_names) })
 
 # Establish a connection to the PostgreSQL database
-conn = psycopg2.connect(
-    host="localhost",
-    port=5432,
-    user="postgres",
-    password="0000",
-    database="postgres"
-)
+
 
 # Define the table name where you want to insert the data
 table_name = 'alkoutlet'

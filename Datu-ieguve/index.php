@@ -29,9 +29,10 @@
      
     ?>
 <div class="title">
-        <div class="name">
-            <i class="fas fa-tasks"></i> Datu krātuve 
+        <div class="name" >
+            <i class="fas fa-tasks" style="display: inline;"></i> Datu krātuve    <div id="rowCount" style="display: inline; padding-left: 1.5rem;;">Skaits: 0</div>
         </div>
+       
         <div class="button-container">
         <select id="kateg" class="kat">
            
@@ -206,7 +207,7 @@
                 </div>
             </div>
 
-
+            <div id="loading-screen"></div>
 
 
 

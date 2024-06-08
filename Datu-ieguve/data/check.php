@@ -18,7 +18,6 @@ if ($count_web_preces_db > 0) {
 } elseif ($count_data_table == 0) {
     echo 'neeksiste';
 } else {
-
     echo 'success';
 }
 ?>

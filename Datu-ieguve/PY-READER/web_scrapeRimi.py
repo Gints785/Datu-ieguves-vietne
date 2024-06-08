@@ -42,11 +42,11 @@ base_urls = [
     "https://www.rimi.lv/e-veikals/lv/produkti/dzerieni/c/SH-5",
     "https://www.rimi.lv/e-veikals/lv/produkti/alkoholiskie-dzerieni/c/SH-1",
     "https://www.rimi.lv/e-veikals/lv/produkti/vina-darzs/c/SH-18",
-    #"https://www.rimi.lv/e-veikals/lv/produkti/skaistumkopsanai-un-higienai/c/SH-14",
-    #"https://www.rimi.lv/e-veikals/lv/produkti/zidainiem-un-berniem/c/SH-15",
-    #"https://www.rimi.lv/e-veikals/lv/produkti/sadzives-kimija/c/SH-10",
-    #"https://www.rimi.lv/e-veikals/lv/produkti/majdzivniekiem/c/SH-8",
-    #"https://www.rimi.lv/e-veikals/lv/produkti/majai-darzam-un-atputai/c/SH-3"
+    "https://www.rimi.lv/e-veikals/lv/produkti/skaistumkopsanai-un-higienai/c/SH-14",
+    "https://www.rimi.lv/e-veikals/lv/produkti/zidainiem-un-berniem/c/SH-15",
+    "https://www.rimi.lv/e-veikals/lv/produkti/sadzives-kimija/c/SH-10",
+    "https://www.rimi.lv/e-veikals/lv/produkti/majdzivniekiem/c/SH-8",
+    "https://www.rimi.lv/e-veikals/lv/produkti/majai-darzam-un-atputai/c/SH-3"
 
     # Add other URLs as needed
 ]
@@ -72,7 +72,7 @@ update_query = """
 cursor.execute(update_query)
 conn.commit()
 
-query = "SELECT \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"rimi\" IS NOT NULL AND TRIM(\"rimi\") <> ''"
+query = "SELECT \"id\",\"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"rimi\" IS NOT NULL AND TRIM(\"rimi\") <> ''"
 cursor.execute(query)
 columns = [desc[0] for desc in cursor.description]
 df = pd.DataFrame(cursor.fetchall(), columns=columns)
@@ -87,6 +87,7 @@ def is_nan_or_empty(value):
 found_product_names = []
 found_product_prices = []
 found_product_artikuls = []
+found_product_id = []
 found_product_dates = []
 found_product_discount = []
 found_product_url = []
@@ -183,6 +184,7 @@ for base_url in base_urls:
                         found_product_names.append(scraped_name)
                         found_product_prices.append(float(price_match.group(1)))  # Convert price to float
                         found_product_artikuls.append(row['artikuls'])  # Store the corresponding Artikuls
+                        found_product_id.append(row['id'])
                         found_product_dates.append(today_date_str)  
                         found_product_discount.append(scraped_discount)
                         found_product_dates_7.append(today_date_str)  
@@ -201,16 +203,9 @@ print(f'Total products found: {total_products_found_count}')
 print(f'===========================================================')
 
 # Create a DataFrame for found products with Product Name, Price, and Artikuls
-found_products_df = pd.DataFrame({'rimi_nosaukums': found_product_names, 'rimi_cena': found_product_prices, 'artikuls': found_product_artikuls, 'rimi_datums': [today_date_str] * len(found_product_names), 'rimi_akcija': found_product_discount,'rimi_url': found_product_url, 'rimi_datums_7': [today_date_str] * len(found_product_names) })
+found_products_df = pd.DataFrame({'rimi_nosaukums': found_product_names, 'rimi_cena': found_product_prices, 'web_preces_id': found_product_id,'artikuls': found_product_artikuls, 'rimi_datums': [today_date_str] * len(found_product_names), 'rimi_akcija': found_product_discount,'rimi_url': found_product_url, 'rimi_datums_7': [today_date_str] * len(found_product_names) })
 
 # Establish a connection to the PostgreSQL database
-conn = psycopg2.connect(
-    host="localhost",
-    port=5432,
-    user="postgres",
-    password="0000",
-    database="postgres"
-)
 
 # Define the table name where you want to insert the data
 table_name = 'rimi'
