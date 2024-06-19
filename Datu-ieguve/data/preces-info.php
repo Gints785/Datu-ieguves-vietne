@@ -3,10 +3,10 @@ require("../connectDB.php");
 
 
 
-$page = isset($_GET['page']) ? intval($_GET['page']) : 1; // Current page number
-$batch_size = isset($_GET['batch_size']) ? intval($_GET['batch_size']) : 20; // Number of rows per batch
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1; 
+$batch_size = isset($_GET['batch_size']) ? intval($_GET['batch_size']) : 20; 
 
-// Calculate the offset based on the current page and batch size
+
 $offset = ($page - 1) * $batch_size;
 
 $select_data_SQL = "

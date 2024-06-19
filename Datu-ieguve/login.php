@@ -23,13 +23,11 @@
                     if (isset($_POST["ielogoties"])) {
                         session_start();
                     
-                        // Assuming you have already established a connection to the database in $savienojums
-                    
-                        // Prepare the statement to find the user by username
+
                         $query = 'SELECT * FROM users WHERE username = $1';
                         $result = pg_prepare($savienojums, "find_user", $query);
                     
-                        // Execute the prepared statement with the username parameter
+   
                         $result = pg_execute($savienojums, "find_user", array($_POST["lietotajs"]));
                     
                         if (pg_num_rows($result) == 1) {
@@ -40,7 +38,7 @@
                                 // Password is correct, set the session variable
                                 $_SESSION["lietotajvards_RCG"] = $ieraksts["username"];
                     
-                                // Redirect to the desired page
+                          
                                 header("location:./");
                             } else {
                                 echo "Nepareizs lietotajs vai parole";

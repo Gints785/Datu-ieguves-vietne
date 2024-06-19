@@ -1,22 +1,22 @@
 <?php
-// Include the file that establishes the PostgreSQL connection
+
 require("../connectDB.php");
 
-// Check if dataID and dataWEB parameters are present
+
 if (!isset($_GET['dataID']) || !isset($_GET['dataWEB']) || !isset($_GET['dataWEB_2'])) {
     echo "Error: Both dataID and dataWEB parameters are required.";
-    exit; // Stop further execution
+    exit; 
 }
 
-// Get the values of dataID and dataWEB from the AJAX request
+
 $dataID = $_GET['dataID'];
 $dataWEB = $_GET['dataWEB'];
 $dataWEB_2 = $_GET['dataWEB_2'];
 
-$columnsToSelect = "datums, cena, akcija"; // Default columns
+$columnsToSelect = "datums, cena, akcija"; 
 $columnsToSelect_2 = "akcija, url";
 
-// Adjust columns based on the table name if needed
+
 switch ($dataWEB) {
     case 'barbora_history':
         $columnsToSelect = "barbora_datums, barbora_cena, barbora_akcija";
@@ -34,7 +34,7 @@ switch ($dataWEB) {
         $columnsToSelect = "alkoutlet_datums, alkoutlet_cena, alkoutlet_akcija";      
         break;    
     default:
-        // Handle default case or error condition
+     
         break;
 }
 
@@ -55,15 +55,15 @@ switch ($dataWEB_2) {
         $columnsToSelect_2 = "alkoutlet_nosaukums ,alkoutlet_akcija, alkoutlet_url, alkoutlet_datums, alkoutlet_cena";
         break;    
     default:
-        // Handle default case or error condition
+       
         break;
 }
 
-// Prepare the SQL query based on the received data
+
 $query = "SELECT $columnsToSelect FROM $dataWEB WHERE artikuls = '$dataID'";
 $query2 = "SELECT $columnsToSelect_2 FROM $dataWEB_2 WHERE artikuls = '$dataID'";
 
-// Execute the query
+
 $result = pg_query($savienojums, $query);
 $result2 = pg_query($savienojums, $query2);
 
@@ -72,21 +72,19 @@ if (!$result || !$result2) {
     
     exit;
 }
-// Create an array to hold the data
+
 $data = array();
 
 
 
 
-// Create an array to hold the data
 
-// Fetch data from the PostgreSQL database
 if ($result) {
     while ($row = pg_fetch_assoc($result)) {
-        // Create an array to hold the formatted data for this row
+   
         $formattedData = array();
 
-        // Iterate over each column in the row
+       
         foreach ($row as $columnName => $columnValue) {
             switch ($columnName) {
                 case 'barbora_datums':
@@ -214,6 +212,6 @@ $response = array(
     'data_info' => $data_info
 );
 
-// Encode the combined data as JSON and echo it
+
 echo json_encode($response);
 ?>

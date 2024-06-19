@@ -13,7 +13,7 @@ $(document).ready(function(){
 
 
     let currentPage = 1;
-    const batchSize = 30; // Change this value as needed
+    const batchSize = 30; 
     fetchProducts();
     getTotalPagesAndUpdateMaxInput();
 
@@ -29,7 +29,7 @@ $(document).ready(function(){
     }
 
 
-    // Function to fetch products based on page number
+  
     function fetchProducts(page) {
         $.ajax({
             url: 'data/product-info.php',
@@ -90,11 +90,11 @@ $(document).ready(function(){
         $.ajax({
             url: 'data/get-total-pages.php',
             type: 'GET',
-            data: { batch_size: batchSize }, // Send the batch size parameter if needed
+            data: { batch_size: batchSize }, 
             success: function(response) {
                 var totalPages = parseInt(response);
-                $('#totalPages').text(totalPages); // Update the total pages display
-                $('#pageNumInput').attr('max', totalPages); // Set the max attribute of the input field
+                $('#totalPages').text(totalPages); 
+                $('#pageNumInput').attr('max', totalPages); 
              
 
             },
@@ -281,7 +281,7 @@ $(document).ready(function(){
         }
     });
     
-    // Function to handle AJAX request and processing
+
     function getProductInfo() {
         $('#pagination').hide();
        
@@ -298,21 +298,19 @@ $(document).ready(function(){
                 console.log("All precugrupas in preces_info:", preces_info.map(preces => preces.grupas_id));
     
                 let filteredPreces = preces_info;
-               
-                // Filter by kategorija first
+             
                 let filteredPrecesAndKategorijaAndPrecugrupa = filteredPreces;
                 if (KATEGORIJA !== '') {
                     filteredPrecesAndKategorijaAndPrecugrupa = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => preces.kateg_id === KATEGORIJA);
                 }
     
-                // If kategorija is selected or if no kategorija is selected but precugrupa is, then filter by precugrupa
                 if (KATEGORIJA !== '' || PRECUGRUPA !== '') {
                     if (PRECUGRUPA !== '') {
                         filteredPrecesAndKategorijaAndPrecugrupa = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => preces.grupas_id === PRECUGRUPA);
                     }
                 }
     
-                // Filter by artikuls within the filtered category and precugrupa
+              
                 let filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls = filteredPrecesAndKategorijaAndPrecugrupa;
                 if (artikuls.length > 0) {
                     filteredPrecesAndKategorijaAndPrecugrupaAndArtikuls = filteredPrecesAndKategorijaAndPrecugrupa.filter(preces => artikuls.includes(preces.artikuls));
@@ -473,11 +471,11 @@ function handleCrossClick(event) {
     fileInput.disabled = false;
     fileInput.value = ''; 
     
-    // Remove the corresponding list item from the DOM
+  
     const listItem = event.target.closest('li');
     listItem.remove();
     
-    // Hide the list if there are no files remaining
+   
  
     listSection.style.display = 'none';
     
@@ -490,7 +488,7 @@ function disable() {
     
 }
 
-// Adding event listener to the list container and delegating the click event to the SVG elements
+
 listContainer.addEventListener('click', function(event) {
     if (event.target.classList.contains('cross') || event.target.tagName === 'path') {
         handleCrossClick(event);
@@ -533,7 +531,7 @@ function handleFiles(files) {
             </div>
         `;
 
-        // Append the file item to the list container
+      
         listContainer.appendChild(listItem);
     }
     
@@ -552,14 +550,13 @@ function dropfile(files) {
 $('#input-file').on('change', function(e) {
     var fileInput = e.target;
     
-    console.log('File input value:', fileInput.value); // Log the file input value
+    console.log('File input value:', fileInput.value); 
     
-    // Check if any files are selected
+ 
     if (fileInput.files.length === 0) {
-        // File input is empty (no file selected)
+     
         console.log('No file selected!');
-        disable(); // Call the disable function
-        // You can perform any actions you need here, such as showing an alert
+        disable(); 
     }
 });
 
@@ -572,48 +569,48 @@ fileInput.addEventListener('change', function(e) {
 
 
 $('#productimport').submit(e => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault(); 
     
-    // Get the file input field
+    
     var fileInput = $('#input-file')[0];
 
-    // Check if any files are selected
+    
     if (fileInput.files.length > 0) {
-        // Extract the file extension
+    
         var fileName = fileInput.files[0].name;
         var fileExtension = fileName.split('.').pop().toLowerCase();
         
-        // Check if the file extension is one of the typical Excel extensions
+     
         if (fileExtension === 'xls' || fileExtension === 'xlsx' || fileExtension === 'xlsm') {
-            // Create FormData object
+        
             var formData = new FormData();
-            formData.append('file', fileInput.files[0]); // Append the file to FormData
+            formData.append('file', fileInput.files[0]); 
             
-            // Send the FormData to the server using AJAX
+         
             $.ajax({
-                url: 'data/import.php', // Replace 'your_php_script.php' with the URL of your PHP script
+                url: 'data/import.php', 
                 type: 'POST',
                 data: formData,
-                processData: false, // Prevent jQuery from automatically processing the form data
-                contentType: false, // Prevent jQuery from automatically setting the content type
+                processData: false, 
+                contentType: false, 
                 success: function(response) {
                     console.log('File sent successfully!');
                     console.log('Server Response:', response);
                     location.reload();
-                    // Handle server response if needed
+                 
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);
-                    // Handle errors if needed
+               
                 }
             });
         } else {
-            // Show alert if the file is not an Excel file
+         
             console.error('File is not an Excel file!');
             showAlert('Ir atļauti tikai Excel faili!');
         }
     } else {
-        // Show browser error message if no files are selected
+     
         console.error('No file selected!');
         showAlert('Nav atlasīts neviens fails!');
     }
@@ -677,13 +674,13 @@ function displayPrecugrupas(precugrupa_info) {
     var selectBox = document.getElementById('precgroup'); 
     selectBox.innerHTML = '';
     
-    // Add default option
+
     var defaultOption = document.createElement('option');
     defaultOption.value = ''; 
     defaultOption.textContent = '-Visas pr.grupas-'; 
     selectBox.appendChild(defaultOption);
 
-    // Populate options from retrieved data
+  
     precugrupa_info.forEach(function(precugrupa) {
         var option = document.createElement('option');
         option.value = precugrupa.id; 
@@ -717,20 +714,20 @@ function fetchkategorijas() {
     });
 }
 function displayKategorijas(kategorija_info) {
-    var selectBox = document.getElementById('kateg'); // Assuming 'kateg' is the ID of your select element
-    selectBox.innerHTML = ''; // Clear existing options
+    var selectBox = document.getElementById('kateg');
+    selectBox.innerHTML = ''; 
     
-    // Add default option
+  
     var defaultOption = document.createElement('option');
-    defaultOption.value = ''; // Set the value of the default option as needed
-    defaultOption.textContent = '-Visas kategorijas-'; // Text for the default option
+    defaultOption.value = ''; 
+    defaultOption.textContent = '-Visas kategorijas-'; 
     selectBox.appendChild(defaultOption);
 
-    // Populate options from retrieved data
+  
     kategorija_info.forEach(function(kategorija) {
         var option = document.createElement('option');
-        option.value = kategorija.id; // Assuming 'id' is the key for the ID of the category
-        option.textContent = kategorija.nosaukums; // Assuming 'nosaukums' is the key for the name of the category
+        option.value = kategorija.id; 
+        option.textContent = kategorija.nosaukums; 
         selectBox.appendChild(option);
     });
 }
@@ -759,17 +756,17 @@ $(document).on('click', '#export_list',(e)=>{
 
 
  document.getElementById('export_check').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault(); 
 
-    // Your export logic
+   
     var tableBody = document.getElementById('prod_info');
     var rows = tableBody.querySelectorAll('tr');
     var customName = document.querySelector('.inp').value.trim();
     var filename = customName ? customName : 'exported_data';
     var data = [];
 
-    var columnNamesRow = ['artikuls', 'nosaukums', 'barbora', 'lats', 'citro', 'rimi', 'alkoutlet']; // Predefined column names
-    // Modify the above array with your predefined column names
+    var columnNamesRow = ['artikuls', 'nosaukums', 'barbora', 'lats', 'citro', 'rimi', 'alkoutlet']; 
+
 
     data.push(columnNamesRow);
 
@@ -777,7 +774,7 @@ $(document).on('click', '#export_list',(e)=>{
         var rowData = [];
         var cells = row.querySelectorAll('td');
         cells.forEach(function(cell, index) {
-            // Exclude the first column (ID column)
+           
             if (index !== 0) {
                 rowData.push(cell.innerText);
             }

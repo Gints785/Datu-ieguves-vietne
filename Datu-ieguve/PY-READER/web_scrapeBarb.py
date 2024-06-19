@@ -8,12 +8,11 @@ import psycopg2
 import math
 import logging
 
-# Read data from Excel file
-conn = None  # Initialize the connection variable
 
+conn = None  
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-# Add a logger
+
 logger = logging.getLogger(__name__)
 
 try:
@@ -29,7 +28,7 @@ try:
 except Exception as e:
     logger.error("Error while establishing connection to the database: %s", e)
 
-# Read data from the PostgreSQL database
+
 query = "SELECT \"id\", \"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"barbora\" IS NOT NULL AND TRIM(\"barbora\") <> ''"
 cursor = conn.cursor()
 update_query = """
@@ -37,24 +36,23 @@ update_query = """
                 SET button_state = false,
                     barbora = 'status in-progress';
             """
-# Execute the update query
+
 cursor.execute(update_query)
 conn.commit()
 cursor.execute(query)
 
 
-# Fetch the data and create a DataFrame
+
 columns = [desc[0] for desc in cursor.description]
 data = cursor.fetchall()
 df = pd.DataFrame(data, columns=columns)
 
-# Close the database connection
+
 cursor.close()
 
-# Initialize WebDriver
 driver = webdriver.Firefox()
 
-# Define the base URLs
+
 base_urls = [
     "https://www.barbora.lv/piena-produkti-un-olas",
     "https://www.barbora.lv/augli-un-darzeni",
@@ -67,7 +65,7 @@ base_urls = [
     "https://www.barbora.lv/kosmetika-un-higiena",
     "https://www.barbora.lv/viss-tirisanai-un-majdzivniekiem",
     "https://www.barbora.lv/majai-un-atputai"
-    # Add other URLs as needed
+    
 ]
 
 selector1 = '.tw-mr-0\\.5.tw-text-b-price-sm.tw-font-semibold.lg\\:tw-text-b-price-xl'
@@ -163,21 +161,21 @@ for base_url in base_urls:
             cents_value = cents_element.text.strip()
            
 
-            # Extract whole and decimal parts
+           
             matches1 = value1.split()
 
             if len(matches1) >= 1:
                 whole_part = matches1[0]
 
-                # Check if there's at least one element in cents
+              
                 if len(cents_value) >= 1:
                     decimal_part = cents_value
 
-                    # Combine the values
+                 
                     combined_value = f"{whole_part}.{decimal_part}"
                     scraped_product_prices.append(combined_value)
                 else:
-                    # If cents are missing, use only the whole part
+                 
                     scraped_product_prices.append(whole_part)
 
         
@@ -313,30 +311,26 @@ logger.info(f'===========================================================')
 logger.info(f'Total products found: {total_products_found_count}')
 logger.info(f'===========================================================')
 
-# Create a DataFrame for found products with Product Name, Price, and Artikuls
+
 found_products_df = pd.DataFrame({'barbora_nosaukums': found_product_names, 'barbora_cena': found_product_prices, 'barbora_datums': [today_date_str] * len(found_product_names), 'barbora_datums_7': [today_date_str] * len(found_product_names), 'barbora_akcija': found_product_discount,'barbora_url': found_product_url, 'web_preces_id': found_product_id , 'artikuls': found_product_artikuls })
 print(found_products_df)  
-# Establish a connection to the PostgreSQL database
 
-# Define the table names
 table_name = 'barbora'
 history_table_name = 'barbora_history'
 
-# Establish a connection to the database
+
 cursor = conn.cursor()
 
 try:
-    # Iterate through the rows of the DataFrame and insert or update data in the database tables
+  
     for index, row in found_products_df.iterrows():
-    # Convert date to string format before insertion into the database
+ 
         
         values = tuple(str(row[column]) if column == 'barbora_cena' else row[column] for column in found_products_df.columns)
-        values = list(values)  # Convert tuple to list to modify values
-        values[found_products_df.columns.get_loc('barbora_datums_7')] = row['barbora_datums']  # Assign value from barbora_datums
+        values = list(values)  
+        values[found_products_df.columns.get_loc('barbora_datums_7')] = row['barbora_datums']  
         values = tuple(values)
 
-
-        # Check if the product exists in the main table
         check_product_query = f"SELECT * FROM {table_name} WHERE \"artikuls\" = CAST(%s AS text)"
         cursor.execute(check_product_query, (values[found_products_df.columns.get_loc('artikuls')],))
         existing_data = cursor.fetchone()
@@ -354,7 +348,7 @@ try:
             
             
             if existing_price != new_price:
-                # Price has changed, update both price and date
+       
                 update_main_table_query = f"""
                     UPDATE {table_name}
                     SET "barbora_nosaukums" = %s, "barbora_cena" = %s, "barbora_datums" = %s, "barbora_datums_7" = %s, "barbora_akcija" = %s, "barbora_url" = %s
@@ -362,7 +356,7 @@ try:
                 """
                 cursor.execute(update_main_table_query, (values[found_products_df.columns.get_loc('barbora_nosaukums')], values[found_products_df.columns.get_loc('barbora_cena')], values[found_products_df.columns.get_loc('barbora_datums')],values[found_products_df.columns.get_loc('barbora_datums_7')],values[found_products_df.columns.get_loc('barbora_akcija')],values[found_products_df.columns.get_loc('barbora_url')], values[found_products_df.columns.get_loc('artikuls')]))
 
-                # Insert old row into history table
+               
                 insert_history_query = f"""
                     INSERT INTO {history_table_name} ("artikuls", "barbora_nosaukums", "barbora_cena", "barbora_datums", "barbora_akcija")
                     VALUES (%s, %s, %s, %s, %s)
@@ -371,7 +365,7 @@ try:
 
                 logger.info("Updated main table with new price and date, and inserted old data into history table.")
             else:
-                # Prices are the same, update only the date
+           
                 update_date_query = f"""
                     UPDATE {table_name}
                     SET "barbora_datums" = %s, barbora_akcija = %s
@@ -388,7 +382,7 @@ try:
 
 
         else:
-            # Product not found in the main table, insert new data
+   
             insert_query = f"""
                 INSERT INTO {table_name} ({', '.join(['"' + col + '"' for col in found_products_df.columns])})
                 VALUES ({', '.join(['%s' for _ in found_products_df.columns])})

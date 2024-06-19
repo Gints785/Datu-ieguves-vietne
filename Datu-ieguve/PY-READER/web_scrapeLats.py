@@ -8,9 +8,9 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-# Add a logger
+
 logger = logging.getLogger(__name__)
-# Connect to the PostgreSQL database
+
 conn = psycopg2.connect(
     host="localhost",
     port=5432,
@@ -19,14 +19,14 @@ conn = psycopg2.connect(
     database="postgres"
 )
 
-# Initialize WebDriver
+
 driver = webdriver.Firefox()
 
 driver.set_page_load_timeout(600)
 
 driver.set_script_timeout(600)
 
-# Define the base URLs
+
 base_urls = [
     "https://www.e-latts.lv/augli-un-darzeni.2.g",
     "https://www.e-latts.lv/piena-produkti-majoneze-un-olas.1.g",
@@ -36,16 +36,16 @@ base_urls = [
     "https://www.e-latts.lv/saldeta-partika.6.g",
     "https://www.e-latts.lv/dzerieni.7.g",
     "https://www.e-latts.lv/alkoholiskie-dzerieni.531.g"
-    # Add other URLs as needed
+    
 ]
 
 total_products_found_count = 0
 
-# Get today's date in the format "YYYY-MM-DD"
+
 today_date = datetime.now()
 today_date_str = today_date.strftime("%Y-%m-%d %H:%M:%S")
 
-# Extract Artikuls from the PostgreSQL database
+
 cursor = conn.cursor()
 cursor.execute("UPDATE statuss SET button_state = false;")  
 update_query = """
@@ -54,7 +54,7 @@ update_query = """
                     lats = 'status in-progress';
             """
 
-# Execute the update query
+
 cursor.execute(update_query)
 conn.commit()
 query = "SELECT \"id\",\"artikuls\", \"nosaukums\", \"barbora\", \"lats\", \"citro\", \"rimi\" FROM web_preces_db WHERE \"lats\" IS NOT NULL AND TRIM(\"lats\") <> ''"
@@ -66,7 +66,7 @@ cursor.close()
 def is_nan_or_empty(value):
     return isinstance(value, float) and math.isnan(value)
 
-# Lists to store found product details
+
 found_product_names = []
 found_product_prices = []
 found_product_artikuls = []
@@ -82,7 +82,7 @@ for base_url in base_urls:
     title_match = re.search(r"https://www.e-latts.lv/([^/]+)", base_url)
     title = title_match.group(1) if title_match else "Unknown"
 
-    for page_number in range(0, 100):  # Adjusted the range to start from page 1
+    for page_number in range(0, 100):  
         url = f"{base_url}?p={page_number}"
         driver.get(url)
         price_elements = driver.find_elements("css selector", "div.-oPrice")
@@ -122,19 +122,19 @@ for base_url in base_urls:
         for scraped_name, scraped_price, scraped_discount, scraped_url in zip(scraped_product_names, scraped_product_prices , product_data, product_url):
             scraped_name_cleaned = scraped_name.lower()
 
-            # Iterate directly over DataFrame rows
+      
             for index, row in df.iterrows():
                 product_name_cleaned = str(row['lats']).strip().lower()
                 
                 if not is_nan_or_empty(product_name_cleaned) and product_name_cleaned == scraped_name_cleaned:
                     print(f'Product found in category comparing {product_name_cleaned}       and        {scraped_name_cleaned}')
-                    # Extract only the numeric part of the price using regular expressions
+                    
                     price_match = re.search(r'(\d+\.\d+)', scraped_price)
                    
                     if price_match:
                         found_product_names.append(scraped_name)
-                        found_product_prices.append(float(price_match.group(1)))  # Convert price to float
-                        found_product_artikuls.append(row['artikuls'])  # Store the corresponding Artikuls
+                        found_product_prices.append(float(price_match.group(1)))  
+                        found_product_artikuls.append(row['artikuls'])  
                         found_product_id.append(row['id']) 
                         found_product_dates.append(today_date_str)  
                         found_product_discount.append(scraped_discount)
@@ -142,39 +142,36 @@ for base_url in base_urls:
                         found_product_url.append(scraped_url)    
                         print(f'Product found in category "{title}" on page {page_number}: {scraped_name}, lats_cena: {price_match.group(1)}, discounted_price: {scraped_discount}, artikuls: {row["artikuls"]}, URL: {scraped_url}')
                         total_products_found_count += 1
-                        break  # Break the loop after finding a match
+                        break  
                     else:
                         print(f'Unable to extract price for product "{scraped_name}"')
 
-# Close the browser tab
+
 driver.quit()
 
 print(f'===========================================================')
 print(f'Total products found: {total_products_found_count}')
 print(f'===========================================================')
 
-# Create a DataFrame for found products with Product Name, Price, and Artikuls
+
 found_products_df = pd.DataFrame({'lats_nosaukums': found_product_names, 'lats_cena': found_product_prices, 'web_preces_id': found_product_id, 'artikuls': found_product_artikuls, 'lats_datums': [today_date_str] * len(found_product_names), 'lats_akcija': found_product_discount,'lats_url': found_product_url, 'lats_datums_7': [today_date_str] * len(found_product_names) })
 
-# Establish a connection to the PostgreSQL database
 
-
-# Define the table name where you want to insert the data
 table_name = 'lats'
 history_table_name = 'lats_history'
 
-# Establish a connection to the database
+
 cursor = conn.cursor()
 
 try:
-    # Iterate through the rows of the DataFrame and insert or update data in the database tables
+ 
     for index, row in found_products_df.iterrows():
-    # Convert date to string format before insertion into the database
+
         values = tuple(str(row[column]) if column == 'lats_cena' else row[column] for column in found_products_df.columns)
-        values = list(values)  # Convert tuple to list to modify values
-        values[found_products_df.columns.get_loc('lats_datums_7')] = row['lats_datums']  # Assign value from barbora_datums
+        values = list(values)  
+        values[found_products_df.columns.get_loc('lats_datums_7')] = row['lats_datums'] 
         values = tuple(values)
-        # Check if the product exists in the main table
+      
         check_product_query = f"SELECT * FROM {table_name} WHERE \"artikuls\" = CAST(%s AS text)"
         cursor.execute(check_product_query, (values[found_products_df.columns.get_loc('artikuls')],))
         existing_data = cursor.fetchone()
@@ -192,7 +189,7 @@ try:
 
            
             if existing_price != new_price:
-                # Price has changed, update both price and date
+     
                 update_main_table_query = f"""
                     UPDATE {table_name}
                     SET "lats_nosaukums" = %s, "lats_cena" = %s, "lats_datums" = %s, "lats_datums_7" = %s, lats_akcija = %s, lats_url = %s
@@ -200,7 +197,6 @@ try:
                 """
                 cursor.execute(update_main_table_query, ( values[found_products_df.columns.get_loc('lats_nosaukums')], values[found_products_df.columns.get_loc('lats_cena')], values[found_products_df.columns.get_loc('lats_datums')],values[found_products_df.columns.get_loc('lats_datums_7')],values[found_products_df.columns.get_loc('lats_akcija')],values[found_products_df.columns.get_loc('lats_url')], values[found_products_df.columns.get_loc('artikuls')]))
 
-                # Insert old row into history table
                 insert_history_query = f"""
                     INSERT INTO {history_table_name} ("artikuls", "lats_nosaukums", "lats_cena", "lats_akcija","lats_datums")
                     VALUES (%s, %s, %s, %s, %s)
@@ -209,7 +205,6 @@ try:
 
                 logger.info("Updated main table with new price and date, and inserted old data into history table.")
             else:
-                # Prices are the same, update only the date
                 update_date_query = f"""
                     UPDATE {table_name}
                     SET "lats_datums" = %s, lats_akcija = %s
@@ -227,7 +222,6 @@ try:
 
 
         else:
-            # Product not found in the main table, insert new data
             insert_query = f"""
                 INSERT INTO {table_name} ({', '.join(['"' + col + '"' for col in found_products_df.columns])})
                 VALUES ({', '.join(['%s' for _ in found_products_df.columns])})

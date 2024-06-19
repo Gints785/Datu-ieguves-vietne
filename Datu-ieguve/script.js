@@ -2,7 +2,6 @@ $(document).ready(function(){
     // Uncomment to check if jQuery is loaded and function is executed
     // console.log("jQuery is ready");
 
-    // nosaukums failam,akcijas topam
 
     let edit = false;
    
@@ -14,7 +13,7 @@ $(document).ready(function(){
 
 
     let currentPage = 1;
-    const batchSize = 30; // Change this value as needed
+    const batchSize = 30; 
     fetchpreces(currentPage);
     getTotalPagesAndUpdateMaxInput();
 
@@ -103,11 +102,11 @@ $(document).ready(function(){
         $.ajax({
             url: 'data/get-total-pages_2.php',
             type: 'GET',
-            data: { batch_size: batchSize }, // Send the batch size parameter if needed
+            data: { batch_size: batchSize }, 
             success: function(response) {
                 var totalPages = parseInt(response);
-                $('#totalPages').text(totalPages); // Update the total pages display
-                $('#pageNumInput').attr('max', totalPages); // Set the max attribute of the input field
+                $('#totalPages').text(totalPages); 
+                $('#pageNumInput').attr('max', totalPages); 
              
 
             },
@@ -116,11 +115,6 @@ $(document).ready(function(){
             }
         });
     }
-
-
-
-
-
 
     $('#Price_selection').click(function() {
         const enteredArtikulsRaw = $('#artikuls').val().trim();
@@ -265,11 +259,7 @@ $(document).ready(function(){
       
     }
     
-    
-
-    
-   
-    
+  
     $(document).on('click', '.close_modal',(e)=>{
         $(".modal").hide()
         $(".modal_export").hide()
@@ -278,9 +268,6 @@ $(document).ready(function(){
        
       
     })
- 
-   
-   
 
     $(document).on('click', '.product-data',(e)=>{
        
@@ -318,9 +305,9 @@ $(document).ready(function(){
                     $('#data_WEB').val("alkoutlet_history");
                     $('#data_WEB_2').val("alkoutlet");
                     break;    
-                // Add more cases as needed for other data types
+         
                 default:
-                    // Handle unknown data type
+              
                     console.error("Unknown data type:", dataType);
             }
             
@@ -330,48 +317,41 @@ $(document).ready(function(){
     e.preventDefault()
     })
 
-
-
-
-
-
-
-
     function drawChart() {
         var dataID = $('#data_ID').val();
         var dataWEB = $('#data_WEB').val();
         var dataWEB_2 = $('#data_WEB_2').val();
         
         console.log(dataID, dataWEB, dataWEB_2); 
-        // Load the Visualization API and the linechart package.
+    
         google.charts.load('current', { 'packages': ['corechart', 'controls'] });
     
-        // Set a callback to run when the Google Visualization API is loaded.
+   
         google.charts.setOnLoadCallback(fetchData);
         console.log('drawChart');
         function fetchData() {
-            // Make AJAX request to history-info.php
+          
             console.log('fetchData');
             $.ajax({
                 url: 'data/history-info.php',
                 type: 'GET',
                 data: { dataID: dataID, dataWEB: dataWEB, dataWEB_2: dataWEB_2 },
                 success: function (data,) {
-                    console.log('Data received from history-info.php:', data); // Log the received data
+                    console.log('Data received from history-info.php:', data); 
                
-                    // Parse the received JSON data
+                  
                     var jsonData = JSON.parse(data);
                     
                     var data = jsonData.data;
 
                     var dataInfo = jsonData.data_info;
                 
-                    // Sort data by date
+        
                     data.sort(function(a, b) {
                         return new Date(a[0]) - new Date(b[0]);
                     });
                 
-                    // Create the DataTable
+             
                     var dataTable = new google.visualization.DataTable();
                     dataTable.addColumn('datetime', 'DateTime');
                     dataTable.addColumn('number', '');
@@ -385,11 +365,11 @@ $(document).ready(function(){
 
                   
                         if (akcija !== 0) {
-                            // Add the row to the DataTable with separate columns for Price and Akcija
+                       
                             dataTable.addRow([datetime, price, akcija]);
                         } else {
-                            // Add the row to the DataTable with a placeholder value for Akcija
-                            dataTable.addRow([datetime, price, null]); // You can use any placeholder value here
+                     
+                            dataTable.addRow([datetime, price, null]); 
                         }
                     });
                     var view = new google.visualization.DataView(dataTable);
@@ -407,15 +387,12 @@ $(document).ready(function(){
                             var akcija_2, akcija;
                             akcija = dataTable.getValue(row, 2);
                             akcija_2 = akcija;
-                            return akcija_2; // Return the value of "akcija_2"
+                            return akcija_2; 
                         },
                         type: 'number',
                         role: 'style'
                     }]);
-
-
-
-            
+         
                     var formatter = new google.visualization.PatternFormat('Cena: {1}, Pilnā cena: {2}');
                    
                     formatter.format(dataTable, [1, 1, 2]);
@@ -468,18 +445,16 @@ $(document).ready(function(){
                                         
                  
                             
-                    // Set chart options
+                  
                     var options = {
                      
                      
                         legend: { position: 'top' },
                         series: {
-                            0: { // 'DateTime' series
-                                // Customize options for the 'DateTime' series
-                                visibleInLegend: false // Do not show in the legend
+                            0: { 
+                                visibleInLegend: false 
                             },
-                            1: { // 'Cena' series
-                                // Customize options for the 'Cena' series
+                            1: { 
                                 visibleInLegend: true // Show in the legend
                             }                 
                         },
@@ -514,21 +489,18 @@ $(document).ready(function(){
                     try {
                         var numRows = dataTable.getNumberOfRows();
                         console.log('Number of rows in the DataTable:', numRows);
-                        // Calculate the date range of the available data
-                        var minDate = dataTable.getValue(0, 0); // Assuming the first column contains dates
+                    
+                        var minDate = dataTable.getValue(0, 0); 
                         var maxDate = dataTable.getValue(dataTable.getNumberOfRows() - 1, 0);
                         var dataRange = (maxDate.getTime() - minDate.getTime()) / (1000 * 3600 * 24); // Difference in days
                     } catch (error) {
                         console.error('An error occurred while calculating date range:', error);
                     }
                     
-                   
-
-
                 try {
-                    // Determine the format for hAxis based on the data range
+                  
                     var hAxisFormat;
-                    var ticksInterval; // Interval between ticks on the horizontal axis
+                    var ticksInterval; 
                     if (dataRange > 365) {
                         // If the data range is greater than a year, show only the year
                         hAxisFormat = 'yyyy';
@@ -547,7 +519,7 @@ $(document).ready(function(){
                 }
                 
                 try {
-                    // Create a ControlWrapper for the ChartRangeFilter
+                 
                     var control = new google.visualization.ControlWrapper({
                         controlType: 'ChartRangeFilter',
                         containerId: 'control_div',
@@ -557,7 +529,7 @@ $(document).ready(function(){
                                 chartType: 'LineChart',
                                 chartOptions: {
                                     chartArea: { width: '80%' },
-                                    hAxis: { format: hAxisFormat, ticks: calculateTicks(minDate, maxDate, ticksInterval) }, // Set the hAxis format and ticks
+                                    hAxis: { format: hAxisFormat, ticks: calculateTicks(minDate, maxDate, ticksInterval) }, 
                                 },
                                 chartView: {
                                     columns: [0, 1]
@@ -568,13 +540,7 @@ $(document).ready(function(){
                 } catch (error) {
                     console.error('An error occurred while creating ControlWrapper:', error);
                 }
-                    
-
-                    
-
-                   
-
-                
+                                 
                     function calculateTicks(minDate, maxDate, interval) {
                         var ticks = [];
                         for (var d = new Date(minDate); d <= maxDate; d.setDate(d.getDate() + interval)) {
@@ -586,7 +552,7 @@ $(document).ready(function(){
                     
                     var seriesVisibility = [true, true];
                 
-                    // Create a ChartWrapper for the LineChart
+         
                     var chart = new google.visualization.ChartWrapper({
                       chartType: 'LineChart',
                       containerId: 'chart_div',
@@ -601,13 +567,13 @@ $(document).ready(function(){
                             var selectedSeries = selectedItem.column;
                             
                             if (selectedSeries === null) {
-                                // No series selected, return
+                          
                                 return;
                             }
                     
                             if (selectedItem.row === null) {
-                                // Toggle the visibility of the selected series
-                                var seriesIndex = selectedSeries - 1; // Adjust index to match series data
+                     
+                                var seriesIndex = selectedSeries - 1; 
                                 var seriesHidden = chart.getOptions().series[seriesIndex].visible;
                                 chart.getOptions().series[seriesIndex].visible = !seriesHidden;
                                 chart.draw();
@@ -617,20 +583,20 @@ $(document).ready(function(){
                     });
                  
                     google.visualization.events.addListener(control, 'statechange', function () {
-                        // Get current state of the control
+            
                         var state = control.getState();
                         
-                        // Adjust hAxis format based on selected range
+             
                         var selectedRange = state.range;
                         var diffDays = (selectedRange.end.getTime() - selectedRange.start.getTime()) / (1000 * 3600 * 24);
                         if (diffDays > 365) {
-                            // If the selected range is greater than a year, show only the year
+                        
                             chart.setOption('hAxis.format', 'yyyy');
                         } else if (diffDays > 30) {
-                            // If the selected range is greater than a month, show month and year
+                       year
                             chart.setOption('hAxis.format', 'MMM yyyy');
                         } else {
-                            // If the selected range is less than a month, show day, month, and year
+                       
                             chart.setOption('hAxis.format', 'dd MMM');
                         }
                         
@@ -639,15 +605,11 @@ $(document).ready(function(){
                   
                    
                     var exportCounter = 0;
-     
-
-              
-        
                                       
                     document.getElementById('export_history').onclick = exportFunction;
 
                     function exportFunction(event) {
-                        // Remove the event listener from the export button to ensure it can only be triggered once
+                   
                         
 
                         event.stopPropagation();
@@ -655,62 +617,57 @@ $(document).ready(function(){
                         
                         console.log('test');
                         exportCounter++;
-
-
-                   
-                        // Get the DataTable from the chart
+ 
                         var dataTable = chart.getDataTable();
                         console.log('Export function executed ' + exportCounter + ' times');
                         
                         console.log('dataTable',dataTable);
 
-                        // Get the number of rows and columns in the DataTable
+       
                         var numRows = dataTable.getNumberOfRows();
                         var numCols = dataTable.getNumberOfColumns();
                     
-                        // Extract the content of the element with ID "productFormHeading"
+              
                         var productFormHeading = document.getElementById('productFormHeading').textContent;
                         var website = document.getElementById('website').textContent;
                         var combinedText = website + " - " + productFormHeading;
                     
-                        // Create an array to store the exported data
+       
                         var exportedData = [];
 
                         
-                    
-                        // Loop through each row in the DataTable
+                  
                         for (var row = 0; row < numRows; row++) {
                             var isVisible = false;
                     
-                            // Loop through each series to check if any series has a non-null value at this row
-                            for (var col = 1; col < numCols; col++) { // Skip the first column (DateTime)
+          
+                            for (var col = 1; col < numCols; col++) { 
                                 if (dataTable.getValue(row, col) !== null) {
                                     isVisible = true;
                                     break;
                                 }
                             }
                     
-                            // If at least one series has a non-null value at this row, consider it as visible
+                
                             if (isVisible) {
                                 var rowData = [];
                     
-                                // Extract the data from the DataTable for this row
+          
                                 for (var j = 0; j < numCols; j++) {
-                                    if (j !== 2) { // Exclude the akcija column
+                                    if (j !== 2) { 
                                         rowData.push(dataTable.getValue(row, j));
                                     }
                                 }
                     
-                                // Push the rowData to exportedData
+                       
                                 exportedData.push(rowData);
                                 
                             }
                         }
-                    
-                        // Log the exported data to the console
+       
                         console.log('Exported data:', exportedData);
                     
-                        // Convert numeric values to strings with periods as decimal separators
+           
                         exportedData = exportedData.map(function(row) {
                             return row.map(function(cell) {
                                 return typeof cell === 'number' ? cell.toString().replace(',', '.') : cell;
@@ -720,62 +677,44 @@ $(document).ready(function(){
                         // Insert the column headers
                         exportedData.unshift(['datums', 'cena', 'pilnā cena']);
 
-                        var websiteRow = [website, '', '']; // Create a row with the website name and empty cells for the other columns
+                        var websiteRow = [website, '', '']; 
                         exportedData.unshift(websiteRow);
                     
-                        // Create a new workbook
+               
                         var wb = XLSX.utils.book_new();
-                    
-                        // Convert the exported data to a worksheet
+              
                         var ws = XLSX.utils.aoa_to_sheet(exportedData);
 
 
-                        // Define the range for merging cells
                         var range = XLSX.utils.decode_range('A1:C1');
                         ws['!merges'] = [{ s: range.s, e: range.e }];
 
-                        // Append the worksheet to the workbook
+                 
                         XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
                         
-                        // Write the workbook to binary format
+             
                         var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
                     
-                        // Convert the binary string to a buffer
+                
                         var buf = new ArrayBuffer(wbout.length);
                         var view = new Uint8Array(buf);
                         for (var i = 0; i < wbout.length; i++) {
                             view[i] = wbout.charCodeAt(i) & 0xFF;
                         }
                     
-                        // Create a Blob object from the buffer
+          
                         var blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                     
-                        // Create a download link
+                   
                         var link = document.createElement('a');
                         link.href = window.URL.createObjectURL(blob);
-                        link.download = combinedText + '.xlsx'; // Use the productFormHeading as the default file name
+                        link.download = combinedText + '.xlsx'; 
                         link.click();
-                        exportedData = [];
-                        
-                        
-                    };
-                    
-                                        
-
-
-                    
-
-
-
-
-
-                    // Draw the dashboard
+                        exportedData = [];        
+                    };  
                     var dashboard = new google.visualization.Dashboard(document.getElementById('dashboard_div'));
                     dashboard.bind(control, chart);
-                    dashboard.draw(view,dataTable, options);
-                    
-
-                    
+                    dashboard.draw(view,dataTable, options);       
                 },
                 error: function (xhr, status, error) {
                     console.error('Error fetching data:', error);
@@ -783,8 +722,6 @@ $(document).ready(function(){
             });
         }
     }
-
-
 
     function fetchPrecugrupas() {
         $.ajax({
@@ -804,13 +741,12 @@ $(document).ready(function(){
         var selectBox = document.getElementById('precgroup'); 
         selectBox.innerHTML = '';
         
-        // Add default option
+
         var defaultOption = document.createElement('option');
         defaultOption.value = ''; 
         defaultOption.textContent = '-Visas pr.grupas-'; 
         selectBox.appendChild(defaultOption);
     
-        // Populate options from retrieved data
         precugrupa_info.forEach(function(precugrupa) {
             var option = document.createElement('option');
             option.value = precugrupa.id; 
@@ -818,16 +754,6 @@ $(document).ready(function(){
             selectBox.appendChild(option);
         });
     }
-
-
-
-
-
-
-
-
-
-
 
     function fetchkategorijas() {
         $.ajax({
@@ -844,29 +770,23 @@ $(document).ready(function(){
         });
     }
     function displayKategorijas(kategorija_info) {
-        var selectBox = document.getElementById('kateg'); // Assuming 'kateg' is the ID of your select element
-        selectBox.innerHTML = ''; // Clear existing options
+        var selectBox = document.getElementById('kateg'); 
+        selectBox.innerHTML = '';
         
-        // Add default option
+
         var defaultOption = document.createElement('option');
-        defaultOption.value = ''; // Set the value of the default option as needed
-        defaultOption.textContent = '-Visas kategorijas-'; // Text for the default option
+        defaultOption.value = '';
+        defaultOption.textContent = '-Visas kategorijas-'; 
         selectBox.appendChild(defaultOption);
     
-        // Populate options from retrieved data
+     
         kategorija_info.forEach(function(kategorija) {
             var option = document.createElement('option');
-            option.value = kategorija.id; // Assuming 'id' is the key for the ID of the category
-            option.textContent = kategorija.nosaukums; // Assuming 'nosaukums' is the key for the name of the category
+            option.value = kategorija.id; 
+            option.textContent = kategorija.nosaukums; 
             selectBox.appendChild(option);
         });
     }
-   
-   
-
-
-
-
 
     $(document).on('click', '#export',(e)=>{
        $(".modal_export").css('display' ,'flex')
@@ -877,12 +797,8 @@ $(document).ready(function(){
         });
     })
   
-
-
     document.getElementById('export_check').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
-    
-        // Your export logic
+        event.preventDefault(); 
         var tableBody = document.getElementById('preces_info');
         var rows = tableBody.querySelectorAll('tr');
         var customName = document.querySelector('.inp').value.trim();
@@ -903,7 +819,7 @@ $(document).ready(function(){
         rows.forEach(function(row) {
             var rowData = [];
             row.querySelectorAll('td.top,span.cena,span.akcija,p.date,p.date7').forEach(function(cell, cellIndex) {
-                // Check if the column index corresponds to a selected column
+           
                 if (columnIndexes.includes(cellIndex)) {
                     rowData.push(cell.innerText);
                 }
@@ -931,25 +847,4 @@ $(document).ready(function(){
         event.target.submit();
     });
 
-
-
-
-
-
-
-
-
 });
-
-
-
-
-
-
-
-
-
-
-
-
-

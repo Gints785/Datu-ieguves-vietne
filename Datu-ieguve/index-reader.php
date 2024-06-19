@@ -24,7 +24,7 @@
 </head>
 <body>
 <?php
-        //require("connectDB.php");
+     
         require("nav.php");
         require("indicator.php");
        

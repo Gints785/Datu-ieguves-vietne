@@ -9,7 +9,7 @@ if(!$select_preces_result){
 }
 
 while($row = pg_fetch_assoc($select_preces_result)){
-    // Check if the record with the same artikuls exists in web_preces_db
+  
     $select_web_preces_SQL = "SELECT * FROM web_preces_db WHERE artikuls = '{$row['artikuls']}'";
     $select_web_preces_result = pg_query($savienojums, $select_web_preces_SQL);
 
@@ -17,7 +17,7 @@ while($row = pg_fetch_assoc($select_preces_result)){
         die("Kļūda!".pg_last_error($savienojums));
     }
 
-    // If the record with the same artikuls doesn't exist in web_preces_db, insert it
+   
     if(pg_num_rows($select_web_preces_result) == 0){
         $insert_SQL = "INSERT INTO web_preces_db (artikuls, nosaukums, barbora, lats, citro, rimi, alkoutlet, grupas_id, kateg_id) 
         VALUES ('{$row['artikuls']}', '{$row['nosaukums']}', '', '', '', '', '', '{$row['grupas_id']}', '{$row['kateg_id']}')";

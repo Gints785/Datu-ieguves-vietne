@@ -162,7 +162,8 @@
                                     <div class="column">
                                         <li><label for="artikuls"><input type="checkbox" id="artikuls" checked="true"> artikuls</label></li>                     
                                         <li><label for="nosaukums"><input type="checkbox"  id="nosaukums" checked="true"> nosaukums</label></li>                              
-                                        <li><label for="pard_cena1"><input type="checkbox"id="pard_cena1" checked="true"> pard_cena1</label></li>                            
+                                        <li><label for="pard_cena1"><input type="checkbox"id="pard_cena1" checked="true"> pard_cena1</label></li>
+                                        <li><label for="papild_info"><input type="checkbox"id="papild_info" checked="true"> akcija</label></li>                                
                                     </div>
                                     <div class="column">
                                         <li><label class="main" for="barbora"><input type="checkbox" id="barbora" checked="true"> barbora</label></li>  
