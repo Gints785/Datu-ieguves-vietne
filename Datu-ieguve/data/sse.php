@@ -4,15 +4,7 @@ require("../connectDB.php");
 header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 
-
 $log_file = 'sse_log.txt';
-
-
-function logMessage($message) {
-    global $log_file;
-    $log_message = date("Y-m-d H:i:s") . " - " . $message . PHP_EOL;
-    file_put_contents($log_file, $log_message, FILE_APPEND);
-}
 
 function customErrorHandler($errno, $errstr, $errfile, $errline) {
     $error_message = "[$errno] $errstr in $errfile at line $errline";
@@ -20,7 +12,6 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
 }
 
 set_error_handler("customErrorHandler");
-
 
 function fetchStatuses() {
     global $savienojums;
@@ -34,7 +25,7 @@ function fetchStatuses() {
         }
         return $statuses;
     } else {
-        logMessage("Error fetching statuses from database: " . pg_last_error($savienojums));
+       
         return [];
     }
 }
@@ -47,16 +38,13 @@ function fetchButtonState() {
     if ($result) {
         $row = pg_fetch_assoc($result);
         $buttonState = ($row['button_state'] === 't') ? true : false;
-        logMessage("Button state fetched: " . ($buttonState ? 'true' : 'false'));
+    
     } else {
-        logMessage("Error fetching button state from database: " . pg_last_error($savienojums));
+     
         return false;
     }
-
-   
     $buttonData = json_encode(['button_state' => $buttonState]);
-    logMessage($buttonData);
- 
+  
     echo "data: $buttonData\n\n";
     ob_flush();
     flush();
@@ -64,42 +52,31 @@ function fetchButtonState() {
     return $buttonState; 
 }
 
-
 $currentStatuses = fetchStatuses();
 
 if (empty($currentStatuses)) {
-    logMessage("No statuses found in the database.");
+ 
     echo "data: {\"error\": \"No statuses found\"}\n\n";
     ob_flush();
     flush();
     exit();
 }
 
-
-logMessage("Initial statuses: " . json_encode($currentStatuses));
-
-
 foreach ($currentStatuses as $currentStatus) {
     foreach ($currentStatus as $column => $status) {
        
         $data = json_encode(['column' => $column, 'status' => $status]);
-        
-     
-        logMessage("Sending data: $data");
-
-        
+               
         echo "data: $data\n\n";
         ob_flush();
         flush();
     }
 }
 
-
 while (true) {
    
     $currentStatuses = fetchStatuses();
     
-
     $buttonState = fetchButtonState();
 
     if (!empty($currentStatuses)) {
@@ -110,13 +87,9 @@ while (true) {
                 foreach ($currentStatus as $column => $status) {
        
                     $data = json_encode(['column' => $column, 'status' => $status]);
-                    
-               
-                    logMessage("Sending data: $data");
+                          
                     $buttonData = json_encode(['button_state' => $buttonState]);
-                    logMessage("Sending button state: $buttonData");
-
-                 
+                     
                     echo "data: $data\n\n";
 
                     ob_flush();
@@ -126,17 +99,13 @@ while (true) {
         
             $lastStatuses = $currentStatuses;
         }
-       
-     
-     
+
     } else {
-        logMessage("No statuses found in the database.");       
+            
         ob_flush();
         flush();
         exit();
-    }
-
-   
+    } 
     sleep(1);
 }
 ?>

@@ -3,8 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     function updateStatus(id, newStatus) {
-        var cleanId = id + '_ind';
-        var element = document.getElementById(cleanId);
+        var element = document.getElementById(id + '_ind');
         
         if (element) {
             // console.log('Updating element:', id, 'with status:', newStatus);
@@ -35,16 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         };
 
-        eventSource.onerror = function(error) {
-          
-            eventSource.close();
-
-      
-            setTimeout(function() {
-                
-                handleSSE();
-            }, 2000); 
-        };
+     
     }
 
 
